@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Japan | Endless Atlas</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --off-white: #faf9f7;
+      --ink: #1a1a1a;
+      --ink-light: #555;
+      --forest: #1e4034;
+      --forest-mid: #2d5c4a;
+      --forest-light: #3d7a62;
+      --gold: #b8975a;
+      --border: rgba(0,0,0,0.1);
+      --card-bg: #ffffff;
+      --shadow: 0 8px 40px rgba(0,0,0,0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--off-white);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    /* ── NAV ─────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 60px;
+      background: rgba(250,249,247,0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .nav-brand sup {
+      font-size: 9px;
+      vertical-align: super;
+      letter-spacing: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Barlow', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      color: var(--ink-light);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--ink); }
+
+    /* ── HERO ────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 480px;
+      margin-top: 60px;
+      overflow: hidden;
+      background: #2a3540;
+    }
+
+    .hero-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+      opacity: 0.82;
+      animation: heroReveal 1.4s ease forwards;
+    }
+
+    @keyframes heroReveal {
+      from { opacity: 0; transform: scale(1.04); }
+      to   { opacity: 0.82; transform: scale(1); }
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(10,12,14,0.12) 0%,
+        rgba(10,12,14,0.28) 60%,
+        rgba(10,12,14,0.55) 100%
+      );
+    }
+
+    .hero-title {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .hero-title h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: clamp(88px, 14vw, 160px);
+      color: #fff;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      animation: titleUp 1s cubic-bezier(0.16,1,0.3,1) 0.3s both;
+    }
+
+    .hero-rule {
+      width: 52px;
+      height: 1px;
+      background: rgba(255,255,255,0.55);
+      animation: titleUp 1s cubic-bezier(0.16,1,0.3,1) 0.5s both;
+    }
+
+    @keyframes titleUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── CONTENT AREA ────────────────────────────────── */
+    .content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 40px 80px;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 60px;
+      align-items: start;
+    }
+
+    /* ── LEFT: INTRO COPY ────────────────────────────── */
+    .intro-section h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 38px;
+      font-weight: 300;
+      line-height: 1.25;
+      margin-bottom: 20px;
+      letter-spacing: 0.01em;
+    }
+
+    .intro-section h2 em {
+      font-style: italic;
+      color: var(--forest);
+    }
+
+    .intro-section p {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--ink-light);
+      font-weight: 300;
+      max-width: 560px;
+    }
+
+    .intro-section p + p { margin-top: 14px; }
+
+    .stat-row {
+      display: flex;
+      gap: 40px;
+      margin-top: 40px;
+      padding-top: 36px;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-item {}
+
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .stat-value small {
+      font-size: 14px;
+      font-weight: 300;
+      font-family: 'Barlow', sans-serif;
+      color: var(--ink-light);
+    }
+
+    /* ── RIGHT: FX WIDGET ────────────────────────────── */
+    .widget-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: sticky;
+      top: 80px;
+    }
+
+    .fx-card {
+      background: var(--card-bg);
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      animation: cardIn 0.7s cubic-bezier(0.16,1,0.3,1) 0.6s both;
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .fx-header {
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .fx-header-label {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 2px;
+    }
+
+    .fx-header-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--ink);
+    }
+
+    .fx-inputs {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .fx-field label {
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .fx-field input,
+    .fx-field select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 9px 10px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 14px;
+      color: var(--ink);
+      background: var(--off-white);
+      appearance: none;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .fx-field input:focus,
+    .fx-field select:focus { border-color: var(--forest-light); }
+
+    .fx-swap-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--forest);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      align-self: end;
+      transition: background 0.2s, transform 0.3s;
+      flex-shrink: 0;
+    }
+
+    .fx-swap-btn:hover {
+      background: var(--forest-mid);
+      transform: rotate(180deg);
+    }
+
+    .fx-swap-btn svg {
+      width: 16px;
+      height: 16px;
+      stroke: #fff;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .fx-result {
+      margin: 0 20px 20px;
+      background: var(--forest);
+      border-radius: 3px;
+      padding: 16px 18px;
+      color: #fff;
+    }
+
+    .fx-result-label {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      margin-bottom: 6px;
+    }
+
+    .fx-result-amount {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 1;
+      transition: opacity 0.25s;
+    }
+
+    .fx-result-sub {
+      font-size: 11px;
+      opacity: 0.65;
+      margin-top: 6px;
+      letter-spacing: 0.04em;
+    }
+
+    .fx-rate-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .fx-rate-text {
+      font-size: 11px;
+      color: var(--ink-light);
+    }
+
+    .fx-rate-badge {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      background: rgba(30,64,52,0.08);
+      color: var(--forest);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    .fx-history {
+      border-top: 1px solid var(--border);
+    }
+
+    .fx-history-toggle {
+      width: 100%;
+      padding: 12px 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'Barlow', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+    }
+
+    .fx-history-toggle svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--ink-light);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      transition: transform 0.25s;
+    }
+
+    .fx-history-toggle.open svg { transform: rotate(180deg); }
+
+    .fx-history-body {
+      display: none;
+      padding: 0 20px 16px;
+    }
+
+    .fx-history-body.open { display: block; }
+
+    .fx-history-chart {
+      width: 100%;
+      height: 90px;
+    }
+
+    .fx-history-bars {
+      display: flex;
+      gap: 4px;
+      align-items: flex-end;
+      height: 70px;
+      margin-bottom: 6px;
+    }
+
+    .fx-bar-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .fx-bar {
+      width: 100%;
+      background: var(--forest-light);
+      border-radius: 2px 2px 0 0;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+      min-height: 4px;
+    }
+
+    .fx-bar:hover { opacity: 1; }
+
+    .fx-bar-label {
+      font-size: 8px;
+      color: var(--ink-light);
+      text-align: center;
+    }
+
+    .fx-updated {
+      padding: 8px 20px 14px;
+      font-size: 10px;
+      color: var(--ink-light);
+      text-align: right;
+      font-style: italic;
+    }
+
+    .fx-loading {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    /* ── TIPS CARD ───────────────────────────────────── */
+    .tips-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+      animation: cardIn 0.7s cubic-bezier(0.16,1,0.3,1) 0.75s both;
+    }
+
+    .tips-card-label {
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 12px;
+    }
+
+    .tips-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .tips-list li {
+      display: flex;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--ink-light);
+      line-height: 1.5;
+    }
+
+    .tip-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+      margin-top: 7px;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-copy {
+      font-size: 12px;
+      color: var(--ink-light);
+      letter-spacing: 0.04em;
+    }
+
+    .footer-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      color: var(--ink-light);
+    }
+
+    /* ── RESPONSIVE ──────────────────────────────────── */
+    @media (max-width: 900px) {
+      .content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      .widget-stack { position: static; }
+      .stat-row { flex-wrap: wrap; gap: 24px; }
+      nav { padding: 0 20px; }
+      .nav-links { gap: 18px; }
+    }
+
+    @media (max-width: 600px) {
+      .hero { height: 320px; }
+      .content { padding: 40px 20px 60px; }
+      .nav-links { display: none; }
+      footer { flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-brand">360<sup>°</sup> Travel Inspirations</a>
+    <ul class="nav-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="#" class="active">Japan</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Inspirations Blog</a></li>
+      <li><a href="#">Travel Resources</a></li>
+      <li><a href="#">Portfolio</a></li>
+      <li><a href="#">Shop</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <!-- Unsplash free-use image: Mt. Fuji with Chureito Pagoda -->
+    <img
+      class="hero-img"
+      src="https://images.unsplash.com/photo-1490761668535-35497054dfd0?auto=format&fit=crop&w=1800&q=80"
+      alt="Mount Fuji with Chureito Pagoda, Japan"
+    />
+    <div class="hero-overlay"></div>
+    <div class="hero-title">
+      <h1>JAPAN</h1>
+      <div class="hero-rule"></div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main class="content">
+
+    <!-- LEFT: INTRO -->
+    <section class="intro-section">
+      <h2>Where the <em>ancient</em> and the<br>ultramodern converge</h2>
+      <p>
+        Japan is a study in beautiful contradictions. Bullet trains whisk you past centuries-old temples, neon cityscapes dissolve into serene bamboo forests, and the world's most meticulous cuisine is served in both Michelin-starred dining rooms and bustling underground izakayas.
+      </p>
+      <p>
+        From the electric pulse of Shibuya to the meditative stillness of Kyoto's Fushimi Inari, every corner of Japan rewards the curious traveler with something genuinely unexpected. This page is your living toolkit for planning a trip — with real-time exchange rates, seasonal insights, and curated recommendations built in.
+      </p>
+
+      <div class="stat-row">
+        <div class="stat-item">
+          <div class="stat-label">Best season</div>
+          <div class="stat-value">Mar – May <small>/ Oct – Nov</small></div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Currency</div>
+          <div class="stat-value">¥ <small>Japanese Yen (JPY)</small></div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Language</div>
+          <div class="stat-value">Japanese</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Time zone</div>
+          <div class="stat-value">JST <small>UTC+9</small></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: WIDGET STACK -->
+    <aside class="widget-stack">
+
+      <!-- FX CONVERTER -->
+      <div class="fx-card" id="fxCard">
+        <div class="fx-header">
+          <div class="fx-header-label">Live Exchange Rate</div>
+          <div class="fx-header-title">Currency Converter</div>
+        </div>
+
+        <div class="fx-inputs">
+          <div class="fx-field">
+            <label>From</label>
+            <select id="fromCurrency">
+              <option value="JPY" selected>JPY — Japanese Yen</option>
+              <option value="USD">USD — US Dollar</option>
+              <option value="EUR">EUR — Euro</option>
+              <option value="GBP">GBP — British Pound</option>
+              <option value="AUD">AUD — Australian Dollar</option>
+              <option value="CAD">CAD — Canadian Dollar</option>
+              <option value="KRW">KRW — South Korean Won</option>
+              <option value="CNY">CNY — Chinese Yuan</option>
+              <option value="TWD">TWD — Taiwan Dollar</option>
+              <option value="HKD">HKD — Hong Kong Dollar</option>
+            </select>
+          </div>
+
+          <button class="fx-swap-btn" id="swapBtn" title="Swap currencies">
+            <svg viewBox="0 0 24 24">
+              <path d="M7 16V4m0 0L3 8m4-4l4 4"/>
+              <path d="M17 8v12m0 0l4-4m-4 4l-4-4"/>
+            </svg>
+          </button>
+
+          <div class="fx-field">
+            <label>To</label>
+            <select id="toCurrency">
+              <option value="JPY">JPY — Japanese Yen</option>
+              <option value="USD" selected>USD — US Dollar</option>
+              <option value="EUR">EUR — Euro</option>
+              <option value="GBP">GBP — British Pound</option>
+              <option value="AUD">AUD — Australian Dollar</option>
+              <option value="CAD">CAD — Canadian Dollar</option>
+              <option value="KRW">KRW — South Korean Won</option>
+              <option value="CNY">CNY — Chinese Yuan</option>
+              <option value="TWD">TWD — Taiwan Dollar</option>
+              <option value="HKD">HKD — Hong Kong Dollar</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Amount input row -->
+        <div style="padding: 0 20px 16px; display:grid; grid-template-columns:1fr auto 1fr; gap:10px; align-items:end;">
+          <div class="fx-field">
+            <label>Amount</label>
+            <input type="number" id="fromAmount" value="1000" min="0" step="any" />
+          </div>
+          <div style="width:36px;"></div>
+          <div class="fx-field">
+            <label>Result</label>
+            <input type="number" id="toAmount" readonly style="background:#f0efe9; color:var(--ink);" />
+          </div>
+        </div>
+
+        <div class="fx-result">
+          <div class="fx-result-label" id="resultLabel">1,000 JPY =</div>
+          <div class="fx-result-amount" id="resultAmount">—</div>
+          <div class="fx-result-sub" id="resultSub">Fetching live rate...</div>
+        </div>
+
+        <div class="fx-rate-row">
+          <span class="fx-rate-text" id="rateText">1 JPY = — USD</span>
+          <span class="fx-rate-badge" id="rateBadge">LIVE</span>
+        </div>
+
+        <div class="fx-history">
+          <button class="fx-history-toggle" id="histToggle">
+            <span>≡ Rate History (7 days)</span>
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="fx-history-body" id="histBody">
+            <div class="fx-history-bars" id="histBars">
+              <!-- JS fills this -->
+            </div>
+          </div>
+        </div>
+
+        <div class="fx-updated" id="fxUpdated">Fetching rates...</div>
+      </div>
+
+      <!-- TRAVEL TIPS CARD -->
+      <div class="tips-card">
+        <div class="tips-card-label">Traveler Tips</div>
+        <ul class="tips-list">
+          <li><span class="tip-dot"></span>Japan is still predominantly cash-based. Carry yen -- ATMs at 7-Eleven and Japan Post are foreigner-friendly.</li>
+          <li><span class="tip-dot"></span>Get an IC card (Suica or Pasmo) at any major station -- it works on trains, buses, and convenience stores nationwide.</li>
+          <li><span class="tip-dot"></span>Buy a JR Pass before you leave home; it cannot be purchased in Japan at the discounted tourist price.</li>
+          <li><span class="tip-dot"></span>Tipping is not customary and can be considered rude. Excellent service is simply the standard.</li>
+        </ul>
+      </div>
+
+    </aside>
+  </main>
+
+  <footer>
+    <span class="footer-copy">&copy; 2035 by 360&deg; Travel Inspirations. All rights reserved.</span>
+    <span class="footer-brand">Endless Atlas</span>
+  </footer>
+
+  <script>
+    /* ─────────────────────────────────────────────────────────
+       LIVE FX ENGINE
+       Uses the free Frankfurter API (https://www.frankfurter.app)
+       No API key required.
+    ───────────────────────────────────────────────────────── */
+
+    const BASE_API = 'https://api.frankfurter.app';
+
+    let currentRate = null;   // from -> to rate
+    let historyData = [];     // last 7 days
+
+    const fromCurrEl  = document.getElementById('fromCurrency');
+    const toCurrEl    = document.getElementById('toCurrency');
+    const fromAmtEl   = document.getElementById('fromAmount');
+    const toAmtEl     = document.getElementById('toAmount');
+    const resultLabel = document.getElementById('resultLabel');
+    const resultAmt   = document.getElementById('resultAmount');
+    const resultSub   = document.getElementById('resultSub');
+    const rateText    = document.getElementById('rateText');
+    const rateBadge   = document.getElementById('rateBadge');
+    const fxUpdated   = document.getElementById('fxUpdated');
+    const histBars    = document.getElementById('histBars');
+    const histToggle  = document.getElementById('histToggle');
+    const histBody    = document.getElementById('histBody');
+    const swapBtn     = document.getElementById('swapBtn');
+
+    function fmt(n, currency) {
+      if (n === null || isNaN(n)) return '—';
+      // Use Intl for compact display
+      if (Math.abs(n) >= 10000) {
+        return new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(n);
+      }
+      // For small numbers like JPY->USD
+      const decimals = n < 0.01 ? 6 : n < 1 ? 4 : 2;
+      return new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      }).format(n);
+    }
+
+    function fmtCompact(n) {
+      if (n === null || isNaN(n)) return '—';
+      if (Math.abs(n) >= 1000) return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(n);
+      if (Math.abs(n) >= 10)   return new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(n);
+      const d = n < 0.01 ? 6 : n < 1 ? 4 : 3;
+      return new Intl.NumberFormat('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }).format(n);
+    }
+
+    function updateDisplay() {
+      if (currentRate === null) return;
+      const amount = parseFloat(fromAmtEl.value) || 0;
+      const converted = amount * currentRate;
+      const from = fromCurrEl.value;
+      const to   = toCurrEl.value;
+
+      toAmtEl.value    = fmtCompact(converted);
+      resultLabel.textContent = `${new Intl.NumberFormat('en-US').format(amount)} ${from} =`;
+      resultAmt.textContent   = fmtCompact(converted);
+      resultSub.textContent   = `${to} · 1 ${from} = ${fmtCompact(currentRate)} ${to}`;
+      rateText.textContent    = `1 ${from} = ${fmtCompact(currentRate)} ${to}`;
+    }
+
+    async function fetchRate() {
+      const from = fromCurrEl.value;
+      const to   = toCurrEl.value;
+
+      if (from === to) {
+        currentRate = 1;
+        updateDisplay();
+        return;
+      }
+
+      rateBadge.textContent = '...';
+      resultAmt.style.opacity = '0.4';
+
+      try {
+        const url = `${BASE_API}/latest?from=${from}&to=${to}`;
+        const res  = await fetch(url);
+        const data = await res.json();
+        currentRate = data.rates[to];
+
+        const d = new Date(data.date);
+        const dateStr = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        fxUpdated.textContent = `Rates updated live · ${dateStr}`;
+        rateBadge.textContent = 'LIVE';
+        resultAmt.style.opacity = '1';
+
+        updateDisplay();
+        fetchHistory(from, to);
+      } catch (e) {
+        rateBadge.textContent = 'ERR';
+        resultAmt.textContent = 'Error';
+        resultAmt.style.opacity = '1';
+        fxUpdated.textContent = 'Could not fetch rates. Check your connection.';
+      }
+    }
+
+    async function fetchHistory(from, to) {
+      try {
+        const end   = new Date();
+        const start = new Date(); start.setDate(start.getDate() - 7);
+        const fmt   = d => d.toISOString().split('T')[0];
+        const url   = `${BASE_API}/${fmt(start)}..${fmt(end)}?from=${from}&to=${to}`;
+        const res   = await fetch(url);
+        const data  = await res.json();
+
+        historyData = Object.entries(data.rates)
+          .sort(([a],[b]) => a.localeCompare(b))
+          .map(([date, rates]) => ({ date, rate: rates[to] }));
+
+        renderHistory(from, to);
+      } catch(e) {
+        histBars.innerHTML = '<span style="font-size:11px;color:var(--ink-light)">History unavailable</span>';
+      }
+    }
+
+    function renderHistory(from, to) {
+      if (!historyData.length) return;
+      const rates = historyData.map(d => d.rate);
+      const minR  = Math.min(...rates);
+      const maxR  = Math.max(...rates);
+      const range = maxR - minR || 1;
+
+      histBars.innerHTML = historyData.map(({ date, rate }) => {
+        const pct  = ((rate - minR) / range) * 70 + 18; // 18–88px height
+        const day  = new Date(date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short' });
+        return `
+          <div class="fx-bar-wrap" title="${day}: ${fmtCompact(rate)} ${to}">
+            <div class="fx-bar" style="height:${pct.toFixed(1)}px"></div>
+            <div class="fx-bar-label">${day}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Events
+    fromAmtEl.addEventListener('input', updateDisplay);
+    toAmtEl.addEventListener('input', () => {
+      if (!currentRate) return;
+      const inv = parseFloat(toAmtEl.value) / currentRate;
+      fromAmtEl.value = isNaN(inv) ? '' : fmtCompact(inv);
+    });
+
+    fromCurrEl.addEventListener('change', fetchRate);
+    toCurrEl.addEventListener('change', fetchRate);
+
+    swapBtn.addEventListener('click', () => {
+      const tmp = fromCurrEl.value;
+      fromCurrEl.value = toCurrEl.value;
+      toCurrEl.value   = tmp;
+      fetchRate();
+    });
+
+    histToggle.addEventListener('click', () => {
+      histToggle.classList.toggle('open');
+      histBody.classList.toggle('open');
+    });
+
+    // Init
+    fetchRate();
+
+    // Auto-refresh every 60 seconds
+    setInterval(fetchRate, 60_000);
+  </script>
+
+</body>
+</html>
