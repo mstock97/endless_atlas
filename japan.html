@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Primary Palette */
+            /* Primary Palette from Guide */
             --forest: #1E4034;
             --paper: #F7F5F0;
             --ink: #0F0F0F;
@@ -27,12 +27,12 @@
         .hero-container {
             position: relative;
             height: 100vh;
-            width: 100vw;
+            width: 100%;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: var(--ink); /* Fallback background */
+            background-color: var(--ink); /* Essential for GitHub/Cloudflare loading states */
         }
 
         picture, .hero-image {
@@ -49,7 +49,7 @@
             z-index: 0;
         }
 
-        /* Scrim for legibility per Brand Guide (Ink at 30%) */
+        /* Scrim: Using 60% Ink per Page 12 of Guidelines for Photo Scrims */
         .hero-container::after {
             content: '';
             position: absolute;
@@ -57,13 +57,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 15, 15, 0.3);
+            background: rgba(15, 15, 15, 0.6);
             z-index: 1;
         }
 
         .hero-title {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(6rem, 25vw, 18rem); /* Boldness Pillar: Taking up space */
+            font-size: clamp(6rem, 25vw, 18rem);
             color: var(--white);
             margin: 0;
             z-index: 2;
@@ -73,7 +73,7 @@
             will-change: transform, opacity;
         }
 
-        /* Content spacing for scroll testing */
+        /* Content spacing */
         .content-placeholder {
             height: 150vh;
             padding: 100px 10%;
@@ -100,8 +100,7 @@
                 src="https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero-hd.JPG" 
                 alt="Mount Fuji, Japan" 
                 class="hero-image"
-                crossorigin="anonymous">
-        </picture>
+                referrerpolicy="no-referrer"> </picture>
         <h1 class="hero-title" id="heroText">JAPAN</h1>
     </section>
 
@@ -113,12 +112,10 @@
     </div>
 
     <script>
-        // Scroll Interaction
         window.addEventListener('scroll', function() {
             const scrollValue = window.scrollY;
             const heroText = document.getElementById('heroText');
             
-            // Text grows and fades out as user scrolls down
             const scale = 1 + (scrollValue / 800);
             const opacity = 1 - (scrollValue / 500);
             
