@@ -9,48 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 
+  <!-- Shared brand styles (header, footer, tokens) -->
+  <link rel="stylesheet" href="/assets/css/brand.css" />
+
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      /* Horizon Trails brand tokens */
-      --forest:       #1E4034;
-      --canopy:       #2D6A4F;
-      --moss:         #52B788;
-      --stone:        #5C5346;
-      --driftwood:    #A8896A;
-      --fog:          #C9D4C5;
-      --ink:          #0F0F0F;
-      --graphite:     #3D3D3D;
-      --ash:          #8C8C8C;
-      --cloud:        #EFEFEF;
-      --paper:        #F7F5F0;
-      --white:        #FFFFFF;
-
-      --font-display:   'Bebas Neue', sans-serif;
-      --font-editorial: 'Playfair Display', Georgia, serif;
-      --font-body:      'DM Sans', sans-serif;
-
-      --border:   rgba(0,0,0,0.09);
-      --shadow:   0 8px 40px rgba(0,0,0,0.07);
-
-      --space-xs:  4px;
-      --space-sm:  8px;
-      --space-md:  16px;
-      --space-lg:  24px;
-      --space-xl:  40px;
-      --space-2xl: 64px;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: var(--font-body);
-      background: var(--paper);
-      color: var(--ink);
-      min-height: 100vh;
-    }
-
     /* ── HERO ────────────────────────────────────────── */
     .hero {
       position: relative;
@@ -477,10 +439,7 @@
 
     /* ── RESPONSIVE ──────────────────────────────────── */
     @media (max-width: 900px) {
-      .content {
-        grid-template-columns: 1fr;
-        gap: 40px;
-      }
+      .content { grid-template-columns: 1fr; gap: 40px; }
       .widget-stack { position: static; }
     }
 
@@ -492,10 +451,8 @@
 </head>
 <body>
 
-  <!-- HEADER (injected by components.js) -->
   <div id="site-header"></div>
 
-  <!-- HERO -->
   <section class="hero">
     <img
       class="hero-img"
@@ -509,10 +466,8 @@
     </div>
   </section>
 
-  <!-- MAIN CONTENT -->
   <main class="content">
 
-    <!-- LEFT: INTRO -->
     <section class="intro-section">
       <h2>Where the <em>ancient</em> and the<br>ultramodern converge</h2>
       <p>
@@ -542,10 +497,8 @@
       </div>
     </section>
 
-    <!-- RIGHT: WIDGET STACK -->
     <aside class="widget-stack">
 
-      <!-- FX CONVERTER -->
       <div class="fx-card" id="fxCard">
         <div class="fx-header">
           <div class="fx-header-label">Live Exchange Rate</div>
@@ -593,7 +546,6 @@
           </div>
         </div>
 
-        <!-- Amount input row -->
         <div style="padding: 0 20px 16px; display:grid; grid-template-columns:1fr auto 1fr; gap:10px; align-items:end;">
           <div class="fx-field">
             <label>Amount</label>
@@ -630,7 +582,6 @@
         <div class="fx-updated" id="fxUpdated">Fetching rates...</div>
       </div>
 
-      <!-- TRAVEL TIPS CARD -->
       <div class="tips-card">
         <div class="tips-card-label">Traveler Tips</div>
         <ul class="tips-list">
@@ -644,16 +595,35 @@
     </aside>
   </main>
 
-  <!-- FOOTER (injected by components.js) -->
   <div id="site-footer"></div>
 
-  <script src="components.js"></script>
-
   <script>
-    const BASE_API = 'https://api.frankfurter.app';
+    // ── Load header and footer from separate HTML files ──────────────────────
+    async function loadComponent(id, path) {
+      try {
+        const res  = await fetch(path);
+        const html = await res.text();
+        document.getElementById(id).innerHTML = html;
 
+        // Mark the active nav link based on current path
+        const currentPath = window.location.pathname;
+        document.querySelectorAll(`#${id} .nav-links a, #${id} .footer-nav a`).forEach(link => {
+          const href = link.getAttribute('href');
+          if (href && href !== '/' && currentPath.startsWith(href)) {
+            link.classList.add('nav-active');
+          }
+        });
+      } catch (e) {
+        console.warn(`Could not load component: ${path}`);
+      }
+    }
+
+    loadComponent('site-header', '/components/header.html');
+    loadComponent('site-footer', '/components/footer.html');
+
+    // ── FX Engine ────────────────────────────────────────────────────────────
+    const BASE_API = 'https://api.frankfurter.app';
     let currentRate = null;
-    let historyData = [];
 
     const fromCurrEl  = document.getElementById('fromCurrency');
     const toCurrEl    = document.getElementById('toCurrency');
@@ -680,12 +650,12 @@
 
     function updateDisplay() {
       if (currentRate === null) return;
-      const amount = parseFloat(fromAmtEl.value) || 0;
+      const amount    = parseFloat(fromAmtEl.value) || 0;
       const converted = amount * currentRate;
-      const from = fromCurrEl.value;
-      const to   = toCurrEl.value;
+      const from      = fromCurrEl.value;
+      const to        = toCurrEl.value;
 
-      toAmtEl.value          = fmtCompact(converted);
+      toAmtEl.value           = fmtCompact(converted);
       resultLabel.textContent = `${new Intl.NumberFormat('en-US').format(amount)} ${from} =`;
       resultAmt.textContent   = fmtCompact(converted);
       resultSub.textContent   = `${to} · 1 ${from} = ${fmtCompact(currentRate)} ${to}`;
@@ -729,33 +699,28 @@
         const res   = await fetch(`${BASE_API}/${fmt(start)}..${fmt(end)}?from=${from}&to=${to}`);
         const data  = await res.json();
 
-        historyData = Object.entries(data.rates)
+        const history = Object.entries(data.rates)
           .sort(([a],[b]) => a.localeCompare(b))
           .map(([date, rates]) => ({ date, rate: rates[to] }));
 
-        renderHistory(to);
+        const rates = history.map(d => d.rate);
+        const minR  = Math.min(...rates);
+        const maxR  = Math.max(...rates);
+        const range = maxR - minR || 1;
+
+        histBars.innerHTML = history.map(({ date, rate }) => {
+          const pct = ((rate - minR) / range) * 54 + 16;
+          const day = new Date(date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short' });
+          return `
+            <div class="fx-bar-wrap" title="${day}: ${fmtCompact(rate)} ${to}">
+              <div class="fx-bar" style="height:${pct.toFixed(1)}px"></div>
+              <div class="fx-bar-label">${day}</div>
+            </div>
+          `;
+        }).join('');
       } catch(e) {
         histBars.innerHTML = '<span style="font-size:11px;color:var(--ash)">History unavailable</span>';
       }
-    }
-
-    function renderHistory(to) {
-      if (!historyData.length) return;
-      const rates = historyData.map(d => d.rate);
-      const minR  = Math.min(...rates);
-      const maxR  = Math.max(...rates);
-      const range = maxR - minR || 1;
-
-      histBars.innerHTML = historyData.map(({ date, rate }) => {
-        const pct = ((rate - minR) / range) * 54 + 16;
-        const day = new Date(date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short' });
-        return `
-          <div class="fx-bar-wrap" title="${day}: ${fmtCompact(rate)} ${to}">
-            <div class="fx-bar" style="height:${pct.toFixed(1)}px"></div>
-            <div class="fx-bar-label">${day}</div>
-          </div>
-        `;
-      }).join('');
     }
 
     fromAmtEl.addEventListener('input', updateDisplay);
@@ -764,17 +729,14 @@
       const inv = parseFloat(toAmtEl.value) / currentRate;
       fromAmtEl.value = isNaN(inv) ? '' : fmtCompact(inv);
     });
-
     fromCurrEl.addEventListener('change', fetchRate);
     toCurrEl.addEventListener('change', fetchRate);
-
     swapBtn.addEventListener('click', () => {
       const tmp = fromCurrEl.value;
       fromCurrEl.value = toCurrEl.value;
       toCurrEl.value   = tmp;
       fetchRate();
     });
-
     histToggle.addEventListener('click', () => {
       histToggle.classList.toggle('open');
       histBody.classList.toggle('open');
