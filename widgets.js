@@ -1,205 +1,294 @@
 /**
- * widgets.js
- * Self-contained widget logic for:
- *  - Currency Converter
- *  - Weather
- *  - Table of Contents (auto-generated)
- *  - Share Buttons
+ * components.js
+ * Loads shared header and footer into every page.
+ * Include this script in every HTML file.
+ *
+ * Usage: <script src="/assets/js/components.js"></script>
+ * Then place <div id="site-header"></div> and <div id="site-footer"></div>
+ * in your HTML where you want the header/footer to appear.
  */
 
-// ─── CURRENCY CONVERTER ───────────────────────────────────────────────────────
-function initCurrencyWidget() {
-  const widget = document.getElementById('widget-currency');
-  if (!widget) return;
+// ─── CONFIG ─────────────────────────────────────────────────────────────────
+const SITE_CONFIG = {
+  name:        'Endless Atlas',
+  nameAccent:  'Endless Atlas',
+  tagline:     'Go further. Write honestly.',
+  isQA:        window.location.hostname.startsWith('qa.'),
+  basePath:    '/',
+};
 
-  const fromInput  = widget.querySelector('#currency-amount');
-  const fromSelect = widget.querySelector('#currency-from');
-  const toSelect   = widget.querySelector('#currency-to');
-  const resultEl   = widget.querySelector('#currency-result');
-  const swapBtn    = widget.querySelector('#currency-swap');
+// ─── NAV LINKS ───────────────────────────────────────────────────────────────
+const NAV_LINKS = [
+  { label: 'Destinations', href: '/destinations/' },
+  { label: 'Itineraries',  href: '/itineraries/' },
+  { label: 'Travel Tips',  href: '/tips/' },
+  { label: 'About',        href: '/about/' },
+];
 
-  // Uses a free public API - no key needed for basic rates
-  const API_URL = 'https://api.exchangerate-api.com/v4/latest/';
-  let rates = {};
+// ─── CSS ─────────────────────────────────────────────────────────────────────
+const STYLES = `
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap');
 
-  async function fetchRates(base) {
-    try {
-      resultEl.textContent = 'Loading…';
-      const res  = await fetch(`${API_URL}${base}`);
-      const data = await res.json();
-      rates = data.rates;
-      convert();
-    } catch {
-      resultEl.textContent = 'Rates unavailable';
-    }
+  :root {
+    --forest:    #1E4034;
+    --canopy:    #2D6A4F;
+    --moss:      #52B788;
+    --stone:     #5C5346;
+    --driftwood: #A8896A;
+    --fog:       #C9D4C5;
+    --ink:       #0F0F0F;
+    --graphite:  #3D3D3D;
+    --ash:       #8C8C8C;
+    --cloud:     #EFEFEF;
+    --paper:     #F7F5F0;
+    --white:     #FFFFFF;
+
+    --font-display:   'Bebas Neue', sans-serif;
+    --font-editorial: 'Playfair Display', Georgia, serif;
+    --font-body:      'DM Sans', sans-serif;
+
+    --space-xs:  4px;
+    --space-sm:  8px;
+    --space-md:  16px;
+    --space-lg:  24px;
+    --space-xl:  40px;
+    --space-2xl: 64px;
   }
 
-  function convert() {
-    const amount = parseFloat(fromInput.value);
-    const to     = toSelect.value;
-    if (isNaN(amount) || !rates[to]) {
-      resultEl.textContent = '—';
-      return;
-    }
-    const converted = (amount * rates[to]).toFixed(2);
-    resultEl.textContent = `${converted} ${to}`;
+  /* ── Header ────────────────────────────────────────────────── */
+  .qa-banner {
+    background: var(--driftwood);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+    padding: var(--space-sm) var(--space-md);
+    letter-spacing: 0.04em;
+  }
+  .qa-banner a {
+    color: var(--white);
+    text-decoration: underline;
+    margin-left: var(--space-sm);
   }
 
-  fromSelect.addEventListener('change', () => fetchRates(fromSelect.value));
-  fromInput.addEventListener('input',   convert);
-  toSelect.addEventListener('change',   convert);
+  .site-header {
+    background-color: var(--forest);
+    border-bottom: 1px solid var(--canopy);
+  }
 
-  swapBtn.addEventListener('click', () => {
-    const tmp = fromSelect.value;
-    fromSelect.value = toSelect.value;
-    toSelect.value   = tmp;
-    fetchRates(fromSelect.value);
-  });
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-lg) var(--space-xl);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xl);
+  }
 
-  fetchRates(fromSelect.value);
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 28px;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    text-decoration: none;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .nav-logo span {
+    color: var(--moss);
+  }
+
+  .nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xl);
+  }
+  .nav-links li {
+    margin: 0;
+  }
+  .nav-links a {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fog);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .nav-links a:hover {
+    color: var(--moss);
+  }
+  .nav-links a.nav-active {
+    color: var(--moss);
+  }
+
+  /* ── Footer ────────────────────────────────────────────────── */
+  .site-footer {
+    background-color: var(--ink);
+    border-top: 1px solid #1e1e1e;
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-2xl) var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xl);
+  }
+
+  .footer-top {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-xl);
+    flex-wrap: wrap;
+  }
+
+  .footer-brand-block .nav-logo {
+    display: inline-block;
+    margin-bottom: var(--space-md);
+  }
+
+  .footer-tagline {
+    font-family: var(--font-editorial);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--stone);
+    margin: 0;
+    line-height: 1.6;
+    max-width: 260px;
+  }
+
+  .footer-nav {
+    display: flex;
+    gap: var(--space-2xl);
+    flex-wrap: wrap;
+  }
+
+  .footer-nav a {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ash);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .footer-nav a:hover {
+    color: var(--moss);
+  }
+
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--space-lg);
+    border-top: 1px solid #222;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+  }
+
+  .footer-copyright {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--stone);
+    letter-spacing: 0.04em;
+    margin: 0;
+  }
+
+  .footer-mark {
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: #2a2a2a;
+    text-transform: uppercase;
+  }
+`;
+
+// ─── INJECT STYLES ────────────────────────────────────────────────────────────
+function injectStyles() {
+  const style = document.createElement('style');
+  style.textContent = STYLES;
+  document.head.appendChild(style);
 }
 
-// ─── WEATHER WIDGET ───────────────────────────────────────────────────────────
-function initWeatherWidget() {
-  const widget = document.getElementById('widget-weather');
-  if (!widget) return;
+// ─── RENDER HEADER ────────────────────────────────────────────────────────────
+function renderHeader() {
+  const navLinksHTML = NAV_LINKS.map(link =>
+    `<li><a href="${link.href}">${link.label}</a></li>`
+  ).join('');
 
-  const input     = widget.querySelector('#weather-city');
-  const searchBtn = widget.querySelector('#weather-search');
-  const display   = widget.querySelector('#weather-display');
+  const qaBanner = SITE_CONFIG.isQA
+    ? `<div class="qa-banner">⚠️ QA ENVIRONMENT — Changes here are not live. <a href="#">View production site →</a></div>`
+    : '';
 
-  // Uses Open-Meteo (free, no key) + geocoding API
-  async function fetchWeather(city) {
-    display.innerHTML = '<div style="text-align:center;color:var(--ink-light);font-size:.85rem">Loading…</div>';
-    try {
-      // Step 1: geocode city name
-      const geoRes  = await fetch(
-        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`
-      );
-      const geoData = await geoRes.json();
-      if (!geoData.results?.length) throw new Error('City not found');
+  return `
+    ${qaBanner}
+    <header class="site-header">
+      <nav class="nav-inner">
+        <a href="/" class="nav-logo">${SITE_CONFIG.name}<span>${SITE_CONFIG.nameAccent}</span></a>
+        <ul class="nav-links">${navLinksHTML}</ul>
+      </nav>
+    </header>
+  `;
+}
 
-      const { latitude, longitude, name, country } = geoData.results[0];
+// ─── RENDER FOOTER ────────────────────────────────────────────────────────────
+function renderFooter() {
+  const footerNavHTML = NAV_LINKS.map(link =>
+    `<a href="${link.href}">${link.label}</a>`
+  ).join('');
 
-      // Step 2: fetch weather
-      const wxRes  = await fetch(
-        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}` +
-        `&current_weather=true&hourly=relativehumidity_2m,windspeed_10m,precipitation_probability`
-      );
-      const wxData = await wxRes.json();
-      const w      = wxData.current_weather;
-
-      const icons = {
-        0:'☀️', 1:'🌤️', 2:'⛅', 3:'☁️',
-        45:'🌫️', 48:'🌫️',
-        51:'🌦️', 61:'🌧️', 71:'🌨️', 80:'🌦️',
-        95:'⛈️', 99:'⛈️',
-      };
-      const icon = icons[w.weathercode] || '🌡️';
-
-      display.innerHTML = `
-        <div class="weather-display">
-          <div class="weather-icon">${icon}</div>
-          <div class="weather-temp">${Math.round(w.temperature)}°C</div>
-          <div class="weather-desc">${name}, ${country}</div>
-          <div class="weather-details">
-            <div class="weather-detail">
-              <div class="weather-detail-label">Wind</div>
-              <div class="weather-detail-value">${w.windspeed} km/h</div>
-            </div>
-            <div class="weather-detail">
-              <div class="weather-detail-label">Humidity</div>
-              <div class="weather-detail-value">${wxData.hourly.relativehumidity_2m[0]}%</div>
-            </div>
-            <div class="weather-detail">
-              <div class="weather-detail-label">Rain chance</div>
-              <div class="weather-detail-value">${wxData.hourly.precipitation_probability[0]}%</div>
-            </div>
-            <div class="weather-detail">
-              <div class="weather-detail-label">Wind dir.</div>
-              <div class="weather-detail-value">${w.winddirection}°</div>
-            </div>
+  return `
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-top">
+          <div class="footer-brand-block">
+            <a href="/" class="nav-logo">${SITE_CONFIG.name}<span>${SITE_CONFIG.nameAccent}</span></a>
+            <p class="footer-tagline">${SITE_CONFIG.tagline}</p>
           </div>
+          <nav class="footer-nav">
+            ${footerNavHTML}
+          </nav>
         </div>
-      `;
-    } catch (e) {
-      display.innerHTML = `<div style="text-align:center;color:var(--clay);font-size:.85rem">
-        Could not load weather. Try another city name.
-      </div>`;
+        <div class="footer-bottom">
+          <p class="footer-copyright">© ${new Date().getFullYear()} ${SITE_CONFIG.name}${SITE_CONFIG.nameAccent}. All rights reserved.</p>
+          <span class="footer-mark">Explore Everything</span>
+        </div>
+      </div>
+    </footer>
+  `;
+}
+
+// ─── ACTIVE NAV LINK ─────────────────────────────────────────────────────────
+function setActiveNavLink() {
+  const path = window.location.pathname;
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    const href = link.getAttribute('href');
+    if (href !== '/' && path.startsWith(href)) {
+      link.classList.add('nav-active');
     }
-  }
-
-  searchBtn.addEventListener('click', () => {
-    const city = input.value.trim();
-    if (city) fetchWeather(city);
-  });
-
-  input.addEventListener('keydown', e => {
-    if (e.key === 'Enter') searchBtn.click();
-  });
-
-  // Auto-load default city if set
-  const defaultCity = widget.dataset.city;
-  if (defaultCity) {
-    input.value = defaultCity;
-    fetchWeather(defaultCity);
-  }
-}
-
-// ─── TABLE OF CONTENTS ────────────────────────────────────────────────────────
-function initTOC() {
-  const tocList = document.getElementById('toc-list');
-  const body    = document.querySelector('.article-body');
-  if (!tocList || !body) return;
-
-  const headings = body.querySelectorAll('h2, h3');
-  if (!headings.length) return;
-
-  headings.forEach((h, i) => {
-    if (!h.id) h.id = `section-${i}`;
-    const li = document.createElement('li');
-    li.innerHTML = `<a href="#${h.id}" class="${h.tagName === 'H3' ? 'toc-h3' : ''}">${h.textContent}</a>`;
-    tocList.appendChild(li);
-  });
-
-  // Highlight active section on scroll
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      const id   = entry.target.id;
-      const link = tocList.querySelector(`a[href="#${id}"]`);
-      if (entry.isIntersecting) {
-        tocList.querySelectorAll('a').forEach(a => a.classList.remove('active'));
-        if (link) link.classList.add('active');
-      }
-    });
-  }, { rootMargin: '-20% 0px -70% 0px' });
-
-  headings.forEach(h => observer.observe(h));
-}
-
-// ─── SHARE BUTTONS ────────────────────────────────────────────────────────────
-function initShareButtons() {
-  const url   = encodeURIComponent(window.location.href);
-  const title = encodeURIComponent(document.title);
-
-  document.querySelectorAll('[data-share]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const type = btn.dataset.share;
-      if (type === 'twitter')  window.open(`https://twitter.com/intent/tweet?url=${url}&text=${title}`);
-      if (type === 'facebook') window.open(`https://facebook.com/sharer/sharer.php?u=${url}`);
-      if (type === 'copy') {
-        navigator.clipboard.writeText(window.location.href);
-        btn.textContent = '✓ Copied!';
-        setTimeout(() => btn.textContent = '🔗 Copy link', 2000);
-      }
-    });
   });
 }
 
-// ─── INIT ALL ─────────────────────────────────────────────────────────────────
+// ─── MOUNT ───────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  initCurrencyWidget();
-  initWeatherWidget();
-  initTOC();
-  initShareButtons();
+  injectStyles();
+
+  const headerEl = document.getElementById('site-header');
+  const footerEl = document.getElementById('site-footer');
+
+  if (headerEl) headerEl.innerHTML = renderHeader();
+  if (footerEl) footerEl.innerHTML = renderFooter();
+
+  setActiveNavLink();
 });
