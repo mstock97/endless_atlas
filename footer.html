@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<!-- footer.html — include via fetch in each page -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand-block">
+        <a href="/" class="nav-logo">Endless<span>Atlas</span></a>
+        <p class="footer-tagline">Go further. Write honestly.</p>
+      </div>
+      <nav class="footer-nav">
+        <a href="/destinations/">Destinations</a>
+        <a href="/itineraries/">Itineraries</a>
+        <a href="/tips/">Travel Tips</a>
+        <a href="/about/">About</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copyright">&copy; <span class="footer-year"></span> EndlessAtlas. All rights reserved.</p>
+      <span class="footer-mark">Explore Everything</span>
+    </div>
+  </div>
+  <script>
+    document.querySelector('.footer-year').textContent = new Date().getFullYear();
+  </script>
+</footer>
