@@ -9,11 +9,8 @@
         :root {
             /* Primary Palette */
             --forest: #1E4034;
-            --canopy: #2D6A4F;
-            --moss: #52B788;
-            /* Neutrals */
-            --ink: #0F0F0F;
             --paper: #F7F5F0;
+            --ink: #0F0F0F;
             --white: #FFFFFF;
         }
 
@@ -26,50 +23,33 @@
             overflow-x: hidden;
         }
 
-        /* Navigation - The Anchor Style */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            background-color: var(--forest);
-            color: var(--paper);
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-sizing: border-box;
-        }
-
-        .logo {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 24px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
         /* Hero Section */
         .hero-container {
             position: relative;
             height: 100vh;
-            width: 100%;
+            width: 100vw;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
+            background-color: var(--ink); /* Fallback background */
         }
 
-        .hero-image {
+        picture, .hero-image {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            z-index: -1;
         }
 
-        /* Scrim for legibility */
+        .hero-image {
+            object-fit: cover;
+            display: block;
+            z-index: 0;
+        }
+
+        /* Scrim for legibility per Brand Guide (Ink at 30%) */
         .hero-container::after {
             content: '';
             position: absolute;
@@ -77,67 +57,76 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 15, 15, 0.3); /* Ink at 30% opacity */
-            z-index: 0;
+            background: rgba(15, 15, 15, 0.3);
+            z-index: 1;
         }
 
         .hero-title {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(8rem, 20vw, 15rem);
+            font-size: clamp(6rem, 25vw, 18rem); /* Boldness Pillar: Taking up space */
             color: var(--white);
             margin: 0;
-            z-index: 1;
-            letter-spacing: 0.1em;
-            transition: transform 0.1s ease-out;
+            z-index: 2;
+            letter-spacing: 0.05em;
+            text-align: center;
             pointer-events: none;
+            will-change: transform, opacity;
         }
 
         /* Content spacing for scroll testing */
         .content-placeholder {
-            height: 200vh;
+            height: 150vh;
             padding: 100px 10%;
             background-color: var(--paper);
+            position: relative;
+            z-index: 3;
         }
 
         .editorial-text {
             font-family: 'Playfair Display', serif;
             font-size: 2.25rem;
-            max-width: 800px;
-            line-height: 1.2;
+            max-width: 850px;
+            line-height: 1.3;
+            color: var(--forest);
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo">Horizon Trails</div>
-        <div class="menu-trigger">EXPLORE</div>
-    </nav>
-
     <section class="hero-container">
         <picture>
             <source media="(max-width: 768px)" srcset="https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero-mobile.JPG">
-            <img src="https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero-hd.JPG" alt="Mount Fuji, Japan" class="hero-image">
+            <img 
+                src="https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero-hd.JPG" 
+                alt="Mount Fuji, Japan" 
+                class="hero-image"
+                crossorigin="anonymous">
         </picture>
         <h1 class="hero-title" id="heroText">JAPAN</h1>
     </section>
 
     <div class="content-placeholder">
-        <p class="editorial-text">Go where the map ends. The trail doesn't care about your schedule.</p>
+        <p class="editorial-text">
+            Go where the map ends. The trail doesn't care about your schedule. 
+            Experience the tension between the raw and the refined.
+        </p>
     </div>
 
     <script>
+        // Scroll Interaction
         window.addEventListener('scroll', function() {
             const scrollValue = window.scrollY;
             const heroText = document.getElementById('heroText');
             
-            // Cool scroll effect: Text scales and fades as you move down
-            const scale = 1 + (scrollValue / 1000);
-            const opacity = 1 - (scrollValue / 600);
+            // Text grows and fades out as user scrolls down
+            const scale = 1 + (scrollValue / 800);
+            const opacity = 1 - (scrollValue / 500);
             
             if (opacity >= 0) {
                 heroText.style.transform = `scale(${scale})`;
                 heroText.style.opacity = opacity;
+            } else {
+                heroText.style.opacity = 0;
             }
         });
     </script>
