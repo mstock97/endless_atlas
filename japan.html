@@ -7,91 +7,57 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --off-white: #faf9f7;
-      --ink: #1a1a1a;
-      --ink-light: #555;
-      --forest: #1e4034;
-      --forest-mid: #2d5c4a;
-      --forest-light: #3d7a62;
-      --gold: #b8975a;
-      --border: rgba(0,0,0,0.1);
-      --card-bg: #ffffff;
-      --shadow: 0 8px 40px rgba(0,0,0,0.08);
+      /* Horizon Trails brand tokens */
+      --forest:       #1E4034;
+      --canopy:       #2D6A4F;
+      --moss:         #52B788;
+      --stone:        #5C5346;
+      --driftwood:    #A8896A;
+      --fog:          #C9D4C5;
+      --ink:          #0F0F0F;
+      --graphite:     #3D3D3D;
+      --ash:          #8C8C8C;
+      --cloud:        #EFEFEF;
+      --paper:        #F7F5F0;
+      --white:        #FFFFFF;
+
+      --font-display:   'Bebas Neue', sans-serif;
+      --font-editorial: 'Playfair Display', Georgia, serif;
+      --font-body:      'DM Sans', sans-serif;
+
+      --border:   rgba(0,0,0,0.09);
+      --shadow:   0 8px 40px rgba(0,0,0,0.07);
+
+      --space-xs:  4px;
+      --space-sm:  8px;
+      --space-md:  16px;
+      --space-lg:  24px;
+      --space-xl:  40px;
+      --space-2xl: 64px;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Barlow', sans-serif;
-      background: var(--off-white);
+      font-family: var(--font-body);
+      background: var(--paper);
       color: var(--ink);
       min-height: 100vh;
     }
-
-    /* ── NAV ─────────────────────────────────────────── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 40px;
-      height: 60px;
-      background: rgba(250,249,247,0.96);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-brand {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 15px;
-      font-weight: 400;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--ink);
-      text-decoration: none;
-    }
-
-    .nav-brand sup {
-      font-size: 9px;
-      vertical-align: super;
-      letter-spacing: 0;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 32px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-family: 'Barlow', sans-serif;
-      font-size: 13px;
-      font-weight: 400;
-      letter-spacing: 0.06em;
-      color: var(--ink-light);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active { color: var(--ink); }
 
     /* ── HERO ────────────────────────────────────────── */
     .hero {
       position: relative;
       width: 100%;
       height: 480px;
-      margin-top: 60px;
       overflow: hidden;
-      background: #2a3540;
+      background: #1a2228;
     }
 
     .hero-img {
@@ -130,11 +96,10 @@
     }
 
     .hero-title h1 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 900;
+      font-family: var(--font-display);
       font-size: clamp(88px, 14vw, 160px);
-      color: #fff;
-      letter-spacing: 0.04em;
+      color: var(--white);
+      letter-spacing: 0.06em;
       line-height: 1;
       animation: titleUp 1s cubic-bezier(0.16,1,0.3,1) 0.3s both;
     }
@@ -142,7 +107,7 @@
     .hero-rule {
       width: 52px;
       height: 1px;
-      background: rgba(255,255,255,0.55);
+      background: rgba(255,255,255,0.45);
       animation: titleUp 1s cubic-bezier(0.16,1,0.3,1) 0.5s both;
     }
 
@@ -164,23 +129,25 @@
 
     /* ── LEFT: INTRO COPY ────────────────────────────── */
     .intro-section h2 {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: var(--font-editorial);
       font-size: 38px;
       font-weight: 300;
       line-height: 1.25;
       margin-bottom: 20px;
       letter-spacing: 0.01em;
+      color: var(--ink);
     }
 
     .intro-section h2 em {
       font-style: italic;
-      color: var(--forest);
+      color: var(--canopy);
     }
 
     .intro-section p {
+      font-family: var(--font-body);
       font-size: 15px;
       line-height: 1.8;
-      color: var(--ink-light);
+      color: var(--graphite);
       font-weight: 300;
       max-width: 560px;
     }
@@ -193,33 +160,33 @@
       margin-top: 40px;
       padding-top: 36px;
       border-top: 1px solid var(--border);
+      flex-wrap: wrap;
     }
 
-    .stat-item {}
-
     .stat-label {
+      font-family: var(--font-body);
       font-size: 10px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--ink-light);
+      color: var(--ash);
       margin-bottom: 4px;
     }
 
     .stat-value {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 28px;
-      font-weight: 600;
+      font-family: var(--font-editorial);
+      font-size: 26px;
+      font-weight: 400;
       color: var(--ink);
     }
 
     .stat-value small {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 300;
-      font-family: 'Barlow', sans-serif;
-      color: var(--ink-light);
+      font-family: var(--font-body);
+      color: var(--ash);
     }
 
-    /* ── RIGHT: FX WIDGET ────────────────────────────── */
+    /* ── RIGHT: WIDGET STACK ─────────────────────────── */
     .widget-stack {
       display: flex;
       flex-direction: column;
@@ -229,8 +196,8 @@
     }
 
     .fx-card {
-      background: var(--card-bg);
-      border-radius: 4px;
+      background: var(--white);
+      border-radius: 3px;
       border: 1px solid var(--border);
       box-shadow: var(--shadow);
       overflow: hidden;
@@ -248,15 +215,16 @@
     }
 
     .fx-header-label {
+      font-family: var(--font-body);
       font-size: 10px;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: var(--ink-light);
+      color: var(--ash);
       margin-bottom: 2px;
     }
 
     .fx-header-title {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: var(--font-editorial);
       font-size: 18px;
       font-weight: 400;
       color: var(--ink);
@@ -271,10 +239,11 @@
     }
 
     .fx-field label {
+      font-family: var(--font-body);
       font-size: 9px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--ink-light);
+      color: var(--ash);
       display: block;
       margin-bottom: 6px;
     }
@@ -283,19 +252,19 @@
     .fx-field select {
       width: 100%;
       border: 1px solid var(--border);
-      border-radius: 3px;
+      border-radius: 2px;
       padding: 9px 10px;
-      font-family: 'Barlow', sans-serif;
+      font-family: var(--font-body);
       font-size: 14px;
       color: var(--ink);
-      background: var(--off-white);
+      background: var(--paper);
       appearance: none;
       outline: none;
       transition: border-color 0.2s;
     }
 
     .fx-field input:focus,
-    .fx-field select:focus { border-color: var(--forest-light); }
+    .fx-field select:focus { border-color: var(--canopy); }
 
     .fx-swap-btn {
       width: 36px;
@@ -313,14 +282,14 @@
     }
 
     .fx-swap-btn:hover {
-      background: var(--forest-mid);
+      background: var(--canopy);
       transform: rotate(180deg);
     }
 
     .fx-swap-btn svg {
       width: 16px;
       height: 16px;
-      stroke: #fff;
+      stroke: var(--white);
       fill: none;
       stroke-width: 2;
       stroke-linecap: round;
@@ -330,31 +299,32 @@
     .fx-result {
       margin: 0 20px 20px;
       background: var(--forest);
-      border-radius: 3px;
+      border-radius: 2px;
       padding: 16px 18px;
-      color: #fff;
+      color: var(--white);
     }
 
     .fx-result-label {
+      font-family: var(--font-body);
       font-size: 10px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      opacity: 0.7;
+      opacity: 0.65;
       margin-bottom: 6px;
     }
 
     .fx-result-amount {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 40px;
-      font-weight: 700;
-      letter-spacing: 0.02em;
+      font-family: var(--font-display);
+      font-size: 44px;
+      letter-spacing: 0.04em;
       line-height: 1;
       transition: opacity 0.25s;
     }
 
     .fx-result-sub {
+      font-family: var(--font-body);
       font-size: 11px;
-      opacity: 0.65;
+      opacity: 0.6;
       margin-top: 6px;
       letter-spacing: 0.04em;
     }
@@ -368,23 +338,23 @@
     }
 
     .fx-rate-text {
+      font-family: var(--font-body);
       font-size: 11px;
-      color: var(--ink-light);
+      color: var(--ash);
     }
 
     .fx-rate-badge {
+      font-family: var(--font-body);
       font-size: 10px;
       padding: 3px 8px;
       border-radius: 20px;
       background: rgba(30,64,52,0.08);
-      color: var(--forest);
+      color: var(--canopy);
       font-weight: 500;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.06em;
     }
 
-    .fx-history {
-      border-top: 1px solid var(--border);
-    }
+    .fx-history { border-top: 1px solid var(--border); }
 
     .fx-history-toggle {
       width: 100%;
@@ -395,17 +365,17 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-family: 'Barlow', sans-serif;
+      font-family: var(--font-body);
       font-size: 10px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--ink-light);
+      color: var(--ash);
     }
 
     .fx-history-toggle svg {
       width: 14px;
       height: 14px;
-      stroke: var(--ink-light);
+      stroke: var(--ash);
       fill: none;
       stroke-width: 2;
       stroke-linecap: round;
@@ -414,17 +384,8 @@
 
     .fx-history-toggle.open svg { transform: rotate(180deg); }
 
-    .fx-history-body {
-      display: none;
-      padding: 0 20px 16px;
-    }
-
+    .fx-history-body { display: none; padding: 0 20px 16px; }
     .fx-history-body.open { display: block; }
-
-    .fx-history-chart {
-      width: 100%;
-      height: 90px;
-    }
 
     .fx-history-bars {
       display: flex;
@@ -444,9 +405,9 @@
 
     .fx-bar {
       width: 100%;
-      background: var(--forest-light);
+      background: var(--canopy);
       border-radius: 2px 2px 0 0;
-      opacity: 0.7;
+      opacity: 0.65;
       transition: opacity 0.2s;
       min-height: 4px;
     }
@@ -454,86 +415,64 @@
     .fx-bar:hover { opacity: 1; }
 
     .fx-bar-label {
+      font-family: var(--font-body);
       font-size: 8px;
-      color: var(--ink-light);
+      color: var(--ash);
       text-align: center;
     }
 
     .fx-updated {
       padding: 8px 20px 14px;
-      font-size: 10px;
-      color: var(--ink-light);
-      text-align: right;
+      font-family: var(--font-editorial);
       font-style: italic;
-    }
-
-    .fx-loading {
-      opacity: 0.4;
-      pointer-events: none;
+      font-size: 10px;
+      color: var(--ash);
+      text-align: right;
     }
 
     /* ── TIPS CARD ───────────────────────────────────── */
     .tips-card {
-      background: var(--card-bg);
+      background: var(--white);
       border: 1px solid var(--border);
-      border-radius: 4px;
+      border-radius: 3px;
       box-shadow: var(--shadow);
       padding: 22px;
       animation: cardIn 0.7s cubic-bezier(0.16,1,0.3,1) 0.75s both;
     }
 
     .tips-card-label {
+      font-family: var(--font-body);
       font-size: 9px;
-      letter-spacing: 0.16em;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--ink-light);
-      margin-bottom: 12px;
+      color: var(--ash);
+      margin-bottom: 14px;
     }
 
     .tips-list {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
     .tips-list li {
       display: flex;
       gap: 10px;
+      font-family: var(--font-body);
       font-size: 13px;
-      color: var(--ink-light);
-      line-height: 1.5;
+      font-weight: 300;
+      color: var(--graphite);
+      line-height: 1.55;
     }
 
     .tip-dot {
       width: 5px;
       height: 5px;
       border-radius: 50%;
-      background: var(--gold);
+      background: var(--moss);
       flex-shrink: 0;
       margin-top: 7px;
-    }
-
-    /* ── FOOTER ──────────────────────────────────────── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 24px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .footer-copy {
-      font-size: 12px;
-      color: var(--ink-light);
-      letter-spacing: 0.04em;
-    }
-
-    .footer-brand {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 13px;
-      letter-spacing: 0.1em;
-      color: var(--ink-light);
     }
 
     /* ── RESPONSIVE ──────────────────────────────────── */
@@ -543,38 +482,21 @@
         gap: 40px;
       }
       .widget-stack { position: static; }
-      .stat-row { flex-wrap: wrap; gap: 24px; }
-      nav { padding: 0 20px; }
-      .nav-links { gap: 18px; }
     }
 
     @media (max-width: 600px) {
       .hero { height: 320px; }
       .content { padding: 40px 20px 60px; }
-      .nav-links { display: none; }
-      footer { flex-direction: column; gap: 8px; text-align: center; }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav>
-    <a href="#" class="nav-brand">360<sup>°</sup> Travel Inspirations</a>
-    <ul class="nav-links">
-      <li><a href="#">Home</a></li>
-      <li><a href="#" class="active">Japan</a></li>
-      <li><a href="#">About</a></li>
-      <li><a href="#">Inspirations Blog</a></li>
-      <li><a href="#">Travel Resources</a></li>
-      <li><a href="#">Portfolio</a></li>
-      <li><a href="#">Shop</a></li>
-    </ul>
-  </nav>
+  <!-- HEADER (injected by components.js) -->
+  <div id="site-header"></div>
 
   <!-- HERO -->
   <section class="hero">
-    <!-- Unsplash free-use image: Mt. Fuji with Chureito Pagoda -->
     <img
       class="hero-img"
       src="https://images.unsplash.com/photo-1490761668535-35497054dfd0?auto=format&fit=crop&w=1800&q=80"
@@ -597,7 +519,7 @@
         Japan is a study in beautiful contradictions. Bullet trains whisk you past centuries-old temples, neon cityscapes dissolve into serene bamboo forests, and the world's most meticulous cuisine is served in both Michelin-starred dining rooms and bustling underground izakayas.
       </p>
       <p>
-        From the electric pulse of Shibuya to the meditative stillness of Kyoto's Fushimi Inari, every corner of Japan rewards the curious traveler with something genuinely unexpected. This page is your living toolkit for planning a trip — with real-time exchange rates, seasonal insights, and curated recommendations built in.
+        From the electric pulse of Shibuya to the meditative stillness of Kyoto's Fushimi Inari, every corner of Japan rewards the curious traveler with something genuinely unexpected. This page is your living toolkit for planning a trip -- with real-time exchange rates, seasonal insights, and curated recommendations built in.
       </p>
 
       <div class="stat-row">
@@ -680,7 +602,7 @@
           <div style="width:36px;"></div>
           <div class="fx-field">
             <label>Result</label>
-            <input type="number" id="toAmount" readonly style="background:#f0efe9; color:var(--ink);" />
+            <input type="number" id="toAmount" readonly style="background:var(--paper); color:var(--ink);" />
           </div>
         </div>
 
@@ -697,13 +619,11 @@
 
         <div class="fx-history">
           <button class="fx-history-toggle" id="histToggle">
-            <span>≡ Rate History (7 days)</span>
+            <span>Rate History (7 days)</span>
             <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
           <div class="fx-history-body" id="histBody">
-            <div class="fx-history-bars" id="histBars">
-              <!-- JS fills this -->
-            </div>
+            <div class="fx-history-bars" id="histBars"></div>
           </div>
         </div>
 
@@ -724,22 +644,16 @@
     </aside>
   </main>
 
-  <footer>
-    <span class="footer-copy">&copy; 2035 by 360&deg; Travel Inspirations. All rights reserved.</span>
-    <span class="footer-brand">Endless Atlas</span>
-  </footer>
+  <!-- FOOTER (injected by components.js) -->
+  <div id="site-footer"></div>
+
+  <script src="components.js"></script>
 
   <script>
-    /* ─────────────────────────────────────────────────────────
-       LIVE FX ENGINE
-       Uses the free Frankfurter API (https://www.frankfurter.app)
-       No API key required.
-    ───────────────────────────────────────────────────────── */
-
     const BASE_API = 'https://api.frankfurter.app';
 
-    let currentRate = null;   // from -> to rate
-    let historyData = [];     // last 7 days
+    let currentRate = null;
+    let historyData = [];
 
     const fromCurrEl  = document.getElementById('fromCurrency');
     const toCurrEl    = document.getElementById('toCurrency');
@@ -756,20 +670,6 @@
     const histBody    = document.getElementById('histBody');
     const swapBtn     = document.getElementById('swapBtn');
 
-    function fmt(n, currency) {
-      if (n === null || isNaN(n)) return '—';
-      // Use Intl for compact display
-      if (Math.abs(n) >= 10000) {
-        return new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(n);
-      }
-      // For small numbers like JPY->USD
-      const decimals = n < 0.01 ? 6 : n < 1 ? 4 : 2;
-      return new Intl.NumberFormat('en-US', {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals,
-      }).format(n);
-    }
-
     function fmtCompact(n) {
       if (n === null || isNaN(n)) return '—';
       if (Math.abs(n) >= 1000) return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(n);
@@ -785,7 +685,7 @@
       const from = fromCurrEl.value;
       const to   = toCurrEl.value;
 
-      toAmtEl.value    = fmtCompact(converted);
+      toAmtEl.value          = fmtCompact(converted);
       resultLabel.textContent = `${new Intl.NumberFormat('en-US').format(amount)} ${from} =`;
       resultAmt.textContent   = fmtCompact(converted);
       resultSub.textContent   = `${to} · 1 ${from} = ${fmtCompact(currentRate)} ${to}`;
@@ -796,34 +696,28 @@
       const from = fromCurrEl.value;
       const to   = toCurrEl.value;
 
-      if (from === to) {
-        currentRate = 1;
-        updateDisplay();
-        return;
-      }
+      if (from === to) { currentRate = 1; updateDisplay(); return; }
 
-      rateBadge.textContent = '...';
+      rateBadge.textContent   = '...';
       resultAmt.style.opacity = '0.4';
 
       try {
-        const url = `${BASE_API}/latest?from=${from}&to=${to}`;
-        const res  = await fetch(url);
+        const res  = await fetch(`${BASE_API}/latest?from=${from}&to=${to}`);
         const data = await res.json();
         currentRate = data.rates[to];
 
         const d = new Date(data.date);
-        const dateStr = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-        fxUpdated.textContent = `Rates updated live · ${dateStr}`;
-        rateBadge.textContent = 'LIVE';
+        fxUpdated.textContent   = `Rates updated · ${d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
+        rateBadge.textContent   = 'LIVE';
         resultAmt.style.opacity = '1';
 
         updateDisplay();
         fetchHistory(from, to);
       } catch (e) {
-        rateBadge.textContent = 'ERR';
-        resultAmt.textContent = 'Error';
+        rateBadge.textContent   = 'ERR';
+        resultAmt.textContent   = 'Error';
         resultAmt.style.opacity = '1';
-        fxUpdated.textContent = 'Could not fetch rates. Check your connection.';
+        fxUpdated.textContent   = 'Could not fetch rates. Check your connection.';
       }
     }
 
@@ -832,21 +726,20 @@
         const end   = new Date();
         const start = new Date(); start.setDate(start.getDate() - 7);
         const fmt   = d => d.toISOString().split('T')[0];
-        const url   = `${BASE_API}/${fmt(start)}..${fmt(end)}?from=${from}&to=${to}`;
-        const res   = await fetch(url);
+        const res   = await fetch(`${BASE_API}/${fmt(start)}..${fmt(end)}?from=${from}&to=${to}`);
         const data  = await res.json();
 
         historyData = Object.entries(data.rates)
           .sort(([a],[b]) => a.localeCompare(b))
           .map(([date, rates]) => ({ date, rate: rates[to] }));
 
-        renderHistory(from, to);
+        renderHistory(to);
       } catch(e) {
-        histBars.innerHTML = '<span style="font-size:11px;color:var(--ink-light)">History unavailable</span>';
+        histBars.innerHTML = '<span style="font-size:11px;color:var(--ash)">History unavailable</span>';
       }
     }
 
-    function renderHistory(from, to) {
+    function renderHistory(to) {
       if (!historyData.length) return;
       const rates = historyData.map(d => d.rate);
       const minR  = Math.min(...rates);
@@ -854,8 +747,8 @@
       const range = maxR - minR || 1;
 
       histBars.innerHTML = historyData.map(({ date, rate }) => {
-        const pct  = ((rate - minR) / range) * 70 + 18; // 18–88px height
-        const day  = new Date(date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short' });
+        const pct = ((rate - minR) / range) * 54 + 16;
+        const day = new Date(date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short' });
         return `
           <div class="fx-bar-wrap" title="${day}: ${fmtCompact(rate)} ${to}">
             <div class="fx-bar" style="height:${pct.toFixed(1)}px"></div>
@@ -865,7 +758,6 @@
       }).join('');
     }
 
-    // Events
     fromAmtEl.addEventListener('input', updateDisplay);
     toAmtEl.addEventListener('input', () => {
       if (!currentRate) return;
@@ -888,10 +780,7 @@
       histBody.classList.toggle('open');
     });
 
-    // Init
     fetchRate();
-
-    // Auto-refresh every 60 seconds
     setInterval(fetchRate, 60_000);
   </script>
 
