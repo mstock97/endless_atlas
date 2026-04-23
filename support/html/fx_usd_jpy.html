@@ -9,19 +9,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-    // Script for fx_usd_jpy.html to send its height to the parent page.
-    function sendHeight() {
+    // Use a ResizeObserver to automatically send height to the parent page
+    // whenever the body changes size (e.g., when the chart opens/closes)
+    const observer = new ResizeObserver(() => {
         const height = document.body.scrollHeight;
-        // Adjust the '*' origin to match your main site URL for security
         window.parent.postMessage({ height: height }, '*'); 
-    }
+    });
 
-    // Send height on load
-    window.onload = sendHeight;
-
-    // Send height when actions are taken (like converting)
-    // Add this call to any button click or action that changes the layout.
-    // e.g., document.getElementById('convertBtn').addEventListener('click', sendHeight);
+    window.onload = () => {
+        observer.observe(document.body);
+        // Send initial height
+        window.parent.postMessage({ height: document.body.scrollHeight }, '*');
+    };
 </script>
 </head>
 <body style="margin:0;padding:16px;background:#F7F5F0">
@@ -803,5 +802,5 @@ fetchDefaultRates();
 
 })();
 </script>
-</script>
-</body></html>
+</body>
+</html>
