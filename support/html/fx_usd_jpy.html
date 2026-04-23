@@ -9,20 +9,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-  function sendHeight() {
-    const height = document.documentElement.scrollHeight;
-    window.parent.postMessage({ type: 'wix-iframe-height', height: height }, '*');
-  }
+    // Script for fx_usd_jpy.html to send its height to the parent page.
+    function sendHeight() {
+        const height = document.body.scrollHeight;
+        // Adjust the '*' origin to match your main site URL for security
+        window.parent.postMessage({ height: height }, '*'); 
+    }
 
-  // Send on load
-  window.addEventListener('load', sendHeight);
+    // Send height on load
+    window.onload = sendHeight;
 
-  // Send whenever DOM changes (chart expand/collapse, data load, etc.)
-  const observer = new MutationObserver(sendHeight);
-  observer.observe(document.body, { childList: true, subtree: true, attributes: true });
-
-  // Also send on any resize
-  window.addEventListener('resize', sendHeight);
+    // Send height when actions are taken (like converting)
+    // Add this call to any button click or action that changes the layout.
+    // e.g., document.getElementById('convertBtn').addEventListener('click', sendHeight);
 </script>
 </head>
 <body style="margin:0;padding:16px;background:#F7F5F0">
