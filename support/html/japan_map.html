@@ -43,27 +43,27 @@
         }
 
         .marker-link {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            display: block;
+            width: 16px;
+            height: 16px;
             text-decoration: none;
             outline: none;
-            white-space: nowrap; /* Prevents city names from wrapping */
+            position: relative; /* Establishes anchor for the absolute labels */
         }
 
         .brand-marker {
-            width: 16px;
-            height: 16px;
+            width: 100%;
+            height: 100%;
             background-color: var(--moss);
             border: 1.5px solid var(--paper);
             border-radius: 50%;
             box-shadow: 0 2px 5px rgba(15, 15, 15, 0.4);
             transition: all 0.3s ease;
             box-sizing: border-box;
-            flex-shrink: 0;
         }
 
         .city-label {
+            position: absolute; /* Allows independent placement from the dot */
             font-family: 'Bebas Neue', sans-serif;
             font-size: 20px;
             letter-spacing: 1.5px;
@@ -74,7 +74,14 @@
             border: 1.5px solid var(--forest);
             box-shadow: 0 2px 6px rgba(30, 64, 52, 0.15);
             transition: all 0.3s ease;
+            white-space: nowrap; /* Prevents city names from wrapping */
         }
+
+        /* --- Smart Positioning Classes --- */
+        .pos-right { left: 100%; top: 50%; transform: translateY(-50%); margin-left: 8px; }
+        .pos-left { right: 100%; top: 50%; transform: translateY(-50%); margin-right: 8px; }
+        .pos-top { bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 8px; }
+        .pos-bottom { top: 100%; left: 50%; transform: translateX(-50%); margin-top: 8px; }
 
         /* Hover States for Desktop */
         .marker-link:hover .brand-marker {
@@ -83,11 +90,11 @@
             box-shadow: 0 4px 8px rgba(15, 15, 15, 0.5);
         }
 
-        .marker-link:hover .city-label {
-            background-color: var(--paper);
-            transform: translateX(4px);
-            box-shadow: 0 4px 10px rgba(30, 64, 52, 0.3);
-        }
+        /* Nudge animations based on label position */
+        .marker-link:hover .pos-right { margin-left: 12px; background-color: var(--paper); box-shadow: 0 4px 10px rgba(30, 64, 52, 0.3); }
+        .marker-link:hover .pos-left { margin-right: 12px; background-color: var(--paper); box-shadow: 0 4px 10px rgba(30, 64, 52, 0.3); }
+        .marker-link:hover .pos-top { margin-bottom: 12px; background-color: var(--paper); box-shadow: 0 4px 10px rgba(30, 64, 52, 0.3); }
+        .marker-link:hover .pos-bottom { margin-top: 12px; background-color: var(--paper); box-shadow: 0 4px 10px rgba(30, 64, 52, 0.3); }
     </style>
 </head>
 <body>
@@ -121,27 +128,27 @@
             attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
         }).addTo(map);
 
-        // 4. Reusable function to create fully linked, labeled markers
-        function createCityPin(lat, lng, cityName, slug) {
+        // 4. Reusable function to create fully linked, labeled markers WITH positioning
+        function createCityPin(lat, lng, cityName, slug, labelPosition = 'right') {
             var iconHtml = `<a href="https://endless-atlas.com/destinations/japan/${slug}" class="marker-link" aria-label="Explore ${cityName}">
                                 <div class="brand-marker"></div>
-                                <div class="city-label">${cityName}</div>
+                                <div class="city-label pos-${labelPosition}">${cityName}</div>
                             </a>`;
 
             var customIcon = L.divIcon({
                 className: 'custom-leaflet-icon', 
                 html: iconHtml,
-                iconSize: null, // Setting to null lets the CSS naturally size the flexbox
-                iconAnchor: [8, 8] // Centers the anchor point exactly on the 16x16 dot
+                iconSize: [16, 16], // Restricting size exactly to the dot
+                iconAnchor: [8, 8]  // Centers the anchor point exactly on the 16x16 dot
             });
 
             L.marker([lat, lng], {icon: customIcon}).addTo(map);
         }
 
-        // 5. Deploy the cities directly
-        createCityPin(35.6762, 139.6503, "TOKYO", "tokyo");
-        createCityPin(35.0116, 135.7681, "KYOTO", "kyoto");
-        createCityPin(34.6937, 135.5023, "OSAKA", "osaka");
+        // 5. Deploy the cities directly with strategic positioning
+        createCityPin(35.6762, 139.6503, "TOKYO", "tokyo", "right");
+        createCityPin(35.0116, 135.7681, "KYOTO", "kyoto", "top");
+        createCityPin(34.6937, 135.5023, "OSAKA", "osaka", "bottom");
 
     </script>
 
