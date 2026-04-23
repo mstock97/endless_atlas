@@ -35,12 +35,6 @@
             cursor: default; 
         }
 
-        /* --- Map Tile Styling --- */
-        .leaflet-tile-pane {
-            /* Fades the surrounding world into the paper background */
-            filter: sepia(0.15) contrast(0.95) opacity(0.4);
-        }
-
         /* --- Custom Marker & Link Styling --- */
         .marker-link {
             display: block;
@@ -107,10 +101,10 @@
             [45.551483, 153.986672]  
         ];
 
-        // Frame the map to perfectly fit these coordinates on any screen size
+        // Frame the map to perfectly fit these coordinates on any screen size (Mobile & Desktop)
         map.fitBounds(japanBounds, { padding: [20, 20] });
 
-        // 3. Add the stylized CartoDB base map
+        // 3. Add the clean CartoDB base map (No filters applied)
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
             maxZoom: 19,
             attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
@@ -138,33 +132,10 @@
             });
         }
 
-        // 5. Fetch Japan's GeoJSON data, color it, then place the city pins
-        fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries/JPN.geo.json')
-            .then(response => response.json())
-            .then(data => {
-                
-                // Add the colored polygon of Japan to the map
-                L.geoJSON(data, {
-                    style: {
-                        fillColor: '#1E4034', // Brand Forest
-                        fillOpacity: 1,
-                        color: '#F7F5F0',     // Brand Paper for borders
-                        weight: 1.5
-                    }
-                }).addTo(map);
-
-                // Deploy the cities AFTER the polygon loads so the pins sit on top
-                createCityPin(35.6762, 139.6503, "TOKYO", "tokyo");
-                createCityPin(35.0116, 135.7681, "KYOTO", "kyoto");
-                createCityPin(34.6937, 135.5023, "OSAKA", "osaka");
-            })
-            .catch(error => {
-                console.error("Error loading Japan shape:", error);
-                // Fallback: Still load the pins if the shapefile fails to download
-                createCityPin(35.6762, 139.6503, "TOKYO", "tokyo");
-                createCityPin(35.0116, 135.7681, "KYOTO", "kyoto");
-                createCityPin(34.6937, 135.5023, "OSAKA", "osaka");
-            });
+        // 5. Deploy the cities directly
+        createCityPin(35.6762, 139.6503, "TOKYO", "tokyo");
+        createCityPin(35.0116, 135.7681, "KYOTO", "kyoto");
+        createCityPin(34.6937, 135.5023, "OSAKA", "osaka");
 
     </script>
 
