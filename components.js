@@ -1,9 +1,8 @@
 /**
  * components.js
- * Loads shared header and footer into every page.
+ * Loads shared header and footer with a polished dropdown.
  */
 
-// ─── CONFIG ─────────────────────────────────────────────────────────────────
 const SITE_CONFIG = {
   name:        'Endless ',
   nameAccent:  'Atlas',
@@ -12,14 +11,13 @@ const SITE_CONFIG = {
   basePath:    '/',
 };
 
-// ─── NAV LINKS ───────────────────────────────────────────────────────────────
-// Modified to support an optional 'children' array for dropdowns
 const NAV_LINKS = [
   { 
     label: 'Destinations', 
     href: '/destinations/',
     children: [
       { label: 'Japan', href: '/destinations/japan/' },
+      { label: 'Europe', href: '/destinations/europe/' },
       { label: 'All Destinations', href: '/destinations/' }
     ]
   },
@@ -28,7 +26,6 @@ const NAV_LINKS = [
   { label: 'Newsletter',   href: '/newsletter/', cta: true },
 ];
 
-// ─── FOOTER COLUMNS ──────────────────────────────────────────────────────────
 const FOOTER_COLS = [
   {
     title: 'Explore',
@@ -59,18 +56,16 @@ const FOOTER_COLS = [
   },
 ];
 
-// ─── RENDER HEADER ────────────────────────────────────────────────────────────
 function renderHeader() {
   const navLinksHTML = NAV_LINKS.map(link => {
-    // Check if the link has a dropdown (children)
     if (link.children) {
       const dropdownHTML = link.children.map(child => 
         `<li><a href="${child.href}">${child.label}</a></li>`
       ).join('');
 
       return `
-        <li class="nav-dropdown-container">
-          <a href="${link.href}" class="dropdown-trigger">${link.label} ▾</a>
+        <li class="nav-item has-dropdown">
+          <a href="${link.href}" class="nav-link">${link.label} <small>▾</small></a>
           <ul class="dropdown-menu">
             ${dropdownHTML}
           </ul>
@@ -78,12 +73,11 @@ function renderHeader() {
       `;
     }
 
-    // Standard link
-    return `<li><a href="${link.href}" class="${link.cta ? 'nav-cta' : ''}">${link.label}</a></li>`;
+    return `<li><a href="${link.href}" class="nav-link ${link.cta ? 'nav-cta' : ''}">${link.label}</a></li>`;
   }).join('');
 
   const qaBanner = SITE_CONFIG.isQA
-    ? `<div class="qa-banner">⚠️ QA ENVIRONMENT — Changes here are not live. <a href="#">View production site →</a></div>`
+    ? `<div class="qa-banner">⚠️ QA ENVIRONMENT</div>`
     : '';
 
   return `
@@ -97,7 +91,6 @@ function renderHeader() {
   `;
 }
 
-// ─── RENDER FOOTER ────────────────────────────────────────────────────────────
 function renderFooter() {
   const colsHTML = FOOTER_COLS.map(col => `
     <div class="footer-col">
@@ -114,31 +107,27 @@ function renderFooter() {
         <div class="footer-grid">
           <div class="footer-brand">
             <a href="/" class="nav-logo">${SITE_CONFIG.name}<span>${SITE_CONFIG.nameAccent}</span></a>
-            <p class="footer-desc">
-              ${SITE_CONFIG.tagline}
-            </p>
+            <p class="footer-desc">${SITE_CONFIG.tagline}</p>
           </div>
           ${colsHTML}
         </div>
         <div class="footer-bottom">
-          <span>© ${new Date().getFullYear()} ${SITE_CONFIG.name}${SITE_CONFIG.nameAccent}. All rights reserved.</span>
+          <span>© ${new Date().getFullYear()} ${SITE_CONFIG.name}${SITE_CONFIG.nameAccent}.</span>
         </div>
       </div>
     </footer>
   `;
 }
 
-// ─── ACTIVE NAV LINK ─────────────────────────────────────────────────────────
 function setActiveNavLink() {
   const path = window.location.pathname;
-  document.querySelectorAll('.nav-links a').forEach(link => {
+  document.querySelectorAll('.nav-link').forEach(link => {
     if (link.getAttribute('href') !== '/' && path.startsWith(link.getAttribute('href'))) {
-      link.style.color = 'var(--ocean)';
+      link.classList.add('active');
     }
   });
 }
 
-// ─── MOUNT ───────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   const headerEl = document.getElementById('site-header');
   const footerEl = document.getElementById('site-footer');
