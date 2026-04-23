@@ -70,19 +70,18 @@
             margin: 0 auto;
         }
 
-        /* Responsive Two-Column Layout for larger screens */
         @media (min-width: 900px) {
             .content-grid {
                 grid-template-columns: 2fr 1fr;
             }
         }
 
-        /* --- REDESIGNED HIGHLIGHTS --- */
+        /* --- HIGHLIGHTS --- */
         .highlights-container {
             display: flex;
             flex-wrap: wrap;
             gap: 2rem;
-            margin-bottom: 2rem; /* Compact layout */
+            margin-bottom: 2rem; 
             justify-content: flex-start;
         }
 
@@ -104,7 +103,7 @@
         }
 
         .highlight-value {
-            font-family: 'Playfair Display', serif; /* Image style serif */
+            font-family: 'Playfair Display', serif;
             font-size: 1.5rem;
             font-weight: 500;
             color: #0F0F0F;
@@ -142,12 +141,12 @@
         .support-column {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem; /* Adds space between the stacked iframes */
+            gap: 1.5rem;
         }
 
         .support-iframe {
             width: 100%;
-            height: 400px; /* Default Desktop height */
+            height: 400px;
             border: none;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
@@ -155,14 +154,12 @@
             transition: height 0.3s ease;
         }
 
-        /* Shorten the map iframe on mobile */
         @media (max-width: 768px) {
             .support-iframe {
                 height: 250px;
             }
         }
 
-        /* Dynamic Height Iframe Container */
         .fx-iframe-container {
             width: 100%;
             position: relative;
@@ -176,7 +173,7 @@
         .fx-iframe {
             width: 100%;
             height: 100%;
-            min-height: 200px; /* Prevents complete collapse before load */
+            min-height: 200px;
             border: none;
             display: block;
         }
@@ -212,7 +209,7 @@
                         <div class="highlight-label">Time Zone</div>
                         <div class="highlight-value">
                             JST
-                            <span class="time-jpy-info">(UTC +9) <span id="current-jst-time"></span></span>
+                            <span class="time-jpy-info">(UTC +9) &nbsp;|&nbsp; <span id="current-jst-time"></span></span>
                         </div>
                     </div>
                 </div>
@@ -262,36 +259,33 @@
             }
         });
 
-        // --- NEW FEATURES SCRIPTS ---
-
-        // 1. Current JST Time (UTC+9)
+        // 1. Current JST Time with AM logic
         function updateJSTTime() {
             const timeSpan = document.getElementById('current-jst-time');
             const now = new Date();
-            // Offset to UTC, then add 9 hours for JST
             const jstTime = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (3600000 * 9));
             
-            const hours = String(jstTime.getHours()).padStart(2, '0');
+            const rawHours = jstTime.getHours();
+            const hours = String(rawHours).padStart(2, '0');
             const minutes = String(jstTime.getMinutes()).padStart(2, '0');
             
-            timeSpan.textContent = `${hours}:${minutes}`;
+            let timeString = `${hours}:${minutes}`;
+            if (rawHours < 12) {
+                timeString += ' AM';
+            }
+            
+            timeSpan.textContent = `Current Time: ${timeString}`;
         }
         
-        // Update immediately and then every 30 seconds
         updateJSTTime();
         setInterval(updateJSTTime, 30000);
 
-
-        // 2. Dynamic Iframe Height Listener (For Converter)
-        // Note: For this to work, you MUST add a matching script to the embedded HTML.
+        // 2. Dynamic Iframe Height Listener
         const iframe = document.getElementById('fx_converter');
 
         window.addEventListener('message', function(e) {
-            // Confirm the message is from our iframe's origin
             if (e.origin === 'https://mstock97.github.io' && e.data.height) {
-                // Update the iframe height (using the container's height)
                 iframe.style.height = e.data.height + 'px';
-                // Also update the container height for styling
                 document.querySelector('.fx-iframe-container').style.height = e.data.height + 'px';
             }
         });
