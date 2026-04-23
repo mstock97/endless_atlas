@@ -7,6 +7,20 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script>
+    function sendHeight() {
+        // Use document.body to get the height of simple pages
+        const trueHeight = document.body.scrollHeight;
+        window.parent.postMessage({ height: trueHeight }, '*'); 
+    }
+
+    const observer = new ResizeObserver(() => sendHeight());
+
+    window.onload = () => {
+        observer.observe(document.body);
+        setTimeout(sendHeight, 100);
+    };
+</script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
