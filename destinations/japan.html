@@ -61,11 +61,86 @@
             background-color: #F7F5F0; /* Brand 'Paper' color */
         }
 
+        /* --- NEW LAYOUT STYLES --- */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Responsive Two-Column Layout for larger screens */
+        @media (min-width: 900px) {
+            .content-grid {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        /* Main Column Styles */
         .editorial-text {
             font-family: 'Playfair Display', serif;
             font-size: clamp(1.5rem, 4vw, 2.25rem);
             line-height: 1.4;
             color: #1E4034; /* Brand 'Forest' color */
+            margin-bottom: 2rem;
+        }
+
+        .highlights-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .highlight-box {
+            background-color: #EAE6DB; /* Slightly darker than paper for contrast */
+            padding: 1.5rem;
+            border-radius: 8px;
+            flex: 1 1 calc(50% - 1rem); /* Creates a 2x2 grid feel */
+            min-width: 150px;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .highlight-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #556B61;
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight-value {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #0F0F0F;
+        }
+
+        .editable-block {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #333;
+            padding: 1.5rem;
+            border: 1px dashed #1E4034;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.4);
+            transition: background-color 0.3s;
+        }
+
+        .editable-block:focus {
+            outline: 2px solid #1E4034;
+            background-color: #FFFFFF;
+        }
+
+        /* Support Column Styles */
+        .support-iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            background-color: #EAE6DB;
         }
     </style>
 </head>
@@ -84,10 +159,47 @@
     </section>
 
     <main>
-        <p class="editorial-text">
-            Go where the map ends. The trail doesn't care about your schedule. 
-            Experience the tension between the raw and the refined.
-        </p>
+        <div class="content-grid">
+            
+            <div class="main-column">
+                <p class="editorial-text">
+                    Go where the map ends. The trail doesn't care about your schedule. 
+                    Experience the tension between the raw and the refined.
+                </p>
+
+                <div class="highlights-container">
+                    <div class="highlight-box">
+                        <div class="highlight-label">Currency</div>
+                        <div class="highlight-value">Japanese Yen (JPY / ¥)</div>
+                    </div>
+                    <div class="highlight-box">
+                        <div class="highlight-label">Time Zone</div>
+                        <div class="highlight-value">JST (UTC +9)</div>
+                    </div>
+                    <div class="highlight-box">
+                        <div class="highlight-label">Capital</div>
+                        <div class="highlight-value">Tokyo</div>
+                    </div>
+                    <div class="highlight-box">
+                        <div class="highlight-label">Primary Language</div>
+                        <div class="highlight-value">Japanese</div>
+                    </div>
+                </div>
+
+                <div class="editable-block" contenteditable="true">
+                    <strong>[Click to Edit]</strong> Japan is an island country in East Asia, located in the northwest Pacific Ocean. It is renowned for its harmonious blend of ancient traditions and cutting-edge technology. From the neon-lit streets of Tokyo to the serene temples of Kyoto and the majestic peaks of Mount Fuji, the archipelago offers a unique tapestry of culture, nature, and history.
+                </div>
+            </div>
+
+            <div class="support-column">
+                <iframe 
+                    src="https://mstock97.github.io/endless_atlas/support/html/japan_map.html" 
+                    class="support-iframe" 
+                    title="Interactive Map of Japan">
+                </iframe>
+            </div>
+
+        </div>
     </main>
 
     <div id="site-footer"></div>
