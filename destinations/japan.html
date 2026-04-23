@@ -119,22 +119,12 @@
             color: #777;
         }
 
-        /* Editable Text Block */
-        .editable-block {
+        /* Static Description Text Block */
+        .description-block {
             font-family: 'DM Sans', sans-serif;
             font-size: 1.1rem;
-            line-height: 1.6;
+            line-height: 1.7;
             color: #333;
-            padding: 1.5rem;
-            border: 1px dashed #1E4034;
-            border-radius: 8px;
-            background-color: rgba(255, 255, 255, 0.4);
-            transition: background-color 0.3s;
-        }
-
-        .editable-block:focus {
-            outline: 2px solid #1E4034;
-            background-color: #FFFFFF;
         }
 
         /* Support Column Styles */
@@ -151,7 +141,6 @@
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             background-color: #EAE6DB;
-            transition: height 0.3s ease;
         }
 
         @media (max-width: 768px) {
@@ -168,6 +157,8 @@
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             background-color: #EAE6DB;
+            /* Smooth height transition */
+            transition: height 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .fx-iframe {
@@ -176,6 +167,8 @@
             min-height: 200px;
             border: none;
             display: block;
+            /* Match the container's transition */
+            transition: height 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
     </style>
 </head>
@@ -214,7 +207,7 @@
                     </div>
                 </div>
 
-                <div class="editable-block" id="dynamic-text-block" contenteditable="true">
+                <div class="description-block" id="dynamic-text-block">
                     Loading description...
                 </div>
             </div>
