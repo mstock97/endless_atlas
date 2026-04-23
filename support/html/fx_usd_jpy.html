@@ -466,7 +466,7 @@
 
 <script>
 // ── CONFIGURE: change these two lines to set default currencies ──────────
-var FX_FROM = "jpy";   // "From" currency code  e.g. "jpy"
+var FX_FROM = "JPY";   // "From" currency code  e.g. "jpy"
 var FX_TO   = "USD";     // "To"   currency code  e.g. "USD"
 // ─────────────────────────────────────────────────────────────────────────
 (function() {
@@ -511,7 +511,7 @@ function xRate(a, b) {
 
 // ---- v2 parsers ----
 function parseLatestInto(arr) {
-  RATES["jpy"] = 1.0;
+  RATES["JPY"] = 1.0;
   for (var i = 0; i < arr.length; i++) RATES[arr[i].quote] = arr[i].rate;
 }
 
@@ -527,8 +527,8 @@ function parseHistoryInto(code, arr) {
 // jpy is synthetic (always 1.0), uses the other currency's date axis.
 function getHistPair(f, t) {
   var fE = HIST[f], tE = HIST[t];
-  if (f === "jpy" && tE) return { dates: tE.dates, fromVals: tE.dates.map(function() { return 1.0; }), toVals: tE.values };
-  if (t === "jpy" && fE) return { dates: fE.dates, fromVals: fE.values, toVals: fE.dates.map(function() { return 1.0; }) };
+  if (f === "JPY" && tE) return { dates: tE.dates, fromVals: tE.dates.map(function() { return 1.0; }), toVals: tE.values };
+  if (t === "JPY" && fE) return { dates: fE.dates, fromVals: fE.values, toVals: fE.dates.map(function() { return 1.0; }) };
   if (!fE || !tE) return null;
   // Intersect date axes
   var tSet = {};
@@ -772,8 +772,8 @@ window[W + "_go"] = function() {
   var f = $el("from").value, t = $el("to").value;
   updateDisplay();
   if (!chartOpen()) return;
-  var fReady = f === "jpy" || (HIST[f] && HIST[f].from5y);
-  var tReady = t === "jpy" || (HIST[t] && HIST[t].from5y);
+  var fReady = f === "JPY" || (HIST[f] && HIST[f].from5y);
+  var tReady = t === "JPY" || (HIST[t] && HIST[t].from5y);
   if (fReady && tReady) {
     tryRenderChart();
   } else {
