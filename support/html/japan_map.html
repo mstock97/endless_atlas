@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Endless Atlas - Styled Interactive Map</title>
+    <title>Endless Atlas - Static Navigation Map</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
@@ -29,29 +31,57 @@
         #map {
             height: 100vh;
             width: 100vw;
-            background-color: var(--paper); /* Ensures loading areas match the brand */
+            background-color: var(--paper);
+            cursor: default; /* Removes the "grab" hand cursor since the map can't be dragged */
         }
 
         /* --- Map Tile Styling --- */
         .leaflet-tile-pane {
-            /* Warms up the grayscale map to feel more earthy and editorial */
             filter: sepia(0.15) contrast(0.95);
         }
 
-        /* --- Custom Marker Styling --- */
+        /* --- Custom Marker & Link Styling --- */
+        .marker-link {
+            display: block;
+            width: 16px;
+            height: 16px;
+            text-decoration: none;
+            outline: none;
+        }
+
         .brand-marker {
+            width: 100%;
+            height: 100%;
             background-color: var(--moss);
             border: 1.5px solid var(--paper);
             border-radius: 50%;
             box-shadow: 0 2px 5px rgba(15, 15, 15, 0.2);
             transition: all 0.3s ease;
-            cursor: pointer;
+            box-sizing: border-box;
         }
 
-        .brand-marker:hover {
+        .marker-link:hover .brand-marker {
             background-color: var(--canopy);
             transform: scale(1.3);
             box-shadow: 0 4px 8px rgba(15, 15, 15, 0.3);
+        }
+
+        /* --- Custom Hover Tooltip Styling --- */
+        .leaflet-tooltip.brand-tooltip {
+            background-color: var(--paper);
+            color: var(--ink);
+            border: 1.5px solid var(--forest);
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 22px;
+            letter-spacing: 1.5px;
+            padding: 4px 14px;
+            border-radius: 2px; /* Sharp, editorial corners */
+            box-shadow: 0 6px 12px rgba(30, 64, 52, 0.15); /* Tinted forest shadow */
+        }
+        
+        /* Tooltip directional arrow styling */
+        .leaflet-tooltip-top.brand-tooltip::before {
+            border-top-color: var(--forest);
         }
     </style>
 </head>
@@ -60,28 +90,54 @@
     <div id="map"></div>
 
     <script>
-        // Initialize the map centered on Japan
+        // 1. Initialize the map with all interactive features strictly disabled
         var map = L.map('map', {
-            zoomControl: false // Optional: removes the + / - buttons for a cleaner visual
+            zoomControl: false,
+            dragging: false,
+            scrollWheelZoom: false,
+            doubleClickZoom: false,
+            boxZoom: false,
+            keyboard: false,
+            touchZoom: false
         }).setView([36.2048, 138.2529], 6);
 
-        // Add a stylized, label-free tile layer (CartoDB Light No Labels)
+        // 2. Add the stylized CartoDB base map
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
             maxZoom: 19,
             attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
         }).addTo(map);
 
-        // Define the custom HTML-based brand icon
-        var brandIcon = L.divIcon({
-            className: 'brand-marker',
-            iconSize: [16, 16],
-            iconAnchor: [8, 8]
-        });
+        // 3. Reusable function to create fully linked, tooltipped markers
+        function createCityPin(lat, lng, cityName, slug) {
+            
+            // Build the HTML for the icon: an anchor tag wrapping our CSS circle
+            var iconHtml = `<a href="https://endless-atlas.com/destinations/japan/${slug}" class="marker-link" aria-label="Explore ${cityName}">
+                                <div class="brand-marker"></div>
+                            </a>`;
 
-        // Add markers using the exact coordinates and the custom icon
-        L.marker([35.6762, 139.6503], {icon: brandIcon}).addTo(map); // Tokyo
-        L.marker([35.0116, 135.7681], {icon: brandIcon}).addTo(map); // Kyoto
-        L.marker([34.6937, 135.5023], {icon: brandIcon}).addTo(map); // Osaka
+            // Define the icon using the HTML we just built
+            var customIcon = L.divIcon({
+                className: '', // Clears default Leaflet wrapper styling
+                html: iconHtml,
+                iconSize: [16, 16],
+                iconAnchor: [8, 8] // Centers the 16x16 icon perfectly over the coordinates
+            });
+
+            // Place the marker on the map
+            var marker = L.marker([lat, lng], {icon: customIcon}).addTo(map);
+
+            // Bind the hover popup (Tooltip) to the marker
+            marker.bindTooltip(cityName, {
+                direction: 'top',
+                className: 'brand-tooltip',
+                offset: [0, -10] // Nudges the tooltip up so it doesn't overlap the scaling dot
+            });
+        }
+
+        // 4. Deploy the cities
+        createCityPin(35.6762, 139.6503, "TOKYO", "tokyo");
+        createCityPin(35.0116, 135.7681, "KYOTO", "kyoto");
+        createCityPin(34.6937, 135.5023, "OSAKA", "osaka");
     </script>
 
 </body>
