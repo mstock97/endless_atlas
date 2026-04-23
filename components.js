@@ -10,9 +10,9 @@
 
 // ─── CONFIG ─────────────────────────────────────────────────────────────────
 const SITE_CONFIG = {
-  name:        'Wander',
-  nameAccent:  'Notes',
-  tagline:     'Stories from everywhere.',
+  name:        'Endless ',
+  nameAccent:  'Atlas',
+  tagline:     'Traveling the World',
   isQA:        window.location.hostname.startsWith('qa.'),
   basePath:    '/',   // change to '/subfolder/' if deploying to a subdirectory
 };
@@ -22,7 +22,6 @@ const NAV_LINKS = [
   { label: 'Destinations', href: '/destinations/' },
   { label: 'Travel Tips',  href: '/tips/' },
   { label: 'Gear',         href: '/gear/' },
-  { label: 'About',        href: '/about/' },
   { label: 'Newsletter',   href: '/newsletter/', cta: true },
 ];
 
@@ -104,7 +103,6 @@ function renderFooter() {
         </div>
         <div class="footer-bottom">
           <span>© ${new Date().getFullYear()} ${SITE_CONFIG.name}${SITE_CONFIG.nameAccent}. All rights reserved.</span>
-          <span>Made with ☀️ for wanderers</span>
         </div>
       </div>
     </footer>
