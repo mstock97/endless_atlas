@@ -3,97 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Endless Atlas - Map</title>
+    <title>Endless Atlas - Interactive Map</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <style>
-        /* --- Brand Variables --- */
-        :root {
-            --forest: #1E4034;
-            --canopy: #2D6A4F;
-            --moss: #528788;
-            --paper: #F7F5F0;
-            --graphite: #3D3D3D;
-        }
-
-        /* --- Base Structure --- */
+        /* Reset margins and make the map fill the entire browser window */
         body {
-            background-color: var(--paper);
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
         }
-
-        /* --- Map Container & SVG Styling --- */
-        .map-container {
-            width: 100%;
-            max-width: 800px;
-            position: relative;
-            padding: 40px;
-            box-sizing: border-box;
-        }
-
-        svg {
-            width: 100%;
-            height: auto;
-            filter: drop-shadow(0px 10px 20px rgba(30, 64, 52, 0.15));
-        }
-
-        .landmass {
-            fill: var(--forest);
-            stroke: var(--paper);
-            stroke-width: 1px;
-            stroke-linejoin: round;
-        }
-
-        /* Interactive City Markers */
-        .city-marker {
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .city-marker circle {
-            fill: var(--moss);
-            stroke: var(--paper);
-            stroke-width: 2px;
-            transition: all 0.3s ease;
-        }
-
-        .city-marker:hover circle {
-            fill: var(--canopy);
-            r: 10; /* Expands slightly on hover */
+        
+        #map {
+            height: 100vh;
+            width: 100vw;
         }
     </style>
 </head>
 <body>
 
-    <div class="map-container">
-        <svg viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
-            
-            <path class="landmass" d="M 500 120 Q 530 80, 580 90 Q 640 100, 650 140 Q 660 180, 600 190 Q 550 200, 520 180 Q 480 150, 500 120 Z" />
-            
-            <path class="landmass" d="M 480 200 Q 460 230, 440 280 Q 410 360, 330 430 Q 280 480, 200 520 Q 150 540, 180 480 Q 220 420, 280 380 Q 360 300, 400 230 Q 430 180, 480 200 Z" />
-            
-            <path class="landmass" d="M 280 500 Q 310 480, 330 520 Q 300 540, 280 500 Z" />
-            
-            <path class="landmass" d="M 160 550 Q 190 530, 210 580 Q 190 630, 150 600 Q 130 570, 160 550 Z" />
-            
-            <a href="/tokyo" class="city-marker">
-                <circle cx="410" cy="330" r="7" />
-            </a>
+    <div id="map"></div>
 
-            <a href="/kyoto" class="city-marker">
-                <circle cx="330" cy="410" r="7" />
-            </a>
+    <script>
+        // 1. Initialize the map and set its view to Japan's coordinates and a zoom level of 6
+        var map = L.map('map').setView([36.2048, 138.2529], 6);
 
-            <a href="/osaka" class="city-marker">
-                <circle cx="310" cy="430" r="7" />
-            </a>
-            
-        </svg>
-    </div>
+        // 2. Add the base tile layer (OpenStreetMap)
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // 3. Add markers for the specific cities using their exact Latitude and Longitude
+        L.marker([35.6762, 139.6503]).addTo(map); // Tokyo
+        L.marker([35.0116, 135.7681]).addTo(map); // Kyoto
+        L.marker([34.6937, 135.5023]).addTo(map); // Osaka
+    </script>
 
 </body>
 </html>
