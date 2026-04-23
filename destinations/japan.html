@@ -6,7 +6,7 @@
     <title>Japan | Endless Atlas</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="../main.css">
+    <link rel="stylesheet" href="/main.css">
 
     <style>
         /* Japan-Specific Hero Styles */
@@ -143,14 +143,10 @@
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
-            
-            /* Reverted back to initial structure */
             position: sticky;
             top: 100px; 
             align-self: start; 
             z-index: 10;
-            
-            /* Smooth transition added so the JS dynamic recentering glides perfectly */
             transition: top 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
@@ -242,7 +238,7 @@
                 <h2 class="section-title">Climate & Weather</h2>
                 <div class="dynamic-iframe-container">
                     <iframe 
-                        src="https://mstock97.github.io/endless_atlas/support/html/japan_climate.html" 
+                        src="/support/html/japan_climate.html" 
                         class="dynamic-iframe" 
                         scrolling="no" 
                         title="Japan Climate Data">
@@ -252,7 +248,7 @@
                 <h2 class="section-title">National Holidays</h2>
                 <div class="dynamic-iframe-container">
                     <iframe 
-                        src="https://mstock97.github.io/endless_atlas/support/html/japan_holidays.html" 
+                        src="/support/html/japan_holidays.html" 
                         class="dynamic-iframe" 
                         scrolling="no" 
                         title="Japan Public Holidays">
@@ -262,7 +258,7 @@
 
             <div class="support-column">
                 <iframe 
-                    src="https://mstock97.github.io/endless_atlas/support/html/japan_map.html" 
+                    src="/support/html/japan_map.html" 
                     class="support-iframe" 
                     title="Interactive Map of Japan"
                     sandbox="allow-scripts allow-same-origin allow-top-navigation allow-top-navigation-by-user-activation allow-popups">
@@ -270,7 +266,7 @@
 
                 <div class="dynamic-iframe-container fx-container">
                     <iframe 
-                        src="https://mstock97.github.io/endless_atlas/support/html/fx_usd_jpy.html" 
+                        src="/support/html/fx_usd_jpy.html" 
                         class="dynamic-iframe" 
                         scrolling="no" 
                         title="USD to JPY Currency Converter">
@@ -283,7 +279,7 @@
 
     <div id="site-footer"></div>
 
-    <script src="../components.js"></script>
+    <script src="/components.js"></script>
 
     <script>
         // Scroll Interaction
@@ -324,34 +320,24 @@
 
         // 2. Scalable Dynamic Iframe Height & Recenter Listener
         window.addEventListener('message', function(e) {
-            if (e.origin !== 'https://mstock97.github.io') return;
+            // Updated to accept messages from your new custom domain
+            if (e.origin !== window.location.origin) return;
             
             if (e.data.height) {
                 const iframes = document.querySelectorAll('iframe');
                 iframes.forEach(iframe => {
                     if (iframe.contentWindow === e.source) {
-                        // Expand the iframe
                         iframe.style.height = e.data.height + 'px';
                         if (iframe.parentElement.classList.contains('dynamic-iframe-container')) {
                             iframe.parentElement.style.height = e.data.height + 'px';
                         }
 
-                        // --- NEW DYNAMIC RECENTERING LOGIC ---
-                        // Give the browser 50ms to register the new physical height
                         setTimeout(() => {
                             const supportCol = document.querySelector('.support-column');
                             const colHeight = supportCol.offsetHeight;
                             const viewportHeight = window.innerHeight;
-                            
-                            // Calculate perfect vertical center
                             const idealTop = (viewportHeight - colHeight) / 2;
-                            
-                            // Clamp the value to protect layout:
-                            // Never more than 100px (so it doesn't leave a huge gap below header)
-                            // Never less than 20px (so it doesn't get chopped off the top of monitor)
                             const newTop = Math.max(20, Math.min(100, idealTop));
-                            
-                            // Apply the dynamic shift
                             supportCol.style.top = newTop + 'px';
                         }, 50);
                     }
@@ -359,8 +345,8 @@
             }
         });
 
-        // 3. Fetch the external text block and inject it
-        fetch('https://mstock97.github.io/endless_atlas/support/text/japan_country_paragraph.html')
+        // 3. Fetch the external text block and inject it using Root-Relative path
+        fetch('/support/text/japan_country_paragraph.html')
             .then(response => {
                 if (!response.ok) throw new Error("Network response was not ok");
                 return response.text();
@@ -373,26 +359,26 @@
                 document.getElementById('dynamic-text-block').innerHTML = "<strong>[Error]</strong> Could not load the description.";
             });
 
-        // 4. Live Exchange Rate Header update
+        // 4. Adjusted Exchange Rate Logic (USD vs JPY Comparison)
         function updateHeaderFX() {
             fetch('https://api.frankfurter.dev/v2/rates?base=USD&quotes=JPY')
                 .then(response => response.json())
                 .then(data => {
                     let rate = null;
-                    
-                    if (Array.isArray(data) && data.length > 0) {
-                        rate = data[0].rate;
-                    } else if (data.rates && data.rates.JPY) {
+                    if (data.rates && data.rates.JPY) {
                         rate = data.rates.JPY;
                     }
                     
                     if (rate) {
                         const fxSpan = document.getElementById('live-fx-rate');
-                        if (rate >= 1) {
-                            fxSpan.innerHTML = `&nbsp;|&nbsp; 1 USD = ${rate.toFixed(2)} JPY`;
+                        // Logic: Compare strength. If USD > JPY value, show 1 JPY in USD.
+                        if (rate > 1) { 
+                            // USD is stronger (typical case)
+                            const inverseRate = (1 / rate).toFixed(4);
+                            fxSpan.innerHTML = `&nbsp;|&nbsp; 1 JPY = ${inverseRate} USD`;
                         } else {
-                            const jpyStrongerRate = (1 / rate).toFixed(2);
-                            fxSpan.innerHTML = `&nbsp;|&nbsp; 1 JPY = ${jpyStrongerRate} USD`;
+                            // JPY is stronger (rare case)
+                            fxSpan.innerHTML = `&nbsp;|&nbsp; 1 USD = ${rate.toFixed(2)} JPY`;
                         }
                     }
                 })
