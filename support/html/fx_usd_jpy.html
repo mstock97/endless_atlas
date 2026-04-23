@@ -9,18 +9,35 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-    // Use a ResizeObserver to automatically send height to the parent page
-    // whenever the body changes size (e.g., when the chart opens/closes)
+    function sendHeight() {
+        // Target the main content wrapper directly to get the true height of the content
+        const wrapper = document.getElementById('fx_jpy_usd');
+        if (wrapper) {
+            // offsetHeight gets the true element size. We add 32 to account for the body's 16px top and bottom padding.
+            const trueHeight = wrapper.offsetHeight + 32;
+            window.parent.postMessage({ height: trueHeight }, '*'); 
+        }
+    }
+
+    // Observe the specific wrapper ID, which ignores the iframe window size and only looks at content
     const observer = new ResizeObserver(() => {
-        const height = document.body.scrollHeight;
-        window.parent.postMessage({ height: height }, '*'); 
+        sendHeight();
     });
 
     window.onload = () => {
-        observer.observe(document.body);
-        // Send initial height
-        window.parent.postMessage({ height: document.body.scrollHeight }, '*');
+        const wrapper = document.getElementById('fx_jpy_usd');
+        if (wrapper) {
+            observer.observe(wrapper);
+        }
+        // Send initial height after a brief moment to ensure fonts load
+        setTimeout(sendHeight, 100);
     };
+
+    // Failsafe: Ensure chart animations (which take ~300ms) trigger a final height update
+    document.addEventListener('click', () => {
+        setTimeout(sendHeight, 50);
+        setTimeout(sendHeight, 350); 
+    });
 </script>
 </head>
 <body style="margin:0;padding:16px;background:#F7F5F0">
