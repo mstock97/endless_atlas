@@ -95,8 +95,7 @@ function renderFooter() {
           <div class="footer-brand">
             <a href="/" class="nav-logo">${SITE_CONFIG.name}<span>${SITE_CONFIG.nameAccent}</span></a>
             <p class="footer-desc">
-              ${SITE_CONFIG.tagline} Independent travel writing, honest guides, and stories
-              from every corner of the globe.
+              ${SITE_CONFIG.tagline} SITE TAGLINE PLACE HOLDEER
             </p>
           </div>
           ${colsHTML}
