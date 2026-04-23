@@ -167,6 +167,7 @@
             min-height: 200px;
             border: none;
             display: block;
+            overflow: hidden; /* Ensures no scrollbar shows during transition */
             /* Match the container's transition */
             transition: height 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
@@ -225,6 +226,7 @@
                         id="fx_converter"
                         src="https://mstock97.github.io/endless_atlas/support/html/fx_usd_jpy.html" 
                         class="fx-iframe" 
+                        scrolling="no" 
                         title="USD to JPY Currency Converter">
                     </iframe>
                 </div>
