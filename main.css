@@ -4,6 +4,10 @@
    DESIGN TOKENS
    ============================================ */
 :root {
+  --sand:       #F7F5F0;
+  --ocean:       #1E4034;
+  --clay:        #52B788;
+  --ink:         #0F0F0F;
   --sand:        #F5F0E8;
   --sand-dark:   #E8E0D0;
   --clay:        #C4956A;
