@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Endless Atlas - Explore Japan</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+    <title>Endless Atlas - Map</title>
     
     <style>
         /* --- Brand Variables --- */
@@ -13,73 +12,39 @@
             --canopy: #2D6A4F;
             --moss: #528788;
             --paper: #F7F5F0;
-            --ink: #0F0F0F;
             --graphite: #3D3D3D;
-            --driftwood: #A8896A;
-            
-            --spacing-md: 16px;
-            --spacing-xl: 40px;
-            --spacing-3xl: 100px;
         }
 
-        /* --- Base Typography & Structure --- */
+        /* --- Base Structure --- */
         body {
             background-color: var(--paper);
-            color: var(--graphite);
-            font-family: 'DM Sans', sans-serif;
-            font-weight: 400;
             margin: 0;
-            padding: var(--spacing-3xl) var(--spacing-md);
+            padding: 0;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-        }
-
-        .editorial-header {
-            text-align: center;
-            max-width: 600px;
-            margin-bottom: var(--spacing-xl);
-        }
-
-        h1 {
-            font-family: 'Bebas Neue', sans-serif;
-            color: var(--ink);
-            font-size: 64px;
-            letter-spacing: 2px;
-            margin: 0 0 var(--spacing-md) 0;
-        }
-
-        .pull-quote {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            font-size: 24px;
-            color: var(--forest);
-            margin: 0 0 var(--spacing-md) 0;
-        }
-
-        p.body-text {
-            font-size: 17px;
-            line-height: 1.6;
-            color: var(--graphite);
+            min-height: 100vh;
         }
 
         /* --- Map Container & SVG Styling --- */
         .map-container {
             width: 100%;
-            max-width: 700px;
+            max-width: 800px;
             position: relative;
+            padding: 40px;
+            box-sizing: border-box;
         }
 
         svg {
             width: 100%;
             height: auto;
-            filter: drop-shadow(0px 10px 20px rgba(30, 64, 52, 0.1));
+            filter: drop-shadow(0px 10px 20px rgba(30, 64, 52, 0.15));
         }
 
         .landmass {
             fill: var(--forest);
             stroke: var(--paper);
-            stroke-width: 1.5px;
+            stroke-width: 1px;
             stroke-linejoin: round;
         }
 
@@ -100,50 +65,31 @@
             fill: var(--canopy);
             r: 10; /* Expands slightly on hover */
         }
-
-        .city-marker text {
-            font-family: 'Bebas Neue', sans-serif;
-            fill: var(--ink);
-            font-size: 20px;
-            opacity: 0;
-            transform: translateY(5px);
-            transition: all 0.3s ease;
-            pointer-events: none;
-        }
-
-        /* Show text label on hover */
-        .city-marker:hover text {
-            opacity: 1;
-            transform: translateY(-15px);
-        }
     </style>
 </head>
 <body>
 
-    <div class="editorial-header">
-        <h1>Japan</h1>
-        <p class="pull-quote">"Go where the map ends."</p>
-        <p class="body-text">We ask questions the guidebook skips. Select a destination below to explore the trails, the quiet valleys, and the unexpected detours.</p>
-    </div>
-
     <div class="map-container">
-        <svg viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
             
-            <path class="landmass" d="M120,480 Q100,500 90,490 Q70,470 90,450 Q130,440 150,420 Q180,400 200,380 Q250,370 280,340 Q320,300 350,250 Q380,200 400,150 Q420,100 450,110 Q460,130 430,170 Q400,220 380,260 Q340,320 310,360 Q270,400 240,410 Q210,430 180,450 Q150,470 120,480 Z M60,530 Q40,550 30,540 Q20,510 50,490 Q70,500 60,530 Z M130,520 Q150,540 160,510 Q140,490 130,520 Z"/>
+            <path class="landmass" d="M 500 120 Q 530 80, 580 90 Q 640 100, 650 140 Q 660 180, 600 190 Q 550 200, 520 180 Q 480 150, 500 120 Z" />
+            
+            <path class="landmass" d="M 480 200 Q 460 230, 440 280 Q 410 360, 330 430 Q 280 480, 200 520 Q 150 540, 180 480 Q 220 420, 280 380 Q 360 300, 400 230 Q 430 180, 480 200 Z" />
+            
+            <path class="landmass" d="M 280 500 Q 310 480, 330 520 Q 300 540, 280 500 Z" />
+            
+            <path class="landmass" d="M 160 550 Q 190 530, 210 580 Q 190 630, 150 600 Q 130 570, 160 550 Z" />
             
             <a href="/tokyo" class="city-marker">
-                <circle cx="310" cy="350" r="7" />
-                <text x="310" y="340" text-anchor="middle">TOKYO</text>
+                <circle cx="410" cy="330" r="7" />
             </a>
 
             <a href="/kyoto" class="city-marker">
-                <circle cx="230" cy="390" r="7" />
-                <text x="230" y="380" text-anchor="middle">KYOTO</text>
+                <circle cx="330" cy="410" r="7" />
             </a>
 
             <a href="/osaka" class="city-marker">
-                <circle cx="215" cy="405" r="7" />
-                <text x="215" y="395" text-anchor="middle">OSAKA</text>
+                <circle cx="310" cy="430" r="7" />
             </a>
             
         </svg>
