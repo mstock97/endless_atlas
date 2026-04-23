@@ -223,7 +223,7 @@
                         <div class="highlight-label">Currency</div>
                         <div class="highlight-value">
                             Japanese Yen
-                            <span class="time-jpy-info">(JPY / ¥)</span>
+                            <span class="time-jpy-info">(JPY / ¥) <span id="live-fx-rate"></span></span>
                         </div>
                     </div>
                     <div class="highlight-box">
@@ -352,6 +352,36 @@
                 console.error('Error fetching text block:', error);
                 document.getElementById('dynamic-text-block').innerHTML = "<strong>[Error]</strong> Could not load the description.";
             });
+
+        // 4. Live Exchange Rate Header update
+        function updateHeaderFX() {
+            fetch('https://api.frankfurter.dev/v2/rates?base=USD&quotes=JPY')
+                .then(response => response.json())
+                .then(data => {
+                    let rate = null;
+                    
+                    // Support the v2 array format (from your fx widget) or standard format
+                    if (Array.isArray(data) && data.length > 0) {
+                        rate = data[0].rate;
+                    } else if (data.rates && data.rates.JPY) {
+                        rate = data.rates.JPY;
+                    }
+                    
+                    if (rate) {
+                        const fxSpan = document.getElementById('live-fx-rate');
+                        if (rate >= 1) {
+                            // USD is stronger
+                            fxSpan.innerHTML = `&nbsp;|&nbsp; 1 USD = ${rate.toFixed(2)} JPY`;
+                        } else {
+                            // JPY is stronger
+                            const jpyStrongerRate = (1 / rate).toFixed(2);
+                            fxSpan.innerHTML = `&nbsp;|&nbsp; 1 JPY = ${jpyStrongerRate} USD`;
+                        }
+                    }
+                })
+                .catch(error => console.error('Error fetching exchange rate:', error));
+        }
+        updateHeaderFX();
     </script>
 </body>
 </html>
