@@ -61,7 +61,7 @@
             background-color: #F7F5F0; /* Brand 'Paper' color */
         }
 
-        /* --- NEW LAYOUT STYLES --- */
+        /* --- LAYOUT STYLES --- */
         .content-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -78,40 +78,32 @@
         }
 
         /* Main Column Styles */
-        .editorial-text {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(1.5rem, 4vw, 2.25rem);
-            line-height: 1.4;
-            color: #1E4034; /* Brand 'Forest' color */
-            margin-bottom: 2rem;
-        }
-
         .highlights-container {
             display: flex;
             flex-wrap: wrap;
             gap: 1rem;
-            margin-bottom: 3rem;
+            margin-bottom: 1.5rem; /* Reduced margin to take up less space */
         }
 
         .highlight-box {
             background-color: #EAE6DB; /* Slightly darker than paper for contrast */
-            padding: 1.5rem;
+            padding: 1rem 1.5rem; /* Reduced padding for a more compact look */
             border-radius: 8px;
-            flex: 1 1 calc(50% - 1rem); /* Creates a 2x2 grid feel */
+            flex: 1 1 calc(50% - 1rem); /* Forces them to share the row */
             min-width: 150px;
             font-family: 'DM Sans', sans-serif;
         }
 
         .highlight-label {
-            font-size: 0.85rem;
+            font-size: 0.80rem;
             text-transform: uppercase;
             letter-spacing: 0.1em;
             color: #556B61;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
 
         .highlight-value {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             font-weight: 500;
             color: #0F0F0F;
         }
@@ -134,9 +126,24 @@
         }
 
         /* Support Column Styles */
+        .support-column {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem; /* Adds space between the stacked iframes */
+        }
+
         .support-iframe {
             width: 100%;
-            height: 500px;
+            height: 400px; /* Slightly reduced height to fit both items better */
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            background-color: #EAE6DB;
+        }
+
+        .fx-iframe {
+            width: 100%;
+            height: 350px; /* Customized height for the converter */
             border: none;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
@@ -162,11 +169,6 @@
         <div class="content-grid">
             
             <div class="main-column">
-                <p class="editorial-text">
-                    Go where the map ends. The trail doesn't care about your schedule. 
-                    Experience the tension between the raw and the refined.
-                </p>
-
                 <div class="highlights-container">
                     <div class="highlight-box">
                         <div class="highlight-label">Currency</div>
@@ -175,14 +177,6 @@
                     <div class="highlight-box">
                         <div class="highlight-label">Time Zone</div>
                         <div class="highlight-value">JST (UTC +9)</div>
-                    </div>
-                    <div class="highlight-box">
-                        <div class="highlight-label">Capital</div>
-                        <div class="highlight-value">Tokyo</div>
-                    </div>
-                    <div class="highlight-box">
-                        <div class="highlight-label">Primary Language</div>
-                        <div class="highlight-value">Japanese</div>
                     </div>
                 </div>
 
@@ -196,6 +190,12 @@
                     src="https://mstock97.github.io/endless_atlas/support/html/japan_map.html" 
                     class="support-iframe" 
                     title="Interactive Map of Japan">
+                </iframe>
+
+                <iframe 
+                    src="https://mstock97.github.io/endless_atlas/support/html/fx_usd_jpy.html" 
+                    class="fx-iframe" 
+                    title="USD to JPY Currency Converter">
                 </iframe>
             </div>
 
