@@ -1,6 +1,6 @@
 /**
  * components.js
- * Loads shared header and footer with a polished dropdown.
+ * Loads shared header and footer with a polished dropdown and mobile menu.
  */
 
 const SITE_CONFIG = {
@@ -42,50 +42,45 @@ const FOOTER_COLS = [
       { label: 'Travel Tips', href: '/tips/' },
       { label: 'Gear Guide',  href: '/gear/' },
       { label: 'Itineraries', href: '/itineraries/' },
-      { label: 'Budgeting',    href: '/budgeting/' },
     ],
-  },
-  {
-    title: 'Company',
-    links: [
-      { label: 'About',         href: '/about/' },
-      { label: 'Contact',       href: '/contact/' },
-      { label: 'Privacy',       href: '/privacy/' },
-      { label: 'Advertise',     href: '/advertise/' },
-    ],
-  },
+  }
 ];
 
 function renderHeader() {
   const navLinksHTML = NAV_LINKS.map(link => {
+    const isCta = link.cta ? 'class="nav-cta"' : '';
+    
     if (link.children) {
       const dropdownHTML = link.children.map(child => 
         `<li><a href="${child.href}">${child.label}</a></li>`
       ).join('');
-
+      
       return `
-        <li class="nav-item has-dropdown">
-          <a href="${link.href}" class="nav-link">${link.label} <small>▾</small></a>
+        <li class="has-dropdown">
+          <a href="${link.href}" ${isCta}>${link.label}</a>
           <ul class="dropdown-menu">
             ${dropdownHTML}
           </ul>
         </li>
       `;
     }
-
-    return `<li><a href="${link.href}" class="nav-link ${link.cta ? 'nav-cta' : ''}">${link.label}</a></li>`;
+    
+    return `<li><a href="${link.href}" ${isCta}>${link.label}</a></li>`;
   }).join('');
 
-  const qaBanner = SITE_CONFIG.isQA
-    ? `<div class="qa-banner">⚠️ QA ENVIRONMENT</div>`
-    : '';
-
   return `
-    ${qaBanner}
     <header class="site-header">
       <nav class="nav-inner">
         <a href="/" class="nav-logo">${SITE_CONFIG.name}<span>${SITE_CONFIG.nameAccent}</span></a>
-        <ul class="nav-links">${navLinksHTML}</ul>
+        <ul class="nav-links" id="navLinks">${navLinksHTML}</ul>
+        
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Menu">
+          <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
       </nav>
     </header>
   `;
@@ -121,7 +116,7 @@ function renderFooter() {
 
 function setActiveNavLink() {
   const path = window.location.pathname;
-  document.querySelectorAll('.nav-link').forEach(link => {
+  document.querySelectorAll('.nav-links a').forEach(link => {
     if (link.getAttribute('href') !== '/' && path.startsWith(link.getAttribute('href'))) {
       link.classList.add('active');
     }
@@ -136,4 +131,14 @@ document.addEventListener('DOMContentLoaded', () => {
   if (footerEl) footerEl.innerHTML = renderFooter();
 
   setActiveNavLink();
+
+  // Mobile Menu Toggle Logic
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const navLinks = document.getElementById('navLinks');
+  
+  if (mobileMenuBtn && navLinks) {
+    mobileMenuBtn.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+  }
 });
