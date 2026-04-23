@@ -77,37 +77,50 @@
             }
         }
 
-        /* Main Column Styles */
+        /* --- REDESIGNED HIGHLIGHTS --- */
         .highlights-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 1.5rem; /* Reduced margin to take up less space */
+            gap: 2rem;
+            margin-bottom: 2rem; /* Compact layout */
+            justify-content: flex-start;
         }
 
         .highlight-box {
-            background-color: #EAE6DB; /* Slightly darker than paper for contrast */
-            padding: 1rem 1.5rem; /* Reduced padding for a more compact look */
-            border-radius: 8px;
-            flex: 1 1 calc(50% - 1rem); /* Forces them to share the row */
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            flex: 1 1 auto;
             min-width: 150px;
             font-family: 'DM Sans', sans-serif;
         }
 
         .highlight-label {
-            font-size: 0.80rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.12em;
             color: #556B61;
-            margin-bottom: 0.25rem;
+            margin: 0;
         }
 
         .highlight-value {
-            font-size: 1.15rem;
+            font-family: 'Playfair Display', serif; /* Image style serif */
+            font-size: 1.5rem;
             font-weight: 500;
             color: #0F0F0F;
+            margin: 0;
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
         }
 
+        .time-jpy-info {
+            font-size: 0.9rem;
+            font-family: 'DM Sans', sans-serif;
+            color: #777;
+        }
+
+        /* Editable Text Block */
         .editable-block {
             font-family: 'DM Sans', sans-serif;
             font-size: 1.1rem;
@@ -134,7 +147,26 @@
 
         .support-iframe {
             width: 100%;
-            height: 400px; /* Slightly reduced height to fit both items better */
+            height: 400px; /* Default Desktop height */
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            background-color: #EAE6DB;
+            transition: height 0.3s ease;
+        }
+
+        /* Shorten the map iframe on mobile */
+        @media (max-width: 768px) {
+            .support-iframe {
+                height: 250px;
+            }
+        }
+
+        /* Dynamic Height Iframe Container */
+        .fx-iframe-container {
+            width: 100%;
+            position: relative;
+            overflow: hidden;
             border: none;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
@@ -143,11 +175,10 @@
 
         .fx-iframe {
             width: 100%;
-            height: 350px; /* Customized height for the converter */
+            height: 100%;
+            min-height: 200px; /* Prevents complete collapse before load */
             border: none;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            background-color: #EAE6DB;
+            display: block;
         }
     </style>
 </head>
@@ -172,11 +203,17 @@
                 <div class="highlights-container">
                     <div class="highlight-box">
                         <div class="highlight-label">Currency</div>
-                        <div class="highlight-value">Japanese Yen (JPY / ¥)</div>
+                        <div class="highlight-value">
+                            Japanese Yen
+                            <span class="time-jpy-info">(JPY / ¥)</span>
+                        </div>
                     </div>
                     <div class="highlight-box">
                         <div class="highlight-label">Time Zone</div>
-                        <div class="highlight-value">JST (UTC +9)</div>
+                        <div class="highlight-value">
+                            JST
+                            <span class="time-jpy-info">(UTC +9) <span id="current-jst-time"></span></span>
+                        </div>
                     </div>
                 </div>
 
@@ -192,11 +229,14 @@
                     title="Interactive Map of Japan">
                 </iframe>
 
-                <iframe 
-                    src="https://mstock97.github.io/endless_atlas/support/html/fx_usd_jpy.html" 
-                    class="fx-iframe" 
-                    title="USD to JPY Currency Converter">
-                </iframe>
+                <div class="fx-iframe-container">
+                    <iframe 
+                        id="fx_converter"
+                        src="https://mstock97.github.io/endless_atlas/support/html/fx_usd_jpy.html" 
+                        class="fx-iframe" 
+                        title="USD to JPY Currency Converter">
+                    </iframe>
+                </div>
             </div>
 
         </div>
@@ -219,6 +259,40 @@
                 heroText.style.opacity = opacity;
             } else {
                 heroText.style.opacity = 0;
+            }
+        });
+
+        // --- NEW FEATURES SCRIPTS ---
+
+        // 1. Current JST Time (UTC+9)
+        function updateJSTTime() {
+            const timeSpan = document.getElementById('current-jst-time');
+            const now = new Date();
+            // Offset to UTC, then add 9 hours for JST
+            const jstTime = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (3600000 * 9));
+            
+            const hours = String(jstTime.getHours()).padStart(2, '0');
+            const minutes = String(jstTime.getMinutes()).padStart(2, '0');
+            
+            timeSpan.textContent = `${hours}:${minutes}`;
+        }
+        
+        // Update immediately and then every 30 seconds
+        updateJSTTime();
+        setInterval(updateJSTTime, 30000);
+
+
+        // 2. Dynamic Iframe Height Listener (For Converter)
+        // Note: For this to work, you MUST add a matching script to the embedded HTML.
+        const iframe = document.getElementById('fx_converter');
+
+        window.addEventListener('message', function(e) {
+            // Confirm the message is from our iframe's origin
+            if (e.origin === 'https://mstock97.github.io' && e.data.height) {
+                // Update the iframe height (using the container's height)
+                iframe.style.height = e.data.height + 'px';
+                // Also update the container height for styling
+                document.querySelector('.fx-iframe-container').style.height = e.data.height + 'px';
             }
         });
     </script>
