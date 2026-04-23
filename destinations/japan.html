@@ -103,7 +103,7 @@
         }
 
         .highlight-value {
-            font-family: 'DM Sans', sans-serif; /* Reverted to brand sans-serif */
+            font-family: 'DM Sans', sans-serif;
             font-size: 1.5rem;
             font-weight: 500;
             color: #0F0F0F;
@@ -214,8 +214,8 @@
                     </div>
                 </div>
 
-                <div class="editable-block" contenteditable="true">
-                    <strong>[Click to Edit]</strong> Japan is an island country in East Asia, located in the northwest Pacific Ocean. It is renowned for its harmonious blend of ancient traditions and cutting-edge technology. From the neon-lit streets of Tokyo to the serene temples of Kyoto and the majestic peaks of Mount Fuji, the archipelago offers a unique tapestry of culture, nature, and history.
+                <div class="editable-block" id="dynamic-text-block" contenteditable="true">
+                    Loading description...
                 </div>
             </div>
 
@@ -223,7 +223,8 @@
                 <iframe 
                     src="https://mstock97.github.io/endless_atlas/support/html/japan_map.html" 
                     class="support-iframe" 
-                    title="Interactive Map of Japan">
+                    title="Interactive Map of Japan"
+                    sandbox="allow-scripts allow-same-origin allow-top-navigation allow-top-navigation-by-user-activation allow-popups">
                 </iframe>
 
                 <div class="fx-iframe-container">
@@ -280,15 +281,28 @@
         updateJSTTime();
         setInterval(updateJSTTime, 30000);
 
-        // 2. Dynamic Iframe Height Listener
+        // 2. Dynamic Iframe Height Listener (For Converter)
         const iframe = document.getElementById('fx_converter');
-
         window.addEventListener('message', function(e) {
             if (e.origin === 'https://mstock97.github.io' && e.data.height) {
                 iframe.style.height = e.data.height + 'px';
                 document.querySelector('.fx-iframe-container').style.height = e.data.height + 'px';
             }
         });
+
+        // 3. Fetch the external text block and inject it
+        fetch('https://mstock97.github.io/endless_atlas/support/text/japan_country_paragraph.html')
+            .then(response => {
+                if (!response.ok) throw new Error("Network response was not ok");
+                return response.text();
+            })
+            .then(htmlContent => {
+                document.getElementById('dynamic-text-block').innerHTML = htmlContent;
+            })
+            .catch(error => {
+                console.error('Error fetching text block:', error);
+                document.getElementById('dynamic-text-block').innerHTML = "<strong>[Error]</strong> Could not load the description.";
+            });
     </script>
 </body>
 </html>
