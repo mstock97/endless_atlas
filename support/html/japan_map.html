@@ -3,22 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Endless Atlas - Interactive Map</title>
+    <title>Endless Atlas - Styled Interactive Map</title>
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <style>
-        /* Reset margins and make the map fill the entire browser window */
+        /* --- Brand Variables --- */
+        :root {
+            --forest: #1E4034;
+            --canopy: #2D6A4F;
+            --moss: #528788;
+            --paper: #F7F5F0;
+            --ink: #0F0F0F;
+        }
+
+        /* --- Base Structure --- */
         body {
             margin: 0;
             padding: 0;
+            background-color: var(--paper);
         }
         
         #map {
             height: 100vh;
             width: 100vw;
+            background-color: var(--paper); /* Ensures loading areas match the brand */
+        }
+
+        /* --- Map Tile Styling --- */
+        .leaflet-tile-pane {
+            /* Warms up the grayscale map to feel more earthy and editorial */
+            filter: sepia(0.15) contrast(0.95);
+        }
+
+        /* --- Custom Marker Styling --- */
+        .brand-marker {
+            background-color: var(--moss);
+            border: 1.5px solid var(--paper);
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(15, 15, 15, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .brand-marker:hover {
+            background-color: var(--canopy);
+            transform: scale(1.3);
+            box-shadow: 0 4px 8px rgba(15, 15, 15, 0.3);
         }
     </style>
 </head>
@@ -27,19 +60,28 @@
     <div id="map"></div>
 
     <script>
-        // 1. Initialize the map and set its view to Japan's coordinates and a zoom level of 6
-        var map = L.map('map').setView([36.2048, 138.2529], 6);
+        // Initialize the map centered on Japan
+        var map = L.map('map', {
+            zoomControl: false // Optional: removes the + / - buttons for a cleaner visual
+        }).setView([36.2048, 138.2529], 6);
 
-        // 2. Add the base tile layer (OpenStreetMap)
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        // Add a stylized, label-free tile layer (CartoDB Light No Labels)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
             maxZoom: 19,
-            attribution: '&copy; OpenStreetMap contributors'
+            attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
         }).addTo(map);
 
-        // 3. Add markers for the specific cities using their exact Latitude and Longitude
-        L.marker([35.6762, 139.6503]).addTo(map); // Tokyo
-        L.marker([35.0116, 135.7681]).addTo(map); // Kyoto
-        L.marker([34.6937, 135.5023]).addTo(map); // Osaka
+        // Define the custom HTML-based brand icon
+        var brandIcon = L.divIcon({
+            className: 'brand-marker',
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
+        });
+
+        // Add markers using the exact coordinates and the custom icon
+        L.marker([35.6762, 139.6503], {icon: brandIcon}).addTo(map); // Tokyo
+        L.marker([35.0116, 135.7681], {icon: brandIcon}).addTo(map); // Kyoto
+        L.marker([34.6937, 135.5023], {icon: brandIcon}).addTo(map); // Osaka
     </script>
 
 </body>
