@@ -118,6 +118,57 @@ a { color: inherit; text-decoration: none; }
 .nav-links a:hover { color: var(--ocean); }
 .nav-links a:hover::after { width: 100%; }
 
+/* Dropdown Styles */
+.has-dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: rgba(245, 240, 232, 0.98);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--sand-dark);
+  border-radius: var(--radius-sm);
+  min-width: 180px;
+  list-style: none;
+  padding: 0.5rem 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all var(--transition);
+  z-index: 10;
+  box-shadow: var(--shadow-soft);
+}
+
+.has-dropdown:hover .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-menu li {
+  margin: 0;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 0.5rem 1.5rem;
+  color: var(--ink-light);
+  font-size: 0.85rem;
+}
+
+.dropdown-menu a::after {
+  display: none; /* Removes the hover underline on dropdown links */
+}
+
+.dropdown-menu a:hover {
+  color: var(--ocean);
+  background: rgba(0, 0, 0, 0.03);
+}
+
 .nav-cta {
   background: var(--ocean);
   color: var(--white) !important;
