@@ -1,11 +1,6 @@
 /**
  * components.js
  * Loads shared header and footer into every page.
- * Include this script in every HTML file.
- *
- * Usage: <script src="/assets/js/components.js"></script>
- * Then place <div id="site-header"></div> and <div id="site-footer"></div>
- * in your HTML where you want the header/footer to appear.
  */
 
 // ─── CONFIG ─────────────────────────────────────────────────────────────────
@@ -14,14 +9,22 @@ const SITE_CONFIG = {
   nameAccent:  'Atlas',
   tagline:     'Traveling the World',
   isQA:        window.location.hostname.startsWith('qa.'),
-  basePath:    '/',   // change to '/subfolder/' if deploying to a subdirectory
+  basePath:    '/',
 };
 
 // ─── NAV LINKS ───────────────────────────────────────────────────────────────
+// Modified to support an optional 'children' array for dropdowns
 const NAV_LINKS = [
-  { label: 'Destinations', href: '/destinations/' },
+  { 
+    label: 'Destinations', 
+    href: '/destinations/',
+    children: [
+      { label: 'Japan', href: '/destinations/japan/' },
+      { label: 'All Destinations', href: '/destinations/' }
+    ]
+  },
   { label: 'Travel Tips',  href: '/tips/' },
-  { label: 'Gear',         href: '/gear/' },
+  { label: 'Gear',          href: '/gear/' },
   { label: 'Newsletter',   href: '/newsletter/', cta: true },
 ];
 
@@ -31,9 +34,9 @@ const FOOTER_COLS = [
     title: 'Explore',
     links: [
       { label: 'All Destinations', href: '/destinations/' },
-      { label: 'Europe',           href: '/destinations/europe/' },
-      { label: 'Asia',             href: '/destinations/asia/' },
-      { label: 'Americas',         href: '/destinations/americas/' },
+      { label: 'Europe',            href: '/destinations/europe/' },
+      { label: 'Asia',              href: '/destinations/asia/' },
+      { label: 'Americas',          href: '/destinations/americas/' },
     ],
   },
   {
@@ -42,25 +45,42 @@ const FOOTER_COLS = [
       { label: 'Travel Tips', href: '/tips/' },
       { label: 'Gear Guide',  href: '/gear/' },
       { label: 'Itineraries', href: '/itineraries/' },
-      { label: 'Budgeting',   href: '/budgeting/' },
+      { label: 'Budgeting',    href: '/budgeting/' },
     ],
   },
   {
     title: 'Company',
     links: [
-      { label: 'About',        href: '/about/' },
-      { label: 'Contact',      href: '/contact/' },
-      { label: 'Privacy',      href: '/privacy/' },
-      { label: 'Advertise',    href: '/advertise/' },
+      { label: 'About',         href: '/about/' },
+      { label: 'Contact',       href: '/contact/' },
+      { label: 'Privacy',       href: '/privacy/' },
+      { label: 'Advertise',     href: '/advertise/' },
     ],
   },
 ];
 
 // ─── RENDER HEADER ────────────────────────────────────────────────────────────
 function renderHeader() {
-  const navLinksHTML = NAV_LINKS.map(link =>
-    `<li><a href="${link.href}" class="${link.cta ? 'nav-cta' : ''}">${link.label}</a></li>`
-  ).join('');
+  const navLinksHTML = NAV_LINKS.map(link => {
+    // Check if the link has a dropdown (children)
+    if (link.children) {
+      const dropdownHTML = link.children.map(child => 
+        `<li><a href="${child.href}">${child.label}</a></li>`
+      ).join('');
+
+      return `
+        <li class="nav-dropdown-container">
+          <a href="${link.href}" class="dropdown-trigger">${link.label} ▾</a>
+          <ul class="dropdown-menu">
+            ${dropdownHTML}
+          </ul>
+        </li>
+      `;
+    }
+
+    // Standard link
+    return `<li><a href="${link.href}" class="${link.cta ? 'nav-cta' : ''}">${link.label}</a></li>`;
+  }).join('');
 
   const qaBanner = SITE_CONFIG.isQA
     ? `<div class="qa-banner">⚠️ QA ENVIRONMENT — Changes here are not live. <a href="#">View production site →</a></div>`
@@ -95,7 +115,7 @@ function renderFooter() {
           <div class="footer-brand">
             <a href="/" class="nav-logo">${SITE_CONFIG.name}<span>${SITE_CONFIG.nameAccent}</span></a>
             <p class="footer-desc">
-              ${SITE_CONFIG.tagline} SITE TAGLINE PLACE HOLDEER
+              ${SITE_CONFIG.tagline}
             </p>
           </div>
           ${colsHTML}
