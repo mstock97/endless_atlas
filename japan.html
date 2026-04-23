@@ -7,11 +7,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Brand Palette */
             --forest: #1E4034;
             --paper: #F7F5F0;
             --ink: #0F0F0F;
             --white: #FFFFFF;
+            --moss: #52B788; /* From brand guide for CTAs */
         }
 
         body, html {
@@ -23,7 +23,71 @@
             overflow-x: hidden;
         }
 
-        /* Hero Section - 75% height */
+        /* ─── HEADER STYLING (The Professional Fix) ─── */
+        .site-header {
+            position: absolute; /* Sits on top of the hero image */
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 20px 0;
+            transition: background 0.3s ease;
+        }
+
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            text-decoration: none;
+            color: var(--white);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .nav-logo span {
+            color: var(--moss);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--white);
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: opacity 0.2s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.7;
+        }
+
+        /* Style for the 'Newsletter' CTA in your JS */
+        .nav-cta {
+            background-color: var(--moss);
+            padding: 10px 20px;
+            border-radius: 2px;
+            color: var(--forest) !important;
+            font-weight: bold !important;
+        }
+
+        /* ─── HERO SECTION ─── */
         .hero-container {
             position: relative;
             height: 75vh;
@@ -35,23 +99,15 @@
             background-color: var(--ink);
         }
 
-        picture, .hero-image {
+        .hero-image {
             position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-        }
-
-        .hero-image {
             object-fit: cover;
-            /* Updated to center crop as requested */
-            object-position: center center; 
-            display: block;
+            object-position: center center;
             z-index: 0;
         }
 
-        /* Scrim: 60% Ink per Guide */
         .hero-container::after {
             content: '';
             position: absolute;
@@ -59,7 +115,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 15, 15, 0.6);
+            background: rgba(15, 15, 15, 0.6); /* Brand guide 60% scrim */
             z-index: 1;
         }
 
@@ -73,31 +129,52 @@
             text-align: center;
             pointer-events: none;
             will-change: transform, opacity;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        /* Main Content Area */
+        /* ─── FOOTER STYLING ─── */
+        .site-footer {
+            background-color: var(--forest);
+            color: var(--paper);
+            padding: 60px 40px;
+            margin-top: 0;
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 40px;
+        }
+
+        .footer-brand .nav-logo { font-size: 32px; }
+        .footer-desc { font-size: 14px; opacity: 0.8; line-height: 1.6; margin-top: 15px; }
+
+        .footer-col h4 { font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; margin-bottom: 20px; }
+        .footer-col ul { list-style: none; padding: 0; margin: 0; }
+        .footer-col li { margin-bottom: 10px; }
+        .footer-col a { color: var(--paper); text-decoration: none; font-size: 14px; opacity: 0.7; }
+        .footer-col a:hover { opacity: 1; }
+
         main {
-            min-height: 50vh;
-            padding: 80px 10%;
-            background-color: var(--paper);
-            position: relative;
-            z-index: 3;
+            padding: 100px 10%;
+            min-height: 30vh;
         }
 
         .editorial-text {
             font-family: 'Playfair Display', serif;
             font-size: clamp(1.5rem, 4vw, 2.25rem);
-            max-width: 850px;
             line-height: 1.4;
             color: var(--forest);
-            margin: 0;
         }
 
         @media (max-width: 768px) {
-            .hero-container {
-                height: 65vh;
-            }
+            .footer-grid { grid-template-columns: 1fr; text-align: center; }
+            .header-inner { padding: 0 20px; }
+            .nav-links { display: none; } /* Standard practice: Hide links for a burger menu on mobile */
         }
     </style>
 </head>
@@ -108,11 +185,9 @@
     <section class="hero-container">
         <picture>
             <source media="(max-width: 768px)" srcset="https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero-mobile.JPG">
-            <img 
-                src="https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero-hd.JPG" 
-                alt="Mount Fuji, Japan" 
-                class="hero-image"
-                referrerpolicy="no-referrer">
+            <img src="https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero-hd.JPG" 
+                 class="hero-image" 
+                 referrerpolicy="no-referrer">
         </picture>
         <h1 class="hero-title" id="heroText">JAPAN</h1>
     </section>
@@ -129,11 +204,9 @@
     <script src="components.js"></script>
 
     <script>
-        // Scroll Interaction for the Title
         window.addEventListener('scroll', function() {
             const scrollValue = window.scrollY;
             const heroText = document.getElementById('heroText');
-            
             const scale = 1 + (scrollValue / 600);
             const opacity = 1 - (scrollValue / 400);
             
@@ -145,6 +218,5 @@
             }
         });
     </script>
-
 </body>
 </html>
