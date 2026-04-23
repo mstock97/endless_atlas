@@ -144,11 +144,15 @@
             flex-direction: column;
             gap: 1.5rem;
             
-            /* Async Sticky Scrolling */
+            /* Professional Centered Async Sticky Scrolling */
             position: sticky;
-            top: 100px; /* Adjust this to sit perfectly below your site header */
+            top: 50vh; /* Anchors the top of the column to the vertical center of the screen */
+            transform: translateY(-50%); /* Shifts the entire column up by exactly half its own dynamic height */
             align-self: start; /* Prevents the grid from forcing it to be full height */
             z-index: 10;
+            
+            /* Syncs the recentering visual shift with the dynamic iframe's height expansion */
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .support-iframe {
@@ -167,7 +171,8 @@
             /* Disable sticky on mobile so it stacks and scrolls normally */
             .support-column {
                 position: relative;
-                top: 0;
+                top: auto;
+                transform: none; /* Clears the recentering transform logic for standard mobile scrolling */
             }
         }
 
