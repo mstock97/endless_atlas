@@ -144,15 +144,14 @@
             flex-direction: column;
             gap: 1.5rem;
             
-            /* Professional Centered Async Sticky Scrolling */
+            /* Reverted back to initial structure */
             position: sticky;
-            top: 50vh; /* Anchors the top of the column to the vertical center of the screen */
-            transform: translateY(-50%); /* Shifts the entire column up by exactly half its own dynamic height */
-            align-self: start; /* Prevents the grid from forcing it to be full height */
+            top: 100px; 
+            align-self: start; 
             z-index: 10;
             
-            /* Syncs the recentering visual shift with the dynamic iframe's height expansion */
-            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            /* Smooth transition added so the JS dynamic recentering glides perfectly */
+            transition: top 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .support-iframe {
@@ -168,11 +167,9 @@
             .support-iframe {
                 height: 250px;
             }
-            /* Disable sticky on mobile so it stacks and scrolls normally */
             .support-column {
                 position: relative;
                 top: auto;
-                transform: none; /* Clears the recentering transform logic for standard mobile scrolling */
             }
         }
 
@@ -185,7 +182,6 @@
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             background-color: transparent;
-            /* Smooth height transition */
             transition: height 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
@@ -195,11 +191,10 @@
             min-height: 200px;
             border: none;
             display: block;
-            overflow: hidden; /* Ensures no scrollbar shows during transition */
+            overflow: hidden; 
             transition: height 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        /* Specific container for the FX converter background */
         .fx-container {
             background-color: #EAE6DB; 
         }
@@ -327,7 +322,7 @@
         updateJSTTime();
         setInterval(updateJSTTime, 30000);
 
-        // 2. Scalable Dynamic Iframe Height Listener
+        // 2. Scalable Dynamic Iframe Height & Recenter Listener
         window.addEventListener('message', function(e) {
             if (e.origin !== 'https://mstock97.github.io') return;
             
@@ -335,10 +330,30 @@
                 const iframes = document.querySelectorAll('iframe');
                 iframes.forEach(iframe => {
                     if (iframe.contentWindow === e.source) {
+                        // Expand the iframe
                         iframe.style.height = e.data.height + 'px';
                         if (iframe.parentElement.classList.contains('dynamic-iframe-container')) {
                             iframe.parentElement.style.height = e.data.height + 'px';
                         }
+
+                        // --- NEW DYNAMIC RECENTERING LOGIC ---
+                        // Give the browser 50ms to register the new physical height
+                        setTimeout(() => {
+                            const supportCol = document.querySelector('.support-column');
+                            const colHeight = supportCol.offsetHeight;
+                            const viewportHeight = window.innerHeight;
+                            
+                            // Calculate perfect vertical center
+                            const idealTop = (viewportHeight - colHeight) / 2;
+                            
+                            // Clamp the value to protect layout:
+                            // Never more than 100px (so it doesn't leave a huge gap below header)
+                            // Never less than 20px (so it doesn't get chopped off the top of monitor)
+                            const newTop = Math.max(20, Math.min(100, idealTop));
+                            
+                            // Apply the dynamic shift
+                            supportCol.style.top = newTop + 'px';
+                        }, 50);
                     }
                 });
             }
@@ -365,7 +380,6 @@
                 .then(data => {
                     let rate = null;
                     
-                    // Support the v2 array format (from your fx widget) or standard format
                     if (Array.isArray(data) && data.length > 0) {
                         rate = data[0].rate;
                     } else if (data.rates && data.rates.JPY) {
@@ -375,10 +389,8 @@
                     if (rate) {
                         const fxSpan = document.getElementById('live-fx-rate');
                         if (rate >= 1) {
-                            // USD is stronger
                             fxSpan.innerHTML = `&nbsp;|&nbsp; 1 USD = ${rate.toFixed(2)} JPY`;
                         } else {
-                            // JPY is stronger
                             const jpyStrongerRate = (1 / rate).toFixed(2);
                             fxSpan.innerHTML = `&nbsp;|&nbsp; 1 JPY = ${jpyStrongerRate} USD`;
                         }
