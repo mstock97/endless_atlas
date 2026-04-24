@@ -365,20 +365,28 @@
                 document.getElementById('dynamic-text-block').innerHTML = "<strong>[Error]</strong> Could not load the description.";
             });
 
-        // 4. Adjusted Exchange Rate Logic (Corrected for Frankfurter v2 Arrays)
+        // 4. Adjusted Exchange Rate Logic (Mirroring the Widget's Cross-Rate Math)
         function updateHeaderFX() {
-            fetch('https://api.frankfurter.dev/v2/rates?base=USD&quotes=JPY')
+            // The widget fetches base-EUR rates for both currencies and divides them.
+            // We are doing the exact same thing here to guarantee identical numbers.
+            fetch('https://api.frankfurter.dev/v2/rates?quotes=USD,JPY')
                 .then(response => response.json())
                 .then(data => {
-                    let rate = null;
+                    if (!Array.isArray(data)) return;
                     
-                    // The v2 API returns an array of objects
-                    if (Array.isArray(data) && data.length > 0 && data[0].rate) {
-                        rate = data[0].rate;
-                    }
+                    let usdRate = null;
+                    let jpyRate = null;
                     
-                    if (rate) {
+                    data.forEach(item => {
+                        if (item.quote === 'USD') usdRate = item.rate;
+                        if (item.quote === 'JPY') jpyRate = item.rate;
+                    });
+                    
+                    if (usdRate && jpyRate) {
                         const fxSpan = document.getElementById('live-fx-rate');
+                        
+                        // Calculate cross-rate exactly like the widget does
+                        const rate = jpyRate / usdRate;
                         const invRate = 1 / rate;
 
                         // Formatting helper matching the iframe widget logic
