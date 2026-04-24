@@ -6,7 +6,7 @@
     <title>Japan | Endless Atlas</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="/main.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
 
     <style>
         /* Japan-Specific Hero Styles */
@@ -297,22 +297,29 @@
             }
         });
 
-        // 1. Current JST Time with AM logic
+        // 1. Current JST Time with proper 12-hour AM/PM logic
         function updateJSTTime() {
             const timeSpan = document.getElementById('current-jst-time');
             const now = new Date();
             const jstTime = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (3600000 * 9));
             
             const rawHours = jstTime.getHours();
-            const hours = String(rawHours).padStart(2, '0');
             const minutes = String(jstTime.getMinutes()).padStart(2, '0');
             
-            let timeString = `${hours}:${minutes}`;
-            if (rawHours < 12) {
-                timeString += ' AM';
+            let displayHours = rawHours;
+            let ampm = 'AM';
+            
+            if (rawHours >= 12) {
+                ampm = 'PM';
+                if (rawHours > 12) {
+                    displayHours = rawHours - 12;
+                }
+            }
+            if (displayHours === 0) {
+                displayHours = 12; // Handle midnight correctly
             }
             
-            timeSpan.textContent = `Current Time: ${timeString}`;
+            timeSpan.textContent = `Current Time: ${displayHours}:${minutes} ${ampm}`;
         }
         
         updateJSTTime();
@@ -320,7 +327,6 @@
 
         // 2. Scalable Dynamic Iframe Height & Recenter Listener
         window.addEventListener('message', function(e) {
-            // Updated to accept messages from your new custom domain
             if (e.origin !== window.location.origin) return;
             
             if (e.data.height) {
@@ -359,27 +365,41 @@
                 document.getElementById('dynamic-text-block').innerHTML = "<strong>[Error]</strong> Could not load the description.";
             });
 
-        // 4. Adjusted Exchange Rate Logic (USD vs JPY Comparison)
+        // 4. Adjusted Exchange Rate Logic (Mirroring the Widget's Cross-Rate Math)
         function updateHeaderFX() {
-            fetch('https://api.frankfurter.dev/v2/rates?base=USD&quotes=JPY')
+            // The widget fetches base-EUR rates for both currencies and divides them.
+            // We are doing the exact same thing here to guarantee identical numbers.
+            fetch('https://api.frankfurter.dev/v2/rates?quotes=USD,JPY')
                 .then(response => response.json())
                 .then(data => {
-                    let rate = null;
-                    if (data.rates && data.rates.JPY) {
-                        rate = data.rates.JPY;
-                    }
+                    if (!Array.isArray(data)) return;
                     
-                    if (rate) {
+                    let usdRate = null;
+                    let jpyRate = null;
+                    
+                    data.forEach(item => {
+                        if (item.quote === 'USD') usdRate = item.rate;
+                        if (item.quote === 'JPY') jpyRate = item.rate;
+                    });
+                    
+                    if (usdRate && jpyRate) {
                         const fxSpan = document.getElementById('live-fx-rate');
-                        // Logic: Compare strength. If USD > JPY value, show 1 JPY in USD.
-                        if (rate > 1) { 
-                            // USD is stronger (typical case)
-                            const inverseRate = (1 / rate).toFixed(4);
-                            fxSpan.innerHTML = `&nbsp;|&nbsp; 1 JPY = ${inverseRate} USD`;
-                        } else {
-                            // JPY is stronger (rare case)
-                            fxSpan.innerHTML = `&nbsp;|&nbsp; 1 USD = ${rate.toFixed(2)} JPY`;
+                        
+                        // Calculate cross-rate exactly like the widget does
+                        const rate = jpyRate / usdRate;
+                        const invRate = 1 / rate;
+
+                        // Formatting helper matching the iframe widget logic
+                        function fmt(n) {
+                            if (n == null || isNaN(n)) return "—";
+                            if (n >= 10000) return n.toLocaleString("en-US", {maximumFractionDigits: 2});
+                            if (n >= 100)   return n.toFixed(2);
+                            if (n >= 1)     return n.toFixed(4);
+                            return n.toFixed(6);
                         }
+
+                        // Display formatted string identical to the widget
+                        fxSpan.innerHTML = `&nbsp;|&nbsp; 1 USD = ${fmt(rate)} JPY &nbsp;|&nbsp; 1 JPY = ${fmt(invRate)} USD`;
                     }
                 })
                 .catch(error => console.error('Error fetching exchange rate:', error));
