@@ -297,22 +297,29 @@
             }
         });
 
-        // 1. Current JST Time with AM logic
+        // 1. Current JST Time with proper 12-hour AM/PM logic
         function updateJSTTime() {
             const timeSpan = document.getElementById('current-jst-time');
             const now = new Date();
             const jstTime = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (3600000 * 9));
             
             const rawHours = jstTime.getHours();
-            const hours = String(rawHours).padStart(2, '0');
             const minutes = String(jstTime.getMinutes()).padStart(2, '0');
             
-            let timeString = `${hours}:${minutes}`;
-            if (rawHours < 12) {
-                timeString += ' AM';
+            let displayHours = rawHours;
+            let ampm = 'AM';
+            
+            if (rawHours >= 12) {
+                ampm = 'PM';
+                if (rawHours > 12) {
+                    displayHours = rawHours - 12;
+                }
+            }
+            if (displayHours === 0) {
+                displayHours = 12; // Handle midnight correctly
             }
             
-            timeSpan.textContent = `Current Time: ${timeString}`;
+            timeSpan.textContent = `Current Time: ${displayHours}:${minutes} ${ampm}`;
         }
         
         updateJSTTime();
@@ -320,7 +327,6 @@
 
         // 2. Scalable Dynamic Iframe Height & Recenter Listener
         window.addEventListener('message', function(e) {
-            // Updated to accept messages from your new custom domain
             if (e.origin !== window.location.origin) return;
             
             if (e.data.height) {
@@ -359,14 +365,16 @@
                 document.getElementById('dynamic-text-block').innerHTML = "<strong>[Error]</strong> Could not load the description.";
             });
 
-        // 4. Adjusted Exchange Rate Logic (Matching Widget Format)
+        // 4. Adjusted Exchange Rate Logic (Corrected for Frankfurter v2 Arrays)
         function updateHeaderFX() {
             fetch('https://api.frankfurter.dev/v2/rates?base=USD&quotes=JPY')
                 .then(response => response.json())
                 .then(data => {
                     let rate = null;
-                    if (data.rates && data.rates.JPY) {
-                        rate = data.rates.JPY;
+                    
+                    // The v2 API returns an array of objects
+                    if (Array.isArray(data) && data.length > 0 && data[0].rate) {
+                        rate = data[0].rate;
                     }
                     
                     if (rate) {
