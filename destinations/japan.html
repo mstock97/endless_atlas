@@ -45,7 +45,7 @@
             align-items: center;
             justify-content: center;
             background-color: #0F0F0F;
-            margin-top: -70px;
+            /* FIX 5: Removed margin-top: -70px; to prevent overlap issues */
         }
 
         .hero-image {
@@ -206,12 +206,13 @@
         .dynamic-iframe-container {
             width: 100%;
             position: relative;
-            /* Allow content to push height without clipping */
             overflow: visible; 
             border: none;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             background-color: transparent;
+            /* FIX 2: Added smooth height transition */
+            transition: height 0.3s ease; 
         }
 
         .dynamic-iframe {
@@ -220,8 +221,9 @@
             min-height: 50px;
             border: none;
             display: block;
-            /* Hide the internal iframe scrollbar */
             overflow: hidden; 
+            /* FIX 2: Added smooth height transition */
+            transition: height 0.3s ease; 
         }
 
         .fx-container {
@@ -269,19 +271,19 @@
 
                 <h2 class="section-title">Climate & Weather in Japan</h2>
                 <div class="dynamic-iframe-container">
-                    <iframe src="/support/html/japan_climate.html" class="dynamic-iframe" title="Japan Climate Data Chart"></iframe>
+                    <iframe src="/support/html/japan_climate.html" class="dynamic-iframe" title="Japan Climate Data Chart" scrolling="no"></iframe>
                 </div>
 
                 <h2 class="section-title">Japan National Holidays</h2>
                 <div class="dynamic-iframe-container">
-                    <iframe src="/support/html/japan_holidays.html" class="dynamic-iframe" title="List of Japan Public Holidays"></iframe>
+                    <iframe src="/support/html/japan_holidays.html" class="dynamic-iframe" title="List of Japan Public Holidays" scrolling="no"></iframe>
                 </div>
             </article>
 
             <aside class="support-column">
-                <iframe src="/support/html/japan_map.html" class="support-iframe" title="Interactive Map of Japan" sandbox="allow-scripts allow-same-origin allow-top-navigation allow-top-navigation-by-user-activation allow-popups"></iframe>
+                <iframe src="/support/html/japan_map.html" class="support-iframe" title="Interactive Map of Japan" sandbox="allow-scripts allow-same-origin allow-top-navigation allow-top-navigation-by-user-activation allow-popups" scrolling="no"></iframe>
                 <div class="dynamic-iframe-container fx-container">
-                    <iframe src="/support/html/fx_usd_jpy.html" class="dynamic-iframe" title="USD to JPY Currency Converter Tool"></iframe>
+                    <iframe src="/support/html/fx_usd_jpy.html" class="dynamic-iframe" title="USD to JPY Currency Converter Tool" scrolling="no"></iframe>
                 </div>
             </aside>
         </div>
@@ -331,33 +333,25 @@
             }
         });
 
-        // 1. Current JST Time
+        // FIX 3: Modernized Current JST Time
         function updateJSTTime() {
             const timeSpan = document.getElementById('current-jst-time');
             if(!timeSpan) return;
+            
             const now = new Date();
-            const jstTime = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (3600000 * 9));
+            const timeString = now.toLocaleTimeString('en-US', { 
+                timeZone: 'Asia/Tokyo',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
             
-            const rawHours = jstTime.getHours();
-            const minutes = String(jstTime.getMinutes()).padStart(2, '0');
-            
-            let displayHours = rawHours;
-            let ampm = 'AM';
-            
-            if (rawHours >= 12) {
-                ampm = 'PM';
-                if (rawHours > 12) {
-                    displayHours = rawHours - 12;
-                }
-            }
-            if (displayHours === 0) displayHours = 12;
-            
-            timeSpan.textContent = `Current Time: ${displayHours}:${minutes} ${ampm}`;
+            timeSpan.textContent = `Current Time: ${timeString}`;
         }
         updateJSTTime();
         setInterval(updateJSTTime, 30000);
 
-        // 2. Iframe Resize logic - Adjusted for instant resizing
+        // 2. Iframe Resize logic
         window.addEventListener('message', function(e) {
             if (e.origin !== window.location.origin) return;
             if (e.data.height) {
@@ -397,6 +391,11 @@
                         const fmt = n => n >= 100 ? n.toFixed(2) : n.toFixed(4);
                         document.getElementById('live-fx-rate').innerHTML = `&nbsp;|&nbsp; 1 USD = ${fmt(rate)} JPY &nbsp;|&nbsp; 1 JPY = ${fmt(inv)} USD`;
                     }
+                })
+                /* FIX 4: Added Error Handling */
+                .catch(error => {
+                    console.error("Error fetching FX rates:", error);
+                    document.getElementById('live-fx-rate').innerHTML = `&nbsp;|&nbsp; FX data currently unavailable`;
                 });
         }
         updateHeaderFX();
