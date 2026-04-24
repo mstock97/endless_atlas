@@ -171,6 +171,14 @@
             color: #333;
         }
 
+        /* Added Sticky Properties to the Main Column */
+        .main-column {
+            position: sticky;
+            top: 100px; 
+            align-self: start; 
+            z-index: 10;
+        }
+
         .support-column {
             display: flex;
             flex-direction: column;
@@ -195,7 +203,8 @@
             .support-iframe {
                 height: 250px;
             }
-            .support-column {
+            /* Remove sticky positioning on mobile for both columns */
+            .support-column, .main-column {
                 position: relative;
                 top: auto;
             }
