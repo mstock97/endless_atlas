@@ -465,7 +465,7 @@
             } else {
                 heroText.style.opacity = 0;
             }
-        });
+        }, { passive: true });
 
         function updateJSTTime() {
             const timeSpan = document.getElementById('current-jst-time');
@@ -485,7 +485,8 @@
         setInterval(updateJSTTime, 30000);
 
         /**
-         * PROPORTIONAL / PARALLAX SCROLL LOGIC
+         * ENTERPRISE PROPORTIONAL SCROLL LOGIC
+         * Utilizes Linear Interpolation (Lerp) and Hardware Acceleration (translate3d)
          */
         const layoutState = {
             gridTop: 0,
@@ -493,31 +494,41 @@
             diff: 0,
             taller: null
         };
+        
+        let currentY = 0; // The actual DOM position
+        let targetY = 0;  // The mathematical destination
 
         const gridEl = document.getElementById('contentGrid');
         const mainCol = document.getElementById('mainCol');
         const supportCol = document.getElementById('supportCol');
 
+        function resetTransforms() {
+            mainCol.style.transform = 'none';
+            supportCol.style.transform = 'none';
+            currentY = 0;
+            targetY = 0;
+        }
+
         function calculateLayout() {
             if (window.innerWidth <= 900) {
-                mainCol.style.transform = 'none';
-                supportCol.style.transform = 'none';
+                resetTransforms();
                 return;
             }
 
-            // Temporarily strip transforms so they don't corrupt the box model measurements
-            mainCol.style.transform = 'none';
-            supportCol.style.transform = 'none';
-
-            // FORCE a browser reflow. This explicitly tells the browser to process the removed transforms 
-            // before measuring the heights below, preventing the old math from ghosting the new math.
-            void mainCol.offsetHeight; 
+            resetTransforms();
+            void mainCol.offsetHeight; // Force reflow
 
             const mainHeight = mainCol.offsetHeight;
             const supportHeight = supportCol.offsetHeight;
-            
             const rect = gridEl.getBoundingClientRect();
+            
             layoutState.gridTop = window.scrollY + rect.top - 100;
+            
+            // THRESHOLD 1: If height difference is less than 50px, disable parallax
+            if (Math.abs(mainHeight - supportHeight) < 50) {
+                 layoutState.diff = 0;
+                 return;
+            }
 
             if (mainHeight > supportHeight) {
                 layoutState.taller = 'main';
@@ -529,48 +540,58 @@
                 layoutState.maxScroll = supportHeight - window.innerHeight + 100;
             }
 
+            // THRESHOLD 2 (The Jitter Fix): 
+            // Prevent hyper-sensitivity if the column is almost the same size as the screen.
+            if (layoutState.maxScroll < window.innerHeight / 1.5) {
+                layoutState.maxScroll = window.innerHeight / 1.5;
+            }
+
             handleProportionalScroll();
         }
 
         function handleProportionalScroll() {
             if (window.innerWidth <= 900 || layoutState.diff <= 0 || layoutState.maxScroll <= 0) {
-                mainCol.style.transform = 'none';
-                supportCol.style.transform = 'none';
+                targetY = 0;
                 return;
             }
 
             let progress = (window.scrollY - layoutState.gridTop) / layoutState.maxScroll;
             progress = Math.max(0, Math.min(1, progress));
 
-            const yOffset = progress * layoutState.diff;
-
-            if (layoutState.taller === 'main') {
-                supportCol.style.transform = `translateY(${yOffset}px)`;
-                mainCol.style.transform = 'none';
-            } else {
-                mainCol.style.transform = `translateY(${yOffset}px)`;
-                supportCol.style.transform = 'none';
-            }
+            // Assign the target, but do NOT apply the CSS here.
+            targetY = progress * layoutState.diff;
         }
 
-        let isScrolling = false;
-        window.addEventListener('scroll', () => {
-            if (!isScrolling) {
-                window.requestAnimationFrame(() => {
-                    handleProportionalScroll();
-                    isScrolling = false;
-                });
-                isScrolling = true;
-            }
-        }, { passive: true });
+        // The Lerp Animation Loop
+        function renderLoop() {
+            // Move currentY 8% closer to targetY every frame
+            currentY += (targetY - currentY) * 0.08;
 
+            // Only apply DOM updates if there is a meaningful visual difference
+            if (Math.abs(targetY - currentY) > 0.05) {
+                if (layoutState.taller === 'main') {
+                    // translate3d forces the browser to use the GPU
+                    supportCol.style.transform = `translate3d(0, ${currentY}px, 0)`;
+                } else if (layoutState.taller === 'support') {
+                    mainCol.style.transform = `translate3d(0, ${currentY}px, 0)`;
+                }
+            }
+            
+            window.requestAnimationFrame(renderLoop);
+        }
+        
+        // Start the continuous animation loop
+        window.requestAnimationFrame(renderLoop);
+
+        // Bind scroll event
+        window.addEventListener('scroll', handleProportionalScroll, { passive: true });
         window.addEventListener('resize', calculateLayout);
 
         // Debounced Resize Observer
         let resizeTimeout;
         const columnObserver = new ResizeObserver(() => {
             clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(calculateLayout, 50); // Waits for DOM to settle before calculating
+            resizeTimeout = setTimeout(calculateLayout, 50); 
         });
         
         if (mainCol) columnObserver.observe(mainCol);
@@ -581,7 +602,6 @@
          * ASYNC DATA FETCHING & EVENT TRIGGERS
          */
         
-        // Iframe Resize logic
         window.addEventListener('message', function(e) {
             if (e.origin !== window.location.origin) return;
             if (e.data.height) {
@@ -593,30 +613,25 @@
                         if (iframe.parentElement.classList.contains('dynamic-iframe-container')) {
                             iframe.parentElement.style.height = newHeight;
                         }
-                        // TRIGGER: Recalculate immediately after an iframe expands
                         setTimeout(calculateLayout, 50); 
                     }
                 });
             }
         });
 
-        // Fetch description
         fetch('/support/text/japan_country_paragraph.html')
             .then(res => res.ok ? res.text() : Promise.reject())
             .then(html => {
                 document.getElementById('dynamic-text-block').innerHTML = html;
-                // TRIGGER: Recalculate after text finishes loading
                 setTimeout(calculateLayout, 50);
             })
             .catch(() => document.getElementById('dynamic-text-block').innerHTML = "Could not load the description.");
 
-        // Fetch Travel Tips logic
         function fetchTravelTips() {
             fetch('/support/text/japan_travel_tips.html')
                 .then(res => res.ok ? res.text() : Promise.reject('Network response was not ok'))
                 .then(html => {
                     document.getElementById('travel-tips-content').innerHTML = html;
-                    // TRIGGER: Recalculate after tips finish loading
                     setTimeout(calculateLayout, 50);
                 })
                 .catch(error => {
@@ -626,7 +641,6 @@
         }
         fetchTravelTips();
 
-        // Exchange Rates
         function updateHeaderFX() {
             fetch('https://api.frankfurter.dev/v2/rates?quotes=USD,JPY')
                 .then(res => res.json())
@@ -642,7 +656,6 @@
                         const inv = 1 / rate;
                         const fmt = n => n >= 100 ? n.toFixed(2) : n.toFixed(4);
                         document.getElementById('live-fx-rate').innerHTML = `&nbsp;|&nbsp; 1 USD = ${fmt(rate)} JPY &nbsp;|&nbsp; 1 JPY = ${fmt(inv)} USD`;
-                        // TRIGGER: Recalculate if numbers wrap or expand the container
                         setTimeout(calculateLayout, 50);
                     }
                 })
@@ -653,7 +666,6 @@
         }
         updateHeaderFX();
 
-        // Weather Accordion Toggle Function
         function toggleWeather() {
             const header = document.getElementById('weatherHeader');
             const content = document.getElementById('weatherContent');
@@ -661,11 +673,9 @@
             header.classList.toggle('expanded');
             content.classList.toggle('expanded');
             
-            // The ResizeObserver will catch this, but forcing it is safer
-            setTimeout(calculateLayout, 450); // wait for CSS transition to finish
+            setTimeout(calculateLayout, 450); 
         }
 
-        // Extract data directly from the iframe
         function extractBestTime() {
             const climateIframe = document.getElementById('climateWidget');
             const labelElement = document.getElementById('dynamicBestMonthsLabel');
@@ -683,12 +693,10 @@
             }
         }
 
-        // ULTIMATE FAILSAFE: Once the entire window (images, fonts, all scripts) is fully loaded, do one final calculation.
         window.addEventListener('load', () => {
             setTimeout(calculateLayout, 100);
         });
 
-        // Initial setup
         window.requestAnimationFrame(calculateLayout);
     </script>
 </body>
