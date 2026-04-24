@@ -104,6 +104,8 @@
             gap: 3rem;
             max-width: 1400px;
             margin: 0 auto;
+            /* CRITICAL: align-items start prevents the shorter column from stretching to match the taller one */
+            align-items: start; 
         }
 
         @media (min-width: 900px) {
@@ -171,23 +173,20 @@
             color: #333;
         }
 
-        /* Added Sticky Properties to the Main Column */
+        /* Reverted back to standard flow positioning for JS control */
         .main-column {
-            position: sticky;
-            top: 100px; 
-            align-self: start; 
+            position: relative;
             z-index: 10;
+            will-change: transform;
         }
 
         .support-column {
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
-            position: sticky;
-            top: 100px; 
-            align-self: start; 
+            position: relative;
             z-index: 10;
-            transition: top 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            will-change: transform;
         }
 
         .support-iframe {
@@ -202,11 +201,6 @@
         @media (max-width: 768px) {
             .support-iframe {
                 height: 250px;
-            }
-            /* Remove sticky positioning on mobile for both columns */
-            .support-column, .main-column {
-                position: relative;
-                top: auto;
             }
         }
 
@@ -319,7 +313,7 @@
             }
         }
 
-        /* --- NEW: TRAVEL TIPS SIDEBAR STYLES --- */
+        /* --- TRAVEL TIPS SIDEBAR STYLES --- */
         .travel-tips-container {
             background-color: #EAE6DB;
             border-radius: 8px;
@@ -345,7 +339,6 @@
             color: #333;
         }
         
-        /* Ensures bullet points or paragraphs from the fetched HTML look good */
         .travel-tips-content ul {
             padding-left: 1.2rem;
             margin: 0;
@@ -371,8 +364,8 @@
     </section>
 
     <main>
-        <div class="content-grid">
-            <article class="main-column">
+        <div class="content-grid" id="contentGrid">
+            <article class="main-column" id="mainCol">
                 <div class="highlights-container">
                     <section class="highlight-box">
                         <h3 class="highlight-label">Currency</h3>
@@ -417,7 +410,7 @@
                 </div>
             </article>
 
-            <aside class="support-column">
+            <aside class="support-column" id="supportCol">
                 <iframe src="/support/html/japan_map.html" class="support-iframe" title="Interactive Map of Japan" sandbox="allow-scripts allow-same-origin allow-top-navigation allow-top-navigation-by-user-activation allow-popups" scrolling="no"></iframe>
                 
                 <div class="travel-tips-container">
@@ -462,7 +455,7 @@
             imgLoader.onload = revealHD;
         }
 
-        // Scroll Interaction
+        // Hero Scroll Interaction
         window.addEventListener('scroll', function() {
             const scrollValue = window.scrollY;
             const heroText = document.getElementById('heroText');
@@ -518,7 +511,7 @@
             .then(html => document.getElementById('dynamic-text-block').innerHTML = html)
             .catch(() => document.getElementById('dynamic-text-block').innerHTML = "Could not load the description.");
 
-        // NEW: Fetch Travel Tips logic
+        // Fetch Travel Tips logic
         function fetchTravelTips() {
             fetch('/support/text/japan_travel_tips.html')
                 .then(res => res.ok ? res.text() : Promise.reject('Network response was not ok'))
@@ -530,7 +523,6 @@
                     document.getElementById('travel-tips-content').innerHTML = "Travel tips are currently unavailable.";
                 });
         }
-        // Initialize the fetch when the script runs
         fetchTravelTips();
 
         // Exchange Rates
@@ -583,6 +575,96 @@
             } catch (error) {
                 console.warn("Could not extract widget data. Ensure both files are on the same domain (CORS).", error);
             }
+        }
+
+        /**
+         * PROPORTIONAL / PARALLAX SCROLL LOGIC
+         */
+        const layoutState = {
+            gridTop: 0,
+            maxScroll: 0,
+            diff: 0,
+            taller: null
+        };
+
+        const gridEl = document.getElementById('contentGrid');
+        const mainCol = document.getElementById('mainCol');
+        const supportCol = document.getElementById('supportCol');
+
+        function calculateLayout() {
+            // Reset state on mobile widths
+            if (window.innerWidth <= 900) {
+                mainCol.style.transform = 'none';
+                supportCol.style.transform = 'none';
+                return;
+            }
+
+            // Temporarily clear transforms to get true DOM heights
+            mainCol.style.transform = 'none';
+            supportCol.style.transform = 'none';
+
+            const mainHeight = mainCol.offsetHeight;
+            const supportHeight = supportCol.offsetHeight;
+            
+            // Calculate where the grid sits relative to the document
+            const rect = gridEl.getBoundingClientRect();
+            layoutState.gridTop = window.scrollY + rect.top - 100; // 100px padding buffer
+
+            if (mainHeight > supportHeight) {
+                layoutState.taller = 'main';
+                layoutState.diff = mainHeight - supportHeight;
+                layoutState.maxScroll = mainHeight - window.innerHeight + 100;
+            } else {
+                layoutState.taller = 'support';
+                layoutState.diff = supportHeight - mainHeight;
+                layoutState.maxScroll = supportHeight - window.innerHeight + 100;
+            }
+
+            // Trigger an immediate position update
+            handleProportionalScroll();
+        }
+
+        function handleProportionalScroll() {
+            if (window.innerWidth <= 900 || layoutState.diff <= 0 || layoutState.maxScroll <= 0) return;
+
+            // Calculate percentage scrolled through the grid (between 0 and 1)
+            let progress = (window.scrollY - layoutState.gridTop) / layoutState.maxScroll;
+            progress = Math.max(0, Math.min(1, progress));
+
+            // Apply translation to the shorter column
+            const yOffset = progress * layoutState.diff;
+
+            if (layoutState.taller === 'main') {
+                supportCol.style.transform = `translateY(${yOffset}px)`;
+                mainCol.style.transform = 'none';
+            } else {
+                mainCol.style.transform = `translateY(${yOffset}px)`;
+                supportCol.style.transform = 'none';
+            }
+        }
+
+        // Throttle scroll events to animation frames for smooth rendering
+        let isScrolling = false;
+        window.addEventListener('scroll', () => {
+            if (!isScrolling) {
+                window.requestAnimationFrame(() => {
+                    handleProportionalScroll();
+                    isScrolling = false;
+                });
+                isScrolling = true;
+            }
+        }, { passive: true });
+
+        // Recalculate on window resize
+        window.addEventListener('resize', calculateLayout);
+
+        // Robust ResizeObserver: Watches the grid for height changes (e.g. Accordion open/close, Iframe load)
+        const gridObserver = new ResizeObserver(() => {
+            // Need a slight timeout to let DOM settle after animations before measuring
+            setTimeout(calculateLayout, 50); 
+        });
+        if (gridEl) {
+            gridObserver.observe(gridEl);
         }
     </script>
 </body>
