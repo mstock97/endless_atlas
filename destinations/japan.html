@@ -45,7 +45,6 @@
             align-items: center;
             justify-content: center;
             background-color: #0F0F0F;
-            /* FIX 5: Removed margin-top: -70px; to prevent overlap issues */
         }
 
         .hero-image {
@@ -202,7 +201,6 @@
             }
         }
 
-        /* --- UPDATED DYNAMIC IFRAME STYLES --- */
         .dynamic-iframe-container {
             width: 100%;
             position: relative;
@@ -211,7 +209,6 @@
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             background-color: transparent;
-            /* FIX 2: Added smooth height transition */
             transition: height 0.3s ease; 
         }
 
@@ -222,7 +219,6 @@
             border: none;
             display: block;
             overflow: hidden; 
-            /* FIX 2: Added smooth height transition */
             transition: height 0.3s ease; 
         }
 
@@ -230,7 +226,7 @@
             background-color: #EAE6DB; 
         }
 
-        /* --- NEW ACCORDION STYLES --- */
+        /* --- ACCORDION STYLES --- */
         .weather-accordion {
             margin: 4rem 0 1.5rem 0;
             border-bottom: 2px solid #EAE6DB;
@@ -245,7 +241,6 @@
             padding-bottom: 0.5rem;
         }
 
-        /* Override global section-title styles when inside accordion */
         .accordion-header .section-title {
             margin: 0;
             border-bottom: none;
@@ -266,7 +261,9 @@
             background: #EAE6DB;
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease, visibility 0.3s;
+            /* Hidden by default until data is loaded from iframe */
+            visibility: hidden; 
         }
 
         .chevron {
@@ -275,7 +272,6 @@
             transition: transform 0.3s ease;
         }
 
-        /* Modern Grid transition for smooth height animation */
         .accordion-content {
             display: grid;
             grid-template-rows: 0fr;
@@ -294,10 +290,9 @@
             overflow: hidden;
         }
 
-        /* Expanded State Toggles */
         .accordion-header.expanded .best-months-label {
             opacity: 0;
-            pointer-events: none;
+            visibility: hidden;
         }
 
         .accordion-header.expanded .chevron {
@@ -359,14 +354,14 @@
                     <div class="accordion-header" id="weatherHeader" onclick="toggleWeather()">
                         <h2 class="section-title">Climate & Weather in Japan</h2>
                         <div class="accordion-meta">
-                            <span class="best-months-label">Best time: Mar-May & Sep-Nov</span>
+                            <span class="best-months-label" id="dynamicBestMonthsLabel"></span>
                             <span class="chevron">▼</span>
                         </div>
                     </div>
                     <div class="accordion-content" id="weatherContent">
                         <div class="accordion-inner">
                             <div class="dynamic-iframe-container">
-                                <iframe src="/support/html/japan_climate.html" class="dynamic-iframe" title="Japan Climate Data Chart" scrolling="no"></iframe>
+                                <iframe src="/support/html/japan_climate.html" class="dynamic-iframe" id="climateWidget" title="Japan Climate Data Chart" scrolling="no" onload="extractBestTime()"></iframe>
                             </div>
                         </div>
                     </div>
@@ -431,7 +426,6 @@
             }
         });
 
-        // FIX 3: Modernized Current JST Time
         function updateJSTTime() {
             const timeSpan = document.getElementById('current-jst-time');
             if(!timeSpan) return;
@@ -449,7 +443,7 @@
         updateJSTTime();
         setInterval(updateJSTTime, 30000);
 
-        // 2. Iframe Resize logic
+        // Iframe Resize logic
         window.addEventListener('message', function(e) {
             if (e.origin !== window.location.origin) return;
             if (e.data.height) {
@@ -466,13 +460,13 @@
             }
         });
 
-        // 3. Fetch description
+        // Fetch description
         fetch('/support/text/japan_country_paragraph.html')
             .then(res => res.ok ? res.text() : Promise.reject())
             .then(html => document.getElementById('dynamic-text-block').innerHTML = html)
             .catch(() => document.getElementById('dynamic-text-block').innerHTML = "Could not load the description.");
 
-        // 4. Exchange Rates
+        // Exchange Rates
         function updateHeaderFX() {
             fetch('https://api.frankfurter.dev/v2/rates?quotes=USD,JPY')
                 .then(res => res.json())
@@ -490,7 +484,6 @@
                         document.getElementById('live-fx-rate').innerHTML = `&nbsp;|&nbsp; 1 USD = ${fmt(rate)} JPY &nbsp;|&nbsp; 1 JPY = ${fmt(inv)} USD`;
                     }
                 })
-                /* FIX 4: Added Error Handling */
                 .catch(error => {
                     console.error("Error fetching FX rates:", error);
                     document.getElementById('live-fx-rate').innerHTML = `&nbsp;|&nbsp; FX data currently unavailable`;
@@ -498,13 +491,35 @@
         }
         updateHeaderFX();
 
-        // NEW: Weather Accordion Toggle Function
+        // Weather Accordion Toggle Function
         function toggleWeather() {
             const header = document.getElementById('weatherHeader');
             const content = document.getElementById('weatherContent');
             
             header.classList.toggle('expanded');
             content.classList.toggle('expanded');
+        }
+
+        // NEW: Extract data directly from the iframe
+        function extractBestTime() {
+            const climateIframe = document.getElementById('climateWidget');
+            const labelElement = document.getElementById('dynamicBestMonthsLabel');
+            
+            try {
+                // Access the internal document of the iframe
+                const iframeDoc = climateIframe.contentDocument || climateIframe.contentWindow.document;
+                
+                // Look for a specific element inside japan_climate.html
+                // YOU MUST ADD id="widget-best-time" to the text you want to pull in that file!
+                const sourceData = iframeDoc.getElementById('widget-best-time');
+                
+                if (sourceData && sourceData.innerText) {
+                    labelElement.textContent = `Best time: ${sourceData.innerText}`;
+                    labelElement.style.visibility = 'visible'; // Reveal it once loaded
+                }
+            } catch (error) {
+                console.warn("Could not extract widget data. Ensure both files are on the same domain (CORS).", error);
+            }
         }
     </script>
 </body>
