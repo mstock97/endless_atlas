@@ -9,7 +9,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <script>
     function sendHeight() {
-        // Use document.body to get the height of simple pages
         const trueHeight = document.body.scrollHeight;
         window.parent.postMessage({ height: trueHeight }, '*'); 
     }
@@ -168,23 +167,28 @@
       .tbl-mobile{display:block}
       .narrative{font-size:12px;padding:12px 13px}
       .strips{flex-direction:column}
-      .strip{flex:none;width:100%}
+      .strip{
+        flex:none;
+        width:100%;
+        align-items: flex-start; /* Aligns label and pills to the left */
+      }
+      .strip strong {
+        width: 100%; /* Forces months to the next line */
+        margin-bottom: 8px; /* Adds space between label and pills */
+      }
     }
   </style>
 </head>
 <body>
 <div class="ht-widget">
 
-  <!-- Best / Avoid strips -->
   <div class="strips">
     <div class="strip strip-best"><strong>Best months to visit</strong><span class="pill pill-best">May</span><span class="pill pill-best">June</span><span class="pill pill-best">October</span></div>
     <div class="strip strip-avoid"><strong>Months to avoid</strong><span class="pill pill-avoid">January</span><span class="pill pill-avoid">March</span><span class="pill pill-avoid">November</span></div>
   </div>
 
-  <!-- Narrative -->
   <p class="narrative">The best time to visit Japan is generally May, June and October, when conditions across most of the country are at their most comfortable. Japan spans a large area with considerable regional climate differences - in any given month temperatures can vary by more than 13°C between regions, so conditions depend heavily on where you are travelling. The country experiences dramatic seasonal swings. August sees country-wide averages around 84.4F (29.1C) while January brings averages down to around 44.8F (7.1C) - with extremes well beyond these figures in some regions. Year-to-year variability is notable: in a warm August country-wide averages can reach 84.4F (29.1C), while a cool August may only average 84.4F (29.1C). January averages range from 43.9F (6.6C) in a cold year to 45.7F (7.6C) in a mild one. Rainfall is typically highest around June and lowest in January. If possible, avoid travelling in January, March and November, when weather conditions across the country are at their worst. This summary draws on data from Tokyo, Osaka, Sapporo, Fukuoka and Naha.</p>
 
-  <!-- Unit toggle -->
   <div class="unit-row">
     <span class="unit-lbl" id="lbl-c">°C</span>
     <label class="toggle">
@@ -194,7 +198,6 @@
     <span class="unit-lbl active" id="lbl-f">°F</span>
   </div>
 
-  <!-- Charts -->
   <div class="charts">
     <div class="chart-card">
       <div class="chart-title">Temperature</div>
@@ -206,14 +209,12 @@
     </div>
   </div>
 
-  <!-- Collapsible monthly breakdown -->
   <div class="collapsible-header" onclick="htToggleTable()">
     <span class="col-label">Monthly breakdown</span>
     <span class="chevron" id="htChev">&#9660;</span>
   </div>
   <div class="table-wrap" id="htMonthTable">
 
-    <!-- Desktop: traditional table (hidden ≤600px via CSS) -->
     <table class="tbl-desktop">
       <thead>
         <tr><th>Month</th><th>High</th><th>Avg</th><th>Low</th><th>Rainfall</th></tr>
@@ -305,7 +306,6 @@
         </tr></tbody>
     </table>
 
-    <!-- Mobile: stacked cards (hidden >600px, built by JS) -->
     <div class="tbl-mobile" id="htMobileCards"></div>
 
   </div>
@@ -332,7 +332,6 @@
 
   let useF = true;
 
-  // ── Build mobile month cards from JS data arrays ───────────────
   function buildMobileCards() {
     const container = document.getElementById('htMobileCards');
     if (!container) return;
@@ -384,7 +383,6 @@
 
   buildMobileCards();
 
-  // ── Temperature chart ──────────────────────────────────────────
   const tempChart = new Chart(document.getElementById('htTempChart'), {
     type: 'line',
     data: {
@@ -417,7 +415,6 @@
     }
   });
 
-  // ── Precipitation chart ────────────────────────────────────────
   const prcpChart = new Chart(document.getElementById('htPrcpChart'), {
     type: 'bar',
     data: {
@@ -456,7 +453,6 @@
     }
   });
 
-  // ── Switch °C / °F ─────────────────────────────────────────────
   window.htSwitchUnits = function(toF) {
     useF = toF;
     tempChart.data.datasets[0].data = toF ? HI_F  : HI_C;
@@ -475,7 +471,6 @@
     document.getElementById('lbl-f').classList.toggle('active',  toF);
   };
 
-  // ── Collapsible table toggle ───────────────────────────────────
   window.htToggleTable = function() {
     document.getElementById('htMonthTable').classList.toggle('open');
     document.getElementById('htChev').classList.toggle('open');
