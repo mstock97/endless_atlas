@@ -486,7 +486,7 @@
 
         /**
          * ENTERPRISE PROPORTIONAL SCROLL LOGIC
-         * Utilizes Linear Interpolation (Lerp) and Hardware Acceleration (translate3d)
+         * V3: Independent Column State Tracking
          */
         const layoutState = {
             gridTop: 0,
@@ -495,95 +495,94 @@
             taller: null
         };
         
-        let currentY = 0; // The actual DOM position
-        let targetY = 0;  // The mathematical destination
+        // Dedicated animation state brains for both columns
+        const mainState = { currentY: 0, targetY: 0 };
+        const supportState = { currentY: 0, targetY: 0 };
 
         const gridEl = document.getElementById('contentGrid');
         const mainCol = document.getElementById('mainCol');
         const supportCol = document.getElementById('supportCol');
 
-        function resetTransforms() {
-            mainCol.style.transform = 'none';
-            supportCol.style.transform = 'none';
-            currentY = 0;
-            targetY = 0;
-        }
-
         function calculateLayout() {
+            // Mobile reset fallback
             if (window.innerWidth <= 900) {
-                resetTransforms();
+                mainCol.style.transform = 'none';
+                supportCol.style.transform = 'none';
+                mainState.currentY = 0; mainState.targetY = 0;
+                supportState.currentY = 0; supportState.targetY = 0;
                 return;
             }
 
-            resetTransforms();
-            void mainCol.offsetHeight; // Force reflow
-
+            // offsetHeight ignores CSS transforms, so we do NOT delete the current animation 
+            // state to measure them. This eliminates the teleportation jitter.
             const mainHeight = mainCol.offsetHeight;
             const supportHeight = supportCol.offsetHeight;
             const rect = gridEl.getBoundingClientRect();
             
             layoutState.gridTop = window.scrollY + rect.top - 100;
             
-            // THRESHOLD 1: If height difference is less than 50px, disable parallax
             if (Math.abs(mainHeight - supportHeight) < 50) {
                  layoutState.diff = 0;
-                 return;
-            }
-
-            if (mainHeight > supportHeight) {
+                 layoutState.taller = 'equal';
+            } else if (mainHeight > supportHeight) {
                 layoutState.taller = 'main';
                 layoutState.diff = mainHeight - supportHeight;
-                layoutState.maxScroll = mainHeight - window.innerHeight + 100;
+                layoutState.maxScroll = Math.max(window.innerHeight / 1.5, mainHeight - window.innerHeight + 100);
             } else {
                 layoutState.taller = 'support';
                 layoutState.diff = supportHeight - mainHeight;
-                layoutState.maxScroll = supportHeight - window.innerHeight + 100;
+                layoutState.maxScroll = Math.max(window.innerHeight / 1.5, supportHeight - window.innerHeight + 100);
             }
 
-            // THRESHOLD 2 (The Jitter Fix): 
-            // Prevent hyper-sensitivity if the column is almost the same size as the screen.
-            if (layoutState.maxScroll < window.innerHeight / 1.5) {
-                layoutState.maxScroll = window.innerHeight / 1.5;
-            }
-
+            // Recalculate target destinations immediately
             handleProportionalScroll();
         }
 
         function handleProportionalScroll() {
-            if (window.innerWidth <= 900 || layoutState.diff <= 0 || layoutState.maxScroll <= 0) {
-                targetY = 0;
+            if (window.innerWidth <= 900) return;
+
+            if (layoutState.diff <= 0 || layoutState.maxScroll <= 0) {
+                mainState.targetY = 0;
+                supportState.targetY = 0;
                 return;
             }
 
             let progress = (window.scrollY - layoutState.gridTop) / layoutState.maxScroll;
             progress = Math.max(0, Math.min(1, progress));
+            const yOffset = progress * layoutState.diff;
 
-            // Assign the target, but do NOT apply the CSS here.
-            targetY = progress * layoutState.diff;
+            // Set targets independently. The taller column is targeted to 0 so it smoothly 
+            // glides back into place if a layout change suddenly makes it the tallest.
+            if (layoutState.taller === 'main') {
+                supportState.targetY = yOffset;
+                mainState.targetY = 0;
+            } else if (layoutState.taller === 'support') {
+                mainState.targetY = yOffset;
+                supportState.targetY = 0;
+            } else {
+                mainState.targetY = 0;
+                supportState.targetY = 0;
+            }
         }
 
         // The Lerp Animation Loop
         function renderLoop() {
-            // Move currentY 8% closer to targetY every frame
-            currentY += (targetY - currentY) * 0.08;
+            // Both columns continuously lerp toward their dedicated mathematical targets
+            mainState.currentY += (mainState.targetY - mainState.currentY) * 0.08;
+            supportState.currentY += (supportState.targetY - supportState.currentY) * 0.08;
 
-            // Only apply DOM updates if there is a meaningful visual difference
-            if (Math.abs(targetY - currentY) > 0.05) {
-                if (layoutState.taller === 'main') {
-                    // translate3d forces the browser to use the GPU
-                    supportCol.style.transform = `translate3d(0, ${currentY}px, 0)`;
-                } else if (layoutState.taller === 'support') {
-                    mainCol.style.transform = `translate3d(0, ${currentY}px, 0)`;
-                }
+            if (window.innerWidth > 900) {
+                // Apply hardware-accelerated transforms to both independently
+                mainCol.style.transform = `translate3d(0, ${mainState.currentY}px, 0)`;
+                supportCol.style.transform = `translate3d(0, ${supportState.currentY}px, 0)`;
             }
             
             window.requestAnimationFrame(renderLoop);
         }
         
-        // Start the continuous animation loop
         window.requestAnimationFrame(renderLoop);
 
-        // Bind scroll event
+        // Bind events
         window.addEventListener('scroll', handleProportionalScroll, { passive: true });
         window.addEventListener('resize', calculateLayout);
 
@@ -601,7 +600,6 @@
         /**
          * ASYNC DATA FETCHING & EVENT TRIGGERS
          */
-        
         window.addEventListener('message', function(e) {
             if (e.origin !== window.location.origin) return;
             if (e.data.height) {
