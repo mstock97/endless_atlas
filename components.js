@@ -16,24 +16,24 @@ const NAV_LINKS = [
     label: 'Destinations', 
     href: '/destinations/',
     children: [
-      { label: 'Japan', href: '/destinations/japan/' },
-      { label: 'Europe', href: '/destinations/europe/' },
-      { label: 'All Destinations', href: '/destinations/' }
+      { label: 'Japan', href: '/destinations/japan' },
+      { label: 'Europe', href: '/destinations/europe' },
+      { label: 'All Destinations', href: '/destinations' }
     ]
   },
-  { label: 'Travel Tips',  href: '/tips/' },
-  { label: 'Gear',          href: '/gear/' },
-  { label: 'Newsletter',   href: '/newsletter/', cta: true },
+  { label: 'Travel Tips',  href: '/tips' },
+  { label: 'Gear',          href: '/gear' },
+  { label: 'Newsletter',   href: '/newsletter', cta: true },
 ];
 
 const FOOTER_COLS = [
   {
     title: 'Explore',
     links: [
-      { label: 'All Destinations', href: '/destinations/' },
-      { label: 'Europe',            href: '/destinations/europe/' },
-      { label: 'Asia',              href: '/destinations/asia/' },
-      { label: 'Americas',          href: '/destinations/americas/' },
+      { label: 'All Destinations', href: '/destinations' },
+      { label: 'Europe',            href: '/destinations/europe' },
+      { label: 'Asia',              href: '/destinations/asia' },
+      { label: 'Americas',          href: '/destinations/americas' },
     ],
   },
   {
