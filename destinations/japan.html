@@ -3,10 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Japan | Endless Atlas</title>
+
+    <!-- ═══════════════════════════════════════════
+         FIX 3: SEO & Open Graph meta tags added
+    ═══════════════════════════════════════════ -->
+    <title>Japan Travel Guide | Endless Atlas</title>
+    <meta name="description" content="Everything you need to plan a trip to Japan — climate, currency, national holidays, an interactive map, and live exchange rates.">
+    <meta property="og:title" content="Japan Travel Guide | Endless Atlas">
+    <meta property="og:description" content="Everything you need to plan a trip to Japan — climate, currency, national holidays, an interactive map, and live exchange rates.">
+    <meta property="og:image" content="https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero-hd.JPG">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://yourdomain.com/destinations/japan/">
+    <link rel="canonical" href="https://yourdomain.com/destinations/japan/">
+
+    <!-- ═══════════════════════════════════════════
+         FIX 9: Font preconnect added, display=swap confirmed
+    ═══════════════════════════════════════════ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="/main.css">
+
+    <!-- ═══════════════════════════════════════════
+         FIX 1: Corrected CSS path (was /main.css)
+    ═══════════════════════════════════════════ -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+
+    <!-- ═══════════════════════════════════════════
+         FIX 15: Structured data (JSON-LD)
+    ═══════════════════════════════════════════ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TouristDestination",
+      "name": "Japan",
+      "description": "Japan is an island country in East Asia, renowned for its harmonious blend of ancient traditions and cutting-edge technology.",
+      "url": "https://yourdomain.com/destinations/japan/",
+      "image": "https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero-hd.JPG",
+      "touristType": ["CulturalTourist", "AdventureTourist", "FoodTourist"]
+    }
+    </script>
 
     <style>
         /* Japan-Specific Hero Styles */
@@ -19,7 +54,7 @@
             align-items: center;
             justify-content: center;
             background-color: #0F0F0F;
-            margin-top: -70px; /* Pulls image up under the sticky header */
+            margin-top: -70px;
         }
 
         .hero-image {
@@ -40,7 +75,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 15, 15, 0.6); /* Brand Guide 60% Scrim */
+            background: rgba(15, 15, 15, 0.6);
             z-index: 1;
         }
 
@@ -53,12 +88,12 @@
             letter-spacing: 0.05em;
             text-align: center;
             pointer-events: none;
-            will-change: transform, opacity;
+            /* FIX 8: will-change only applied when scroll is active (see JS) */
         }
 
         main {
             padding: 100px 10%;
-            background-color: #F7F5F0; /* Brand 'Paper' color */
+            background-color: #F7F5F0;
         }
 
         /* --- LAYOUT STYLES --- */
@@ -92,7 +127,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 2rem;
-            margin-bottom: 2rem; 
+            margin-bottom: 2rem;
             justify-content: flex-start;
         }
 
@@ -144,8 +179,8 @@
             flex-direction: column;
             gap: 1.5rem;
             position: sticky;
-            top: 100px; 
-            align-self: start; 
+            top: 100px;
+            align-self: start;
             z-index: 10;
             transition: top 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
@@ -187,13 +222,30 @@
             min-height: 200px;
             border: none;
             display: block;
-            overflow: hidden; 
+            overflow: hidden;
             transition: height 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .fx-container {
-            background-color: #EAE6DB; 
+            background-color: #EAE6DB;
         }
+
+        /* FIX 6: iframe loading placeholder */
+        .iframe-loading-placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #F7F5F0;
+            color: #8C8C8C;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .iframe-loading-placeholder.hidden { opacity: 0; }
     </style>
 </head>
 <body>
@@ -203,8 +255,11 @@
     <section class="hero-container">
         <picture>
             <source media="(max-width: 768px)" srcset="https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero-mobile.JPG">
-            <img src="https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero-hd.JPG" 
-                 class="hero-image" 
+            <!-- FIX 7: alt text + fetchpriority added -->
+            <img src="https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero-hd.JPG"
+                 class="hero-image"
+                 alt="Mount Fuji rising above the clouds at sunrise, Japan"
+                 fetchpriority="high"
                  referrerpolicy="no-referrer">
         </picture>
         <h1 class="hero-title" id="heroText">JAPAN</h1>
@@ -212,14 +267,15 @@
 
     <main>
         <div class="content-grid">
-            
+
             <div class="main-column">
                 <div class="highlights-container">
                     <div class="highlight-box">
                         <div class="highlight-label">Currency</div>
                         <div class="highlight-value">
                             Japanese Yen
-                            <span class="time-jpy-info">(JPY / ¥) <span id="live-fx-rate"></span></span>
+                            <!-- FIX 4: fallback text shown until rate loads -->
+                            <span class="time-jpy-info">(JPY / ¥) <span id="live-fx-rate">fetching rate…</span></span>
                         </div>
                     </div>
                     <div class="highlight-box">
@@ -231,45 +287,52 @@
                     </div>
                 </div>
 
+                <!-- FIX 5: fallback text if fetch fails is handled in JS -->
                 <div class="description-block" id="dynamic-text-block">
-                    Loading description...
+                    Loading description…
                 </div>
 
-                <h2 class="section-title">Climate & Weather</h2>
-                <div class="dynamic-iframe-container">
-                    <iframe 
-                        src="/support/html/japan_climate.html" 
-                        class="dynamic-iframe" 
-                        scrolling="no" 
-                        title="Japan Climate Data">
+                <h2 class="section-title">Climate &amp; Weather</h2>
+                <div class="dynamic-iframe-container" style="position:relative;">
+                    <div class="iframe-loading-placeholder" id="placeholder-climate">Loading climate data…</div>
+                    <iframe
+                        src="/support/html/japan_climate.html"
+                        class="dynamic-iframe"
+                        scrolling="no"
+                        title="Japan Climate Data"
+                        onload="hidePlaceholder('placeholder-climate')">
                     </iframe>
                 </div>
 
                 <h2 class="section-title">National Holidays</h2>
-                <div class="dynamic-iframe-container">
-                    <iframe 
-                        src="/support/html/japan_holidays.html" 
-                        class="dynamic-iframe" 
-                        scrolling="no" 
-                        title="Japan Public Holidays">
+                <div class="dynamic-iframe-container" style="position:relative;">
+                    <div class="iframe-loading-placeholder" id="placeholder-holidays">Loading holidays…</div>
+                    <iframe
+                        src="/support/html/japan_holidays.html"
+                        class="dynamic-iframe"
+                        scrolling="no"
+                        title="Japan Public Holidays"
+                        onload="hidePlaceholder('placeholder-holidays')">
                     </iframe>
                 </div>
             </div>
 
             <div class="support-column">
-                <iframe 
-                    src="/support/html/japan_map.html" 
-                    class="support-iframe" 
+                <iframe
+                    src="/support/html/japan_map.html"
+                    class="support-iframe"
                     title="Interactive Map of Japan"
                     sandbox="allow-scripts allow-same-origin allow-top-navigation allow-top-navigation-by-user-activation allow-popups">
                 </iframe>
 
-                <div class="dynamic-iframe-container fx-container">
-                    <iframe 
-                        src="/support/html/fx_usd_jpy.html" 
-                        class="dynamic-iframe" 
-                        scrolling="no" 
-                        title="USD to JPY Currency Converter">
+                <div class="dynamic-iframe-container fx-container" style="position:relative;">
+                    <div class="iframe-loading-placeholder" id="placeholder-fx">Loading currency converter…</div>
+                    <iframe
+                        src="/support/html/fx_usd_jpy.html"
+                        class="dynamic-iframe"
+                        scrolling="no"
+                        title="USD to JPY Currency Converter"
+                        onload="hidePlaceholder('placeholder-fx')">
                     </iframe>
                 </div>
             </div>
@@ -279,56 +342,72 @@
 
     <div id="site-footer"></div>
 
-    <script src="/components.js"></script>
+    <!-- FIX 2: Corrected path (was /components.js) -->
+    <script src="/assets/js/components.js"></script>
 
     <script>
-        // Scroll Interaction
-        window.addEventListener('scroll', function() {
-            const scrollValue = window.scrollY;
-            const heroText = document.getElementById('heroText');
-            const scale = 1 + (scrollValue / 600);
-            const opacity = 1 - (scrollValue / 400);
-            
-            if (opacity >= 0) {
-                heroText.style.transform = `scale(${scale})`;
-                heroText.style.opacity = opacity;
-            } else {
-                heroText.style.opacity = 0;
-            }
-        });
+        // FIX 6: Hide iframe loading placeholders once loaded
+        function hidePlaceholder(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
+        }
 
-        // 1. Current JST Time with proper 12-hour AM/PM logic
+        // FIX 12: Scroll parallax respects prefers-reduced-motion
+        // FIX 8: will-change applied only while scrolling, removed after
+        const heroText = document.getElementById('heroText');
+        let scrollTimeout;
+
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            heroText.style.willChange = 'transform, opacity';
+
+            window.addEventListener('scroll', function() {
+                const scrollValue = window.scrollY;
+                const scale = 1 + (scrollValue / 600);
+                const opacity = 1 - (scrollValue / 400);
+
+                if (opacity >= 0) {
+                    heroText.style.transform = `scale(${scale})`;
+                    heroText.style.opacity = opacity;
+                } else {
+                    heroText.style.opacity = 0;
+                }
+
+                // FIX 8: Clean up will-change after scroll stops
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    heroText.style.willChange = 'auto';
+                }, 300);
+            });
+        }
+
+        // FIX 13: JST clock on 60-second interval (was 30s — confusing at :00)
         function updateJSTTime() {
             const timeSpan = document.getElementById('current-jst-time');
             const now = new Date();
             const jstTime = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (3600000 * 9));
-            
+
             const rawHours = jstTime.getHours();
             const minutes = String(jstTime.getMinutes()).padStart(2, '0');
-            
+
             let displayHours = rawHours;
             let ampm = 'AM';
-            
+
             if (rawHours >= 12) {
                 ampm = 'PM';
-                if (rawHours > 12) {
-                    displayHours = rawHours - 12;
-                }
+                if (rawHours > 12) displayHours = rawHours - 12;
             }
-            if (displayHours === 0) {
-                displayHours = 12; // Handle midnight correctly
-            }
-            
+            if (displayHours === 0) displayHours = 12;
+
             timeSpan.textContent = `Current Time: ${displayHours}:${minutes} ${ampm}`;
         }
-        
-        updateJSTTime();
-        setInterval(updateJSTTime, 30000);
 
-        // 2. Scalable Dynamic Iframe Height & Recenter Listener
+        updateJSTTime();
+        setInterval(updateJSTTime, 60000);
+
+        // Dynamic iframe height listener
         window.addEventListener('message', function(e) {
             if (e.origin !== window.location.origin) return;
-            
+
             if (e.data.height) {
                 const iframes = document.querySelectorAll('iframe');
                 iframes.forEach(iframe => {
@@ -351,59 +430,60 @@
             }
         });
 
-        // 3. Fetch the external text block and inject it using Root-Relative path
+        // FIX 5: Fetch description with graceful fallback
         fetch('/support/text/japan_country_paragraph.html')
             .then(response => {
-                if (!response.ok) throw new Error("Network response was not ok");
+                if (!response.ok) throw new Error('Network response was not ok');
                 return response.text();
             })
             .then(htmlContent => {
                 document.getElementById('dynamic-text-block').innerHTML = htmlContent;
             })
-            .catch(error => {
-                console.error('Error fetching text block:', error);
-                document.getElementById('dynamic-text-block').innerHTML = "<strong>[Error]</strong> Could not load the description.";
+            .catch(() => {
+                document.getElementById('dynamic-text-block').innerHTML =
+                    'Japan is an island country in East Asia, renowned for its harmonious blend of ancient traditions and cutting-edge technology. From the neon-lit streets of Tokyo to the serene temples of Kyoto and the majestic peaks of Mount Fuji, the archipelago offers a unique tapestry of culture, nature, and history.';
             });
 
-        // 4. Adjusted Exchange Rate Logic (Mirroring the Widget's Cross-Rate Math)
+        // FIX 4: Exchange rate with error fallback
         function updateHeaderFX() {
-            // The widget fetches base-EUR rates for both currencies and divides them.
-            // We are doing the exact same thing here to guarantee identical numbers.
             fetch('https://api.frankfurter.dev/v2/rates?quotes=USD,JPY')
                 .then(response => response.json())
                 .then(data => {
-                    if (!Array.isArray(data)) return;
-                    
                     let usdRate = null;
                     let jpyRate = null;
-                    
-                    data.forEach(item => {
-                        if (item.quote === 'USD') usdRate = item.rate;
-                        if (item.quote === 'JPY') jpyRate = item.rate;
-                    });
-                    
+
+                    if (Array.isArray(data)) {
+                        data.forEach(item => {
+                            if (item.quote === 'USD') usdRate = item.rate;
+                            if (item.quote === 'JPY') jpyRate = item.rate;
+                        });
+                    }
+
+                    const fxSpan = document.getElementById('live-fx-rate');
+
                     if (usdRate && jpyRate) {
-                        const fxSpan = document.getElementById('live-fx-rate');
-                        
-                        // Calculate cross-rate exactly like the widget does
                         const rate = jpyRate / usdRate;
                         const invRate = 1 / rate;
 
-                        // Formatting helper matching the iframe widget logic
                         function fmt(n) {
-                            if (n == null || isNaN(n)) return "—";
-                            if (n >= 10000) return n.toLocaleString("en-US", {maximumFractionDigits: 2});
+                            if (n == null || isNaN(n)) return '—';
+                            if (n >= 10000) return n.toLocaleString('en-US', { maximumFractionDigits: 2 });
                             if (n >= 100)   return n.toFixed(2);
                             if (n >= 1)     return n.toFixed(4);
                             return n.toFixed(6);
                         }
 
-                        // Display formatted string identical to the widget
                         fxSpan.innerHTML = `&nbsp;|&nbsp; 1 USD = ${fmt(rate)} JPY &nbsp;|&nbsp; 1 JPY = ${fmt(invRate)} USD`;
+                    } else {
+                        // FIX 4: Silent failure replaced with user-facing fallback
+                        fxSpan.textContent = '| rate unavailable';
                     }
                 })
-                .catch(error => console.error('Error fetching exchange rate:', error));
+                .catch(() => {
+                    document.getElementById('live-fx-rate').textContent = '| rate unavailable';
+                });
         }
+
         updateHeaderFX();
     </script>
 </body>
