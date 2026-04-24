@@ -12,7 +12,7 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="Japan | Endless Atlas">
     <meta property="og:description" content="Your comprehensive guide to traveling Japan. Real-time FX rates, weather data, and travel essentials.">
-    <meta property="og:image" content="https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero.JPG">
+    <meta property="og:image" content="https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero-hd.JPG">
 
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:title" content="Japan | Endless Atlas">
@@ -45,7 +45,7 @@
             align-items: center;
             justify-content: center;
             background-color: #0F0F0F;
-            margin-top: -70px; /* Pulls image up under the sticky header */
+            margin-top: -70px;
         }
 
         .hero-image {
@@ -57,19 +57,21 @@
             object-fit: cover;
             object-position: center center;
             z-index: 0;
-            /* Transition for the progressive load blur */
+            /* Added transition for a smooth reveal */
             transition: filter 0.8s ease-in-out, transform 0.8s ease-in-out;
+            will-change: filter;
         }
 
-        /* Progressive Loading States */
+        /* Initial state: Blurred and slightly scaled to hide edges */
         .img-low-res {
-            filter: blur(20px);
-            transform: scale(1.05); /* Slight scale to prevent white edges during blur */
+            filter: blur(15px);
+            transform: scale(1.05);
         }
 
+        /* Target state: Sharp and original scale */
         .img-loaded {
-            filter: blur(0);
-            transform: scale(1);
+            filter: blur(0) !important;
+            transform: scale(1) !important;
         }
 
         .hero-container::after {
@@ -79,7 +81,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 15, 15, 0.6); /* Brand Guide 60% Scrim */
+            background: rgba(15, 15, 15, 0.6); 
             z-index: 1;
         }
 
@@ -97,10 +99,9 @@
 
         main {
             padding: 100px 10%;
-            background-color: #F7F5F0; /* Brand 'Paper' color */
+            background-color: #F7F5F0; 
         }
 
-        /* --- LAYOUT STYLES --- */
         .content-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -115,7 +116,6 @@
             }
         }
 
-        /* --- SECTION HEADERS --- */
         .section-title {
             font-family: 'Bebas Neue', sans-serif;
             font-size: 2.5rem;
@@ -126,7 +126,6 @@
             padding-bottom: 0.5rem;
         }
 
-        /* --- HIGHLIGHTS --- */
         .highlights-container {
             display: flex;
             flex-wrap: wrap;
@@ -169,7 +168,6 @@
             color: #777;
         }
 
-        /* Static Description Text Block */
         .description-block {
             font-family: 'DM Sans', sans-serif;
             font-size: 1.1rem;
@@ -177,7 +175,6 @@
             color: #333;
         }
 
-        /* Support Column Styles */
         .support-column {
             display: flex;
             flex-direction: column;
@@ -208,7 +205,6 @@
             }
         }
 
-        /* Universal Dynamic Iframe Styles */
         .dynamic-iframe-container {
             width: 100%;
             position: relative;
@@ -251,7 +247,6 @@
 
     <main>
         <div class="content-grid">
-            
             <article class="main-column">
                 <div class="highlights-container">
                     <section class="highlight-box">
@@ -276,40 +271,21 @@
 
                 <h2 class="section-title">Climate & Weather in Japan</h2>
                 <div class="dynamic-iframe-container">
-                    <iframe 
-                        src="/support/html/japan_climate.html" 
-                        class="dynamic-iframe" 
-                        title="Japan Climate Data Chart">
-                    </iframe>
+                    <iframe src="/support/html/japan_climate.html" class="dynamic-iframe" title="Japan Climate Data Chart"></iframe>
                 </div>
 
                 <h2 class="section-title">Japan National Holidays</h2>
                 <div class="dynamic-iframe-container">
-                    <iframe 
-                        src="/support/html/japan_holidays.html" 
-                        class="dynamic-iframe" 
-                        title="List of Japan Public Holidays">
-                    </iframe>
+                    <iframe src="/support/html/japan_holidays.html" class="dynamic-iframe" title="List of Japan Public Holidays"></iframe>
                 </div>
             </article>
 
             <aside class="support-column">
-                <iframe 
-                    src="/support/html/japan_map.html" 
-                    class="support-iframe" 
-                    title="Interactive Map of Japan"
-                    sandbox="allow-scripts allow-same-origin allow-top-navigation allow-top-navigation-by-user-activation allow-popups">
-                </iframe>
-
+                <iframe src="/support/html/japan_map.html" class="support-iframe" title="Interactive Map of Japan" sandbox="allow-scripts allow-same-origin allow-top-navigation allow-top-navigation-by-user-activation allow-popups"></iframe>
                 <div class="dynamic-iframe-container fx-container">
-                    <iframe 
-                        src="/support/html/fx_usd_jpy.html" 
-                        class="dynamic-iframe" 
-                        title="USD to JPY Currency Converter Tool">
-                    </iframe>
+                    <iframe src="/support/html/fx_usd_jpy.html" class="dynamic-iframe" title="USD to JPY Currency Converter Tool"></iframe>
                 </div>
             </aside>
-
         </div>
     </main>
 
@@ -318,26 +294,38 @@
     <script src="/components.js"></script>
 
     <script>
-        // Progressive Hero Image Loader
-        // We wait for the window to load, then fetch the HD image in the background
-        window.addEventListener('load', function() {
-            const heroImg = document.getElementById('mainHeroImage');
-            const hdUrl = "https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero.JPG";
-            
-            const imgLoader = new Image();
-            imgLoader.src = hdUrl;
-
-            imgLoader.onload = function() {
-                heroImg.src = hdUrl;
+        /**
+         * PROGRESSIVE IMAGE LOADER
+         * Replaces mobile/low-res image with HD version once downloaded.
+         */
+        const heroImg = document.getElementById('mainHeroImage');
+        const hdUrl = "https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero-hd.JPG";
+        
+        function revealHD() {
+            heroImg.src = hdUrl;
+            // Short timeout ensures the browser has swapped the source before removing the blur
+            setTimeout(() => {
                 heroImg.classList.remove('img-low-res');
                 heroImg.classList.add('img-loaded');
-            };
-        });
+            }, 50);
+        }
+
+        const imgLoader = new Image();
+        imgLoader.src = hdUrl;
+
+        // If HD image is already in cache, reveal immediately
+        if (imgLoader.complete) {
+            revealHD();
+        } else {
+            // Otherwise, wait for it to download
+            imgLoader.onload = revealHD;
+        }
 
         // Scroll Interaction
         window.addEventListener('scroll', function() {
             const scrollValue = window.scrollY;
             const heroText = document.getElementById('heroText');
+            if (!heroText) return;
             const scale = 1 + (scrollValue / 600);
             const opacity = 1 - (scrollValue / 400);
             
@@ -368,20 +356,16 @@
                     displayHours = rawHours - 12;
                 }
             }
-            if (displayHours === 0) {
-                displayHours = 12;
-            }
+            if (displayHours === 0) displayHours = 12;
             
             timeSpan.textContent = `Current Time: ${displayHours}:${minutes} ${ampm}`;
         }
-        
         updateJSTTime();
         setInterval(updateJSTTime, 30000);
 
-        // 2. Scalable Dynamic Iframe Height & Recenter Listener
+        // 2. Iframe Resize logic
         window.addEventListener('message', function(e) {
             if (e.origin !== window.location.origin) return;
-            
             if (e.data.height) {
                 const iframes = document.querySelectorAll('iframe');
                 iframes.forEach(iframe => {
@@ -390,67 +374,35 @@
                         if (iframe.parentElement.classList.contains('dynamic-iframe-container')) {
                             iframe.parentElement.style.height = e.data.height + 'px';
                         }
-
-                        setTimeout(() => {
-                            const supportCol = document.querySelector('.support-column');
-                            const colHeight = supportCol.offsetHeight;
-                            const viewportHeight = window.innerHeight;
-                            const idealTop = (viewportHeight - colHeight) / 2;
-                            const newTop = Math.max(20, Math.min(100, idealTop));
-                            supportCol.style.top = newTop + 'px';
-                        }, 50);
                     }
                 });
             }
         });
 
-        // 3. Fetch description text
+        // 3. Fetch description
         fetch('/support/text/japan_country_paragraph.html')
-            .then(response => {
-                if (!response.ok) throw new Error("Network response was not ok");
-                return response.text();
-            })
-            .then(htmlContent => {
-                document.getElementById('dynamic-text-block').innerHTML = htmlContent;
-            })
-            .catch(error => {
-                console.error('Error fetching text block:', error);
-                document.getElementById('dynamic-text-block').innerHTML = "<strong>[Error]</strong> Could not load the description.";
-            });
+            .then(res => res.ok ? res.text() : Promise.reject())
+            .then(html => document.getElementById('dynamic-text-block').innerHTML = html)
+            .catch(() => document.getElementById('dynamic-text-block').innerHTML = "Could not load the description.");
 
-        // 4. Exchange Rate Logic
+        // 4. Exchange Rates
         function updateHeaderFX() {
             fetch('https://api.frankfurter.dev/v2/rates?quotes=USD,JPY')
-                .then(response => response.json())
+                .then(res => res.json())
                 .then(data => {
                     if (!Array.isArray(data)) return;
-                    
-                    let usdRate = null;
-                    let jpyRate = null;
-                    
+                    let usd, jpy;
                     data.forEach(item => {
-                        if (item.quote === 'USD') usdRate = item.rate;
-                        if (item.quote === 'JPY') jpyRate = item.rate;
+                        if (item.quote === 'USD') usd = item.rate;
+                        if (item.quote === 'JPY') jpy = item.rate;
                     });
-                    
-                    if (usdRate && jpyRate) {
-                        const fxSpan = document.getElementById('live-fx-rate');
-                        
-                        const rate = jpyRate / usdRate;
-                        const invRate = 1 / rate;
-
-                        function fmt(n) {
-                            if (n == null || isNaN(n)) return "—";
-                            if (n >= 10000) return n.toLocaleString("en-US", {maximumFractionDigits: 2});
-                            if (n >= 100)   return n.toFixed(2);
-                            if (n >= 1)      return n.toFixed(4);
-                            return n.toFixed(6);
-                        }
-
-                        fxSpan.innerHTML = `&nbsp;|&nbsp; 1 USD = ${fmt(rate)} JPY &nbsp;|&nbsp; 1 JPY = ${fmt(invRate)} USD`;
+                    if (usd && jpy) {
+                        const rate = jpy / usd;
+                        const inv = 1 / rate;
+                        const fmt = n => n >= 100 ? n.toFixed(2) : n.toFixed(4);
+                        document.getElementById('live-fx-rate').innerHTML = `&nbsp;|&nbsp; 1 USD = ${fmt(rate)} JPY &nbsp;|&nbsp; 1 JPY = ${fmt(inv)} USD`;
                     }
-                })
-                .catch(error => console.error('Error fetching exchange rate:', error));
+                });
         }
         updateHeaderFX();
     </script>
