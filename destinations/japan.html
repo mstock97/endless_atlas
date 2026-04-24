@@ -57,18 +57,15 @@
             object-fit: cover;
             object-position: center center;
             z-index: 0;
-            /* Added transition for a smooth reveal */
             transition: filter 0.8s ease-in-out, transform 0.8s ease-in-out;
             will-change: filter;
         }
 
-        /* Initial state: Blurred and slightly scaled to hide edges */
         .img-low-res {
             filter: blur(15px);
             transform: scale(1.05);
         }
 
-        /* Target state: Sharp and original scale */
         .img-loaded {
             filter: blur(0) !important;
             transform: scale(1) !important;
@@ -205,25 +202,26 @@
             }
         }
 
+        /* --- UPDATED DYNAMIC IFRAME STYLES --- */
         .dynamic-iframe-container {
             width: 100%;
             position: relative;
-            overflow: hidden;
+            /* Allow content to push height without clipping */
+            overflow: visible; 
             border: none;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             background-color: transparent;
-            transition: height 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .dynamic-iframe {
             width: 100%;
             height: 100%;
-            min-height: 200px;
+            min-height: 50px;
             border: none;
             display: block;
+            /* Hide the internal iframe scrollbar */
             overflow: hidden; 
-            transition: height 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .fx-container {
@@ -296,14 +294,12 @@
     <script>
         /**
          * PROGRESSIVE IMAGE LOADER
-         * Replaces mobile/low-res image with HD version once downloaded.
          */
         const heroImg = document.getElementById('mainHeroImage');
         const hdUrl = "https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero-hd.JPG";
         
         function revealHD() {
             heroImg.src = hdUrl;
-            // Short timeout ensures the browser has swapped the source before removing the blur
             setTimeout(() => {
                 heroImg.classList.remove('img-low-res');
                 heroImg.classList.add('img-loaded');
@@ -313,11 +309,9 @@
         const imgLoader = new Image();
         imgLoader.src = hdUrl;
 
-        // If HD image is already in cache, reveal immediately
         if (imgLoader.complete) {
             revealHD();
         } else {
-            // Otherwise, wait for it to download
             imgLoader.onload = revealHD;
         }
 
@@ -363,16 +357,17 @@
         updateJSTTime();
         setInterval(updateJSTTime, 30000);
 
-        // 2. Iframe Resize logic
+        // 2. Iframe Resize logic - Adjusted for instant resizing
         window.addEventListener('message', function(e) {
             if (e.origin !== window.location.origin) return;
             if (e.data.height) {
                 const iframes = document.querySelectorAll('iframe');
                 iframes.forEach(iframe => {
                     if (iframe.contentWindow === e.source) {
-                        iframe.style.height = e.data.height + 'px';
+                        const newHeight = e.data.height + 'px';
+                        iframe.style.height = newHeight;
                         if (iframe.parentElement.classList.contains('dynamic-iframe-container')) {
-                            iframe.parentElement.style.height = e.data.height + 'px';
+                            iframe.parentElement.style.height = newHeight;
                         }
                     }
                 });
