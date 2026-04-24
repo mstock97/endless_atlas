@@ -262,7 +262,6 @@
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
             transition: opacity 0.3s ease, visibility 0.3s;
-            /* Hidden by default until data is loaded from iframe */
             visibility: hidden; 
         }
 
@@ -309,6 +308,42 @@
                 width: 100%;
                 justify-content: space-between;
             }
+        }
+
+        /* --- NEW: TRAVEL TIPS SIDEBAR STYLES --- */
+        .travel-tips-container {
+            background-color: #EAE6DB;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .support-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            color: #1E4034;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #D1CDC4;
+            padding-bottom: 0.5rem;
+        }
+
+        .travel-tips-content {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        /* Ensures bullet points or paragraphs from the fetched HTML look good */
+        .travel-tips-content ul {
+            padding-left: 1.2rem;
+            margin: 0;
+        }
+        
+        .travel-tips-content p {
+            margin-top: 0;
         }
     </style>
 </head>
@@ -375,6 +410,14 @@
 
             <aside class="support-column">
                 <iframe src="/support/html/japan_map.html" class="support-iframe" title="Interactive Map of Japan" sandbox="allow-scripts allow-same-origin allow-top-navigation allow-top-navigation-by-user-activation allow-popups" scrolling="no"></iframe>
+                
+                <div class="travel-tips-container">
+                    <h3 class="support-title">Travel Tips</h3>
+                    <div class="travel-tips-content" id="travel-tips-content">
+                        Loading travel tips...
+                    </div>
+                </div>
+
                 <div class="dynamic-iframe-container fx-container">
                     <iframe src="/support/html/fx_usd_jpy.html" class="dynamic-iframe" title="USD to JPY Currency Converter Tool" scrolling="no"></iframe>
                 </div>
@@ -466,6 +509,21 @@
             .then(html => document.getElementById('dynamic-text-block').innerHTML = html)
             .catch(() => document.getElementById('dynamic-text-block').innerHTML = "Could not load the description.");
 
+        // NEW: Fetch Travel Tips logic
+        function fetchTravelTips() {
+            fetch('/support/text/japan_travel_tips.html')
+                .then(res => res.ok ? res.text() : Promise.reject('Network response was not ok'))
+                .then(html => {
+                    document.getElementById('travel-tips-content').innerHTML = html;
+                })
+                .catch(error => {
+                    console.error("Error fetching travel tips:", error);
+                    document.getElementById('travel-tips-content').innerHTML = "Travel tips are currently unavailable.";
+                });
+        }
+        // Initialize the fetch when the script runs
+        fetchTravelTips();
+
         // Exchange Rates
         function updateHeaderFX() {
             fetch('https://api.frankfurter.dev/v2/rates?quotes=USD,JPY')
@@ -500,22 +558,18 @@
             content.classList.toggle('expanded');
         }
 
-        // NEW: Extract data directly from the iframe
+        // Extract data directly from the iframe
         function extractBestTime() {
             const climateIframe = document.getElementById('climateWidget');
             const labelElement = document.getElementById('dynamicBestMonthsLabel');
             
             try {
-                // Access the internal document of the iframe
                 const iframeDoc = climateIframe.contentDocument || climateIframe.contentWindow.document;
-                
-                // Look for a specific element inside japan_climate.html
-                // YOU MUST ADD id="widget-best-time" to the text you want to pull in that file!
                 const sourceData = iframeDoc.getElementById('widget-best-time');
                 
                 if (sourceData && sourceData.innerText) {
                     labelElement.textContent = `Best time: ${sourceData.innerText}`;
-                    labelElement.style.visibility = 'visible'; // Reveal it once loaded
+                    labelElement.style.visibility = 'visible'; 
                 }
             } catch (error) {
                 console.warn("Could not extract widget data. Ensure both files are on the same domain (CORS).", error);
