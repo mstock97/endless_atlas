@@ -104,7 +104,6 @@
             gap: 3rem;
             max-width: 1400px;
             margin: 0 auto;
-            /* CRITICAL: align-items start prevents the shorter column from stretching to match the taller one */
             align-items: start; 
         }
 
@@ -173,7 +172,6 @@
             color: #333;
         }
 
-        /* Reverted back to standard flow positioning for JS control */
         .main-column {
             position: relative;
             z-index: 10;
@@ -212,7 +210,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             background-color: transparent;
-            transition: height 0.3s ease; 
+            /* Removed transition here to prevent layout thrashing and out-of-sync heights */
         }
 
         .dynamic-iframe {
@@ -222,7 +220,6 @@
             border: none;
             display: block;
             overflow: hidden; 
-            transition: height 0.3s ease; 
         }
 
         .fx-container {
@@ -578,7 +575,7 @@
         }
 
         /**
-         * PROPORTIONAL / PARALLAX SCROLL LOGIC
+         * PROPORTIONAL / PARALLAX SCROLL LOGIC (FIXED)
          */
         const layoutState = {
             gridTop: 0,
@@ -592,17 +589,13 @@
         const supportCol = document.getElementById('supportCol');
 
         function calculateLayout() {
-            // Reset state on mobile widths
             if (window.innerWidth <= 900) {
                 mainCol.style.transform = 'none';
                 supportCol.style.transform = 'none';
                 return;
             }
 
-            // Temporarily clear transforms to get true DOM heights
-            mainCol.style.transform = 'none';
-            supportCol.style.transform = 'none';
-
+            // offsetHeight completely ignores CSS transforms, so we don't need to clear styles to get true height
             const mainHeight = mainCol.offsetHeight;
             const supportHeight = supportCol.offsetHeight;
             
@@ -620,20 +613,23 @@
                 layoutState.maxScroll = supportHeight - window.innerHeight + 100;
             }
 
-            // Trigger an immediate position update
             handleProportionalScroll();
         }
 
         function handleProportionalScroll() {
-            if (window.innerWidth <= 900 || layoutState.diff <= 0 || layoutState.maxScroll <= 0) return;
+            // Safety Check: if the maxScroll becomes negative or diff hits 0, ensure transforms are reset to prevent sticking
+            if (window.innerWidth <= 900 || layoutState.diff <= 0 || layoutState.maxScroll <= 0) {
+                mainCol.style.transform = 'none';
+                supportCol.style.transform = 'none';
+                return;
+            }
 
-            // Calculate percentage scrolled through the grid (between 0 and 1)
             let progress = (window.scrollY - layoutState.gridTop) / layoutState.maxScroll;
             progress = Math.max(0, Math.min(1, progress));
 
-            // Apply translation to the shorter column
             const yOffset = progress * layoutState.diff;
 
+            // Apply translation ONLY to the shorter column, ensuring the taller column is strictly reset to 'none'
             if (layoutState.taller === 'main') {
                 supportCol.style.transform = `translateY(${yOffset}px)`;
                 mainCol.style.transform = 'none';
@@ -643,7 +639,6 @@
             }
         }
 
-        // Throttle scroll events to animation frames for smooth rendering
         let isScrolling = false;
         window.addEventListener('scroll', () => {
             if (!isScrolling) {
@@ -655,17 +650,18 @@
             }
         }, { passive: true });
 
-        // Recalculate on window resize
         window.addEventListener('resize', calculateLayout);
 
-        // Robust ResizeObserver: Watches the grid for height changes (e.g. Accordion open/close, Iframe load)
-        const gridObserver = new ResizeObserver(() => {
-            // Need a slight timeout to let DOM settle after animations before measuring
-            setTimeout(calculateLayout, 50); 
+        // Targeted ResizeObserver: Directly watches both columns for individual dynamic content changes
+        const columnObserver = new ResizeObserver(() => {
+            window.requestAnimationFrame(calculateLayout);
         });
-        if (gridEl) {
-            gridObserver.observe(gridEl);
-        }
+        
+        if (mainCol) columnObserver.observe(mainCol);
+        if (supportCol) columnObserver.observe(supportCol);
+
+        // Initial setup
+        window.requestAnimationFrame(calculateLayout);
     </script>
 </body>
 </html>
