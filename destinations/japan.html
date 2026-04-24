@@ -12,7 +12,7 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="Japan | Endless Atlas">
     <meta property="og:description" content="Your comprehensive guide to traveling Japan. Real-time FX rates, weather data, and travel essentials.">
-    <meta property="og:image" content="https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero-hd.JPG">
+    <meta property="og:image" content="https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero.JPG">
 
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:title" content="Japan | Endless Atlas">
@@ -57,6 +57,19 @@
             object-fit: cover;
             object-position: center center;
             z-index: 0;
+            /* Transition for the progressive load blur */
+            transition: filter 0.8s ease-in-out, transform 0.8s ease-in-out;
+        }
+
+        /* Progressive Loading States */
+        .img-low-res {
+            filter: blur(20px);
+            transform: scale(1.05); /* Slight scale to prevent white edges during blur */
+        }
+
+        .img-loaded {
+            filter: blur(0);
+            transform: scale(1);
         }
 
         .hero-container::after {
@@ -227,13 +240,12 @@
     <div id="site-header"></div>
 
     <section class="hero-container">
-        <picture>
-            <source media="(max-width: 768px)" srcset="https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero-mobile.JPG">
-            <img src="https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero-hd.JPG" 
-                 class="hero-image" 
-                 alt="Mount Fuji with cherry blossoms - Japan Destination"
-                 referrerpolicy="no-referrer">
-        </picture>
+        <img src="https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero-mobile.JPG" 
+             class="hero-image img-low-res" 
+             id="mainHeroImage"
+             alt="Mount Fuji with cherry blossoms - Japan Destination"
+             referrerpolicy="no-referrer">
+        
         <h1 class="hero-title" id="heroText">JAPAN</h1>
     </section>
 
@@ -267,7 +279,6 @@
                     <iframe 
                         src="/support/html/japan_climate.html" 
                         class="dynamic-iframe" 
-                        scrolling="no" 
                         title="Japan Climate Data Chart">
                     </iframe>
                 </div>
@@ -277,7 +288,6 @@
                     <iframe 
                         src="/support/html/japan_holidays.html" 
                         class="dynamic-iframe" 
-                        scrolling="no" 
                         title="List of Japan Public Holidays">
                     </iframe>
                 </div>
@@ -295,7 +305,6 @@
                     <iframe 
                         src="/support/html/fx_usd_jpy.html" 
                         class="dynamic-iframe" 
-                        scrolling="no" 
                         title="USD to JPY Currency Converter Tool">
                     </iframe>
                 </div>
@@ -309,6 +318,22 @@
     <script src="/components.js"></script>
 
     <script>
+        // Progressive Hero Image Loader
+        // We wait for the window to load, then fetch the HD image in the background
+        window.addEventListener('load', function() {
+            const heroImg = document.getElementById('mainHeroImage');
+            const hdUrl = "https://storage.googleapis.com/blog_asset_storage_prod/Japan%20Assets/Japan_Fuji_Hero.JPG";
+            
+            const imgLoader = new Image();
+            imgLoader.src = hdUrl;
+
+            imgLoader.onload = function() {
+                heroImg.src = hdUrl;
+                heroImg.classList.remove('img-low-res');
+                heroImg.classList.add('img-loaded');
+            };
+        });
+
         // Scroll Interaction
         window.addEventListener('scroll', function() {
             const scrollValue = window.scrollY;
@@ -324,9 +349,10 @@
             }
         });
 
-        // 1. Current JST Time with proper 12-hour AM/PM logic
+        // 1. Current JST Time
         function updateJSTTime() {
             const timeSpan = document.getElementById('current-jst-time');
+            if(!timeSpan) return;
             const now = new Date();
             const jstTime = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (3600000 * 9));
             
@@ -343,7 +369,7 @@
                 }
             }
             if (displayHours === 0) {
-                displayHours = 12; // Handle midnight correctly
+                displayHours = 12;
             }
             
             timeSpan.textContent = `Current Time: ${displayHours}:${minutes} ${ampm}`;
@@ -378,7 +404,7 @@
             }
         });
 
-        // 3. Fetch the external text block and inject it using Root-Relative path
+        // 3. Fetch description text
         fetch('/support/text/japan_country_paragraph.html')
             .then(response => {
                 if (!response.ok) throw new Error("Network response was not ok");
@@ -392,7 +418,7 @@
                 document.getElementById('dynamic-text-block').innerHTML = "<strong>[Error]</strong> Could not load the description.";
             });
 
-        // 4. Adjusted Exchange Rate Logic (Mirroring the Widget's Cross-Rate Math)
+        // 4. Exchange Rate Logic
         function updateHeaderFX() {
             fetch('https://api.frankfurter.dev/v2/rates?quotes=USD,JPY')
                 .then(response => response.json())
