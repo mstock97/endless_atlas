@@ -210,7 +210,6 @@
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             background-color: transparent;
-            /* Removed transition here to prevent layout thrashing and out-of-sync heights */
         }
 
         .dynamic-iframe {
@@ -485,6 +484,103 @@
         updateJSTTime();
         setInterval(updateJSTTime, 30000);
 
+        /**
+         * PROPORTIONAL / PARALLAX SCROLL LOGIC
+         */
+        const layoutState = {
+            gridTop: 0,
+            maxScroll: 0,
+            diff: 0,
+            taller: null
+        };
+
+        const gridEl = document.getElementById('contentGrid');
+        const mainCol = document.getElementById('mainCol');
+        const supportCol = document.getElementById('supportCol');
+
+        function calculateLayout() {
+            if (window.innerWidth <= 900) {
+                mainCol.style.transform = 'none';
+                supportCol.style.transform = 'none';
+                return;
+            }
+
+            // Temporarily strip transforms so they don't corrupt the box model measurements
+            mainCol.style.transform = 'none';
+            supportCol.style.transform = 'none';
+
+            // FORCE a browser reflow. This explicitly tells the browser to process the removed transforms 
+            // before measuring the heights below, preventing the old math from ghosting the new math.
+            void mainCol.offsetHeight; 
+
+            const mainHeight = mainCol.offsetHeight;
+            const supportHeight = supportCol.offsetHeight;
+            
+            const rect = gridEl.getBoundingClientRect();
+            layoutState.gridTop = window.scrollY + rect.top - 100;
+
+            if (mainHeight > supportHeight) {
+                layoutState.taller = 'main';
+                layoutState.diff = mainHeight - supportHeight;
+                layoutState.maxScroll = mainHeight - window.innerHeight + 100;
+            } else {
+                layoutState.taller = 'support';
+                layoutState.diff = supportHeight - mainHeight;
+                layoutState.maxScroll = supportHeight - window.innerHeight + 100;
+            }
+
+            handleProportionalScroll();
+        }
+
+        function handleProportionalScroll() {
+            if (window.innerWidth <= 900 || layoutState.diff <= 0 || layoutState.maxScroll <= 0) {
+                mainCol.style.transform = 'none';
+                supportCol.style.transform = 'none';
+                return;
+            }
+
+            let progress = (window.scrollY - layoutState.gridTop) / layoutState.maxScroll;
+            progress = Math.max(0, Math.min(1, progress));
+
+            const yOffset = progress * layoutState.diff;
+
+            if (layoutState.taller === 'main') {
+                supportCol.style.transform = `translateY(${yOffset}px)`;
+                mainCol.style.transform = 'none';
+            } else {
+                mainCol.style.transform = `translateY(${yOffset}px)`;
+                supportCol.style.transform = 'none';
+            }
+        }
+
+        let isScrolling = false;
+        window.addEventListener('scroll', () => {
+            if (!isScrolling) {
+                window.requestAnimationFrame(() => {
+                    handleProportionalScroll();
+                    isScrolling = false;
+                });
+                isScrolling = true;
+            }
+        }, { passive: true });
+
+        window.addEventListener('resize', calculateLayout);
+
+        // Debounced Resize Observer
+        let resizeTimeout;
+        const columnObserver = new ResizeObserver(() => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(calculateLayout, 50); // Waits for DOM to settle before calculating
+        });
+        
+        if (mainCol) columnObserver.observe(mainCol);
+        if (supportCol) columnObserver.observe(supportCol);
+
+
+        /**
+         * ASYNC DATA FETCHING & EVENT TRIGGERS
+         */
+        
         // Iframe Resize logic
         window.addEventListener('message', function(e) {
             if (e.origin !== window.location.origin) return;
@@ -497,6 +593,8 @@
                         if (iframe.parentElement.classList.contains('dynamic-iframe-container')) {
                             iframe.parentElement.style.height = newHeight;
                         }
+                        // TRIGGER: Recalculate immediately after an iframe expands
+                        setTimeout(calculateLayout, 50); 
                     }
                 });
             }
@@ -505,7 +603,11 @@
         // Fetch description
         fetch('/support/text/japan_country_paragraph.html')
             .then(res => res.ok ? res.text() : Promise.reject())
-            .then(html => document.getElementById('dynamic-text-block').innerHTML = html)
+            .then(html => {
+                document.getElementById('dynamic-text-block').innerHTML = html;
+                // TRIGGER: Recalculate after text finishes loading
+                setTimeout(calculateLayout, 50);
+            })
             .catch(() => document.getElementById('dynamic-text-block').innerHTML = "Could not load the description.");
 
         // Fetch Travel Tips logic
@@ -514,6 +616,8 @@
                 .then(res => res.ok ? res.text() : Promise.reject('Network response was not ok'))
                 .then(html => {
                     document.getElementById('travel-tips-content').innerHTML = html;
+                    // TRIGGER: Recalculate after tips finish loading
+                    setTimeout(calculateLayout, 50);
                 })
                 .catch(error => {
                     console.error("Error fetching travel tips:", error);
@@ -538,6 +642,8 @@
                         const inv = 1 / rate;
                         const fmt = n => n >= 100 ? n.toFixed(2) : n.toFixed(4);
                         document.getElementById('live-fx-rate').innerHTML = `&nbsp;|&nbsp; 1 USD = ${fmt(rate)} JPY &nbsp;|&nbsp; 1 JPY = ${fmt(inv)} USD`;
+                        // TRIGGER: Recalculate if numbers wrap or expand the container
+                        setTimeout(calculateLayout, 50);
                     }
                 })
                 .catch(error => {
@@ -554,6 +660,9 @@
             
             header.classList.toggle('expanded');
             content.classList.toggle('expanded');
+            
+            // The ResizeObserver will catch this, but forcing it is safer
+            setTimeout(calculateLayout, 450); // wait for CSS transition to finish
         }
 
         // Extract data directly from the iframe
@@ -574,91 +683,10 @@
             }
         }
 
-        /**
-         * PROPORTIONAL / PARALLAX SCROLL LOGIC (FIXED)
-         */
-        const layoutState = {
-            gridTop: 0,
-            maxScroll: 0,
-            diff: 0,
-            taller: null
-        };
-
-        const gridEl = document.getElementById('contentGrid');
-        const mainCol = document.getElementById('mainCol');
-        const supportCol = document.getElementById('supportCol');
-
-        function calculateLayout() {
-            if (window.innerWidth <= 900) {
-                mainCol.style.transform = 'none';
-                supportCol.style.transform = 'none';
-                return;
-            }
-
-            // offsetHeight completely ignores CSS transforms, so we don't need to clear styles to get true height
-            const mainHeight = mainCol.offsetHeight;
-            const supportHeight = supportCol.offsetHeight;
-            
-            // Calculate where the grid sits relative to the document
-            const rect = gridEl.getBoundingClientRect();
-            layoutState.gridTop = window.scrollY + rect.top - 100; // 100px padding buffer
-
-            if (mainHeight > supportHeight) {
-                layoutState.taller = 'main';
-                layoutState.diff = mainHeight - supportHeight;
-                layoutState.maxScroll = mainHeight - window.innerHeight + 100;
-            } else {
-                layoutState.taller = 'support';
-                layoutState.diff = supportHeight - mainHeight;
-                layoutState.maxScroll = supportHeight - window.innerHeight + 100;
-            }
-
-            handleProportionalScroll();
-        }
-
-        function handleProportionalScroll() {
-            // Safety Check: if the maxScroll becomes negative or diff hits 0, ensure transforms are reset to prevent sticking
-            if (window.innerWidth <= 900 || layoutState.diff <= 0 || layoutState.maxScroll <= 0) {
-                mainCol.style.transform = 'none';
-                supportCol.style.transform = 'none';
-                return;
-            }
-
-            let progress = (window.scrollY - layoutState.gridTop) / layoutState.maxScroll;
-            progress = Math.max(0, Math.min(1, progress));
-
-            const yOffset = progress * layoutState.diff;
-
-            // Apply translation ONLY to the shorter column, ensuring the taller column is strictly reset to 'none'
-            if (layoutState.taller === 'main') {
-                supportCol.style.transform = `translateY(${yOffset}px)`;
-                mainCol.style.transform = 'none';
-            } else {
-                mainCol.style.transform = `translateY(${yOffset}px)`;
-                supportCol.style.transform = 'none';
-            }
-        }
-
-        let isScrolling = false;
-        window.addEventListener('scroll', () => {
-            if (!isScrolling) {
-                window.requestAnimationFrame(() => {
-                    handleProportionalScroll();
-                    isScrolling = false;
-                });
-                isScrolling = true;
-            }
-        }, { passive: true });
-
-        window.addEventListener('resize', calculateLayout);
-
-        // Targeted ResizeObserver: Directly watches both columns for individual dynamic content changes
-        const columnObserver = new ResizeObserver(() => {
-            window.requestAnimationFrame(calculateLayout);
+        // ULTIMATE FAILSAFE: Once the entire window (images, fonts, all scripts) is fully loaded, do one final calculation.
+        window.addEventListener('load', () => {
+            setTimeout(calculateLayout, 100);
         });
-        
-        if (mainCol) columnObserver.observe(mainCol);
-        if (supportCol) columnObserver.observe(supportCol);
 
         // Initial setup
         window.requestAnimationFrame(calculateLayout);
