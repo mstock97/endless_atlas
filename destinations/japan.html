@@ -359,7 +359,7 @@
                 document.getElementById('dynamic-text-block').innerHTML = "<strong>[Error]</strong> Could not load the description.";
             });
 
-        // 4. Adjusted Exchange Rate Logic (USD vs JPY Comparison)
+        // 4. Adjusted Exchange Rate Logic (Matching Widget Format)
         function updateHeaderFX() {
             fetch('https://api.frankfurter.dev/v2/rates?base=USD&quotes=JPY')
                 .then(response => response.json())
@@ -371,15 +371,19 @@
                     
                     if (rate) {
                         const fxSpan = document.getElementById('live-fx-rate');
-                        // Logic: Compare strength. If USD > JPY value, show 1 JPY in USD.
-                        if (rate > 1) { 
-                            // USD is stronger (typical case)
-                            const inverseRate = (1 / rate).toFixed(4);
-                            fxSpan.innerHTML = `&nbsp;|&nbsp; 1 JPY = ${inverseRate} USD`;
-                        } else {
-                            // JPY is stronger (rare case)
-                            fxSpan.innerHTML = `&nbsp;|&nbsp; 1 USD = ${rate.toFixed(2)} JPY`;
+                        const invRate = 1 / rate;
+
+                        // Formatting helper matching the iframe widget logic
+                        function fmt(n) {
+                            if (n == null || isNaN(n)) return "—";
+                            if (n >= 10000) return n.toLocaleString("en-US", {maximumFractionDigits: 2});
+                            if (n >= 100)   return n.toFixed(2);
+                            if (n >= 1)     return n.toFixed(4);
+                            return n.toFixed(6);
                         }
+
+                        // Display formatted string identical to the widget
+                        fxSpan.innerHTML = `&nbsp;|&nbsp; 1 USD = ${fmt(rate)} JPY &nbsp;|&nbsp; 1 JPY = ${fmt(invRate)} USD`;
                     }
                 })
                 .catch(error => console.error('Error fetching exchange rate:', error));
