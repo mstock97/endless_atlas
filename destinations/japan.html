@@ -350,7 +350,7 @@
     <div id="site-header"></div>
 
     <section class="hero-container">
-        <img src="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero-hd.JPG" 
+        <img src="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero-mobile.JPG" 
              class="hero-image img-low-res" 
              id="mainHeroImage"
              alt="Mount Fuji with cherry blossoms - Japan Destination"
@@ -430,25 +430,50 @@
     <script>
         /**
          * PROGRESSIVE IMAGE LOADER
+         * Stage 1: mobile (low-res) loads instantly via HTML, blurry
+         * Stage 2: HD loads in background, unblurs on ready
+         * Stage 3: full-res loads in background, swaps seamlessly on ready
          */
         const heroImg = document.getElementById('mainHeroImage');
-        const hdUrl = "https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero.JPG";
-        
+        const hdUrl   = "https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero-hd.JPG";
+        const fullUrl = "https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero.JPG";
+
+        function loadFullRes() {
+            const fullLoader = new Image();
+            fullLoader.referrerPolicy = 'no-referrer';
+            fullLoader.src = fullUrl;
+
+            function swapFull() {
+                heroImg.src = fullUrl;
+            }
+
+            if (fullLoader.complete) {
+                swapFull();
+            } else {
+                fullLoader.onload = swapFull;
+            }
+        }
+
         function revealHD() {
             heroImg.src = hdUrl;
+
             setTimeout(() => {
                 heroImg.classList.remove('img-low-res');
                 heroImg.classList.add('img-loaded');
             }, 50);
+
+            // Wait for blur transition to finish, then silently load full-res
+            setTimeout(loadFullRes, 900);
         }
 
-        const imgLoader = new Image();
-        imgLoader.src = hdUrl;
+        const hdLoader = new Image();
+        hdLoader.referrerPolicy = 'no-referrer';
+        hdLoader.src = hdUrl;
 
-        if (imgLoader.complete) {
+        if (hdLoader.complete) {
             revealHD();
         } else {
-            imgLoader.onload = revealHD;
+            hdLoader.onload = revealHD;
         }
 
         // Hero Scroll Interaction
@@ -495,7 +520,6 @@
             taller: null
         };
         
-        // Dedicated animation state brains for both columns
         const mainState = { currentY: 0, targetY: 0 };
         const supportState = { currentY: 0, targetY: 0 };
 
@@ -504,7 +528,6 @@
         const supportCol = document.getElementById('supportCol');
 
         function calculateLayout() {
-            // Mobile reset fallback
             if (window.innerWidth <= 900) {
                 mainCol.style.transform = 'none';
                 supportCol.style.transform = 'none';
@@ -513,8 +536,6 @@
                 return;
             }
 
-            // offsetHeight ignores CSS transforms, so we do NOT delete the current animation 
-            // state to measure them. This eliminates the teleportation jitter.
             const mainHeight = mainCol.offsetHeight;
             const supportHeight = supportCol.offsetHeight;
             const rect = gridEl.getBoundingClientRect();
@@ -534,7 +555,6 @@
                 layoutState.maxScroll = Math.max(window.innerHeight / 1.5, supportHeight - window.innerHeight + 100);
             }
 
-            // Recalculate target destinations immediately
             handleProportionalScroll();
         }
 
@@ -551,8 +571,6 @@
             progress = Math.max(0, Math.min(1, progress));
             const yOffset = progress * layoutState.diff;
 
-            // Set targets independently. The taller column is targeted to 0 so it smoothly 
-            // glides back into place if a layout change suddenly makes it the tallest.
             if (layoutState.taller === 'main') {
                 supportState.targetY = yOffset;
                 mainState.targetY = 0;
@@ -565,14 +583,11 @@
             }
         }
 
-        // The Lerp Animation Loop
         function renderLoop() {
-            // Both columns continuously lerp toward their dedicated mathematical targets
             mainState.currentY += (mainState.targetY - mainState.currentY) * 0.08;
             supportState.currentY += (supportState.targetY - supportState.currentY) * 0.08;
 
             if (window.innerWidth > 900) {
-                // Apply hardware-accelerated transforms to both independently
                 mainCol.style.transform = `translate3d(0, ${mainState.currentY}px, 0)`;
                 supportCol.style.transform = `translate3d(0, ${supportState.currentY}px, 0)`;
             }
@@ -582,11 +597,9 @@
         
         window.requestAnimationFrame(renderLoop);
 
-        // Bind events
         window.addEventListener('scroll', handleProportionalScroll, { passive: true });
         window.addEventListener('resize', calculateLayout);
 
-        // Debounced Resize Observer
         let resizeTimeout;
         const columnObserver = new ResizeObserver(() => {
             clearTimeout(resizeTimeout);
@@ -595,7 +608,6 @@
         
         if (mainCol) columnObserver.observe(mainCol);
         if (supportCol) columnObserver.observe(supportCol);
-
 
         /**
          * ASYNC DATA FETCHING & EVENT TRIGGERS
