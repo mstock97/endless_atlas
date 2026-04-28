@@ -54,6 +54,16 @@
             --warm-rule: #EAE6DB;
         }
 
+        /* ===== STICKY SUB-HEADER ===== */
+        .sticky-sub-nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            background-color: var(--paper); /* Prevents content from showing through when scrolling */
+            border-bottom: 1px solid var(--warm-rule); /* Optional: adds a clean line separating it from scrolling content */
+        }
+
         /* ===== HERO ===== */
         .hero-container {
             position: relative;
@@ -412,7 +422,6 @@
         }
     </style>
 </head>
-<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-F7SKJN227T"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -424,10 +433,11 @@
 <body>
 
     <div id="site-header"></div>
+    
+    <div id="japan-sub-header" class="sticky-sub-nav"></div>
 
     <section class="hero-container" id="heroContainer">
 
-        <!-- Stage 1: HD placeholder loads instantly, displayed blurry -->
         <img src="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero-hd.JPG"
              class="hero-image img-low-res"
              id="mainHeroImage"
@@ -461,7 +471,6 @@
         <div class="content-grid" id="contentGrid">
             <article class="main-column" id="mainCol">
 
-                <!-- Quick Facts Strip -->
                 <div class="quick-facts">
                     <div class="fact-cell">
                         <span class="fact-label">Capital</span>
@@ -546,8 +555,8 @@
 
     <div id="site-footer"></div>
 
-    <script src="/destinations/japan/japan-components.js"></script>
     <script src="/components.js"></script>
+    <script src="/destinations/japan/japan_components.js"></script>
 
     <script>
         // ===== PROGRESSIVE IMAGE LOADER =====
