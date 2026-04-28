@@ -105,36 +105,49 @@
     opacity: 0;
   }
 
-  /* Slide counter — tappable dots at bottom center */
+  /* Slide nav — thin progress lines */
   .slide-counter {
     position: absolute;
-    bottom: 14px;
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
     z-index: 6;
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 7px;
+    gap: 5px;
   }
 
   .counter-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.35);
-    transition: background 0.3s, width 0.3s;
+    flex: 1;
+    height: 1.5px;
+    background: rgba(255,255,255,0.25);
     cursor: pointer;
-    /* larger tap target */
-    padding: 6px;
-    margin: -6px;
-    box-sizing: content-box;
+    position: relative;
+    overflow: hidden;
+    /* invisible tap target above and below */
+    padding: 8px 0;
+    margin: -8px 0;
+    background-clip: content-box;
+    -webkit-background-clip: content-box;
+    transition: background 0.3s;
   }
 
-  .counter-dot.active {
-    background: var(--white);
-    width: 18px;
-    border-radius: 3px;
+  /* the actual visible line is the ::after */
+  .counter-dot::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 100%;
+    height: 1.5px;
+    background: rgba(255,255,255,0.25);
+    transition: background 0.4s ease;
+  }
+
+  .counter-dot.active::after {
+    background: rgba(255,255,255,0.9);
   }
 
   /* ─── GEO PIN ─── */
