@@ -1,105 +1,43 @@
-/* ============================================
-   ENDLESS-ATLAS TYPOGRAPHY (v1.2)
-   ============================================ */
-
-/* 01 — HERO DISPLAY (Bebas Neue) 
-   Used for high-impact hero sections. 
-   Represents the 'Boldness' brand value.
-*/
+/* Typography Scale */
 h1, .display-hero {
-  font-family: var(--font-display);
-  font-size: 6rem; /* 96px */
-  text-transform: uppercase;
-  color: var(--color-ink); /* Never use gray for large headings */
-  line-height: 0.95;
-  letter-spacing: 0.02em;
+    font-family: var(--font-display);
+    font-size: clamp(5rem, 20vw, 15rem); /* Consistently huge for all heroes */
+    text-transform: uppercase;
+    color: var(--color-white);
+    letter-spacing: 0.05em;
+    line-height: 0.9;
 }
 
-/* 02 — SECTION HEADER (Bebas Neue)
-   Large headers for breaking up main content areas.
-*/
-h2, .display-large {
-  font-family: var(--font-display);
-  font-size: 4rem; /* 64px */
-  text-transform: uppercase;
-  color: var(--color-ink);
-  line-height: 1.1;
+h2, .section-title {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    color: var(--color-forest);
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid var(--color-fog);
+    padding-bottom: var(--space-sm);
+    margin: var(--space-xl) 0 var(--space-md);
 }
 
-/* 03 — EDITORIAL TITLE (Playfair Display)
-   The primary font for article headlines and story titles.
-*/
-h3, .headline-editorial {
-  font-family: var(--font-editorial);
-  font-size: 2.25rem; /* 36px */
-  font-weight: 400;
-  color: var(--color-ink);
-  line-height: 1.2;
+h3, .support-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--color-forest);
+    border-bottom: 1px solid var(--color-fog);
+    padding-bottom: var(--space-sm);
+    margin-bottom: var(--space-md);
 }
 
-/* 04 — SUB-HEADER (Playfair Display Italic)
-   Subheadings within articles or "deck" copy under headlines.
-*/
-h4, .subtitle-italic {
-  font-family: var(--font-editorial);
-  font-style: italic;
-  font-size: 1.5rem; /* 24px */
-  color: var(--color-stone); /* Used for bylines and secondary text */
-  line-height: 1.4;
-}
-
-/* 05 — NORMAL PARAGRAPH (DM Sans)
-   Optimized for long-form reading on the "Paper" background.
-*/
 p, .body-text {
-  font-family: var(--font-body);
-  font-size: 1.0625rem; /* 17px */
-  color: var(--color-graphite); /* Graphite is softer than pure black for readability */
-  line-height: 1.7;
+    font-family: var(--font-body);
+    font-size: 1.0625rem; /* 17px */
+    line-height: 1.7;
+    color: var(--color-graphite);
 }
 
-/* 06 — CATEGORY LABELS (DM Sans Bold)
-   Small markers for tags or content categories.
-*/
-.label-tag {
-  font-family: var(--font-body);
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--color-moss); /* Moss is the designated accent for labels */
-}
-
-/* 07 — PULL QUOTES
-   Editorial highlights used to emphasize narrative texture.
-*/
-blockquote, .pull-quote {
-  font-family: var(--font-editorial);
-  font-size: 1.5rem;
-  font-style: italic;
-  color: var(--color-ink);
-  border-left: 2px solid var(--color-moss); /* Moss used for pull-quote accents */
-  padding-left: var(--space-lg);
-  margin: var(--space-xl) 0;
-}
-
-/* 08 — STATS & NUMBERS (Bebas Neue)
-   For bold data points like "Days Trekked" or "Miles Covered".
-*/
-.stat-large {
-  font-family: var(--font-display);
-  font-size: 4rem;
-  color: var(--color-canopy); /* Mid-green for supportive UI elements */
-  line-height: 1;
-}
-
-/* 09 — PHOTO CAPTION & METADATA (DM Sans)
-   Used for image descriptions and location stamps.
-*/
-figcaption, .caption, .metadata {
-  font-family: var(--font-body);
-  font-size: 0.6875rem; /* 11px */
-  color: var(--color-ash);
-  line-height: 1.5;
-  letter-spacing: 0.01em;
+.caption, figcaption {
+    font-family: var(--font-body);
+    font-size: 0.6875rem; /* 11px */
+    color: var(--color-ash);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
