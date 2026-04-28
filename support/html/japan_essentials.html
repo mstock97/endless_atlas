@@ -8,6 +8,8 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html, body { width: 100%; background: transparent; overflow: hidden; }
+
     .ea-wrap {
       background: #1E4034;
       border-radius: 6px;
@@ -80,7 +82,7 @@
 </head>
 <body>
 
-<div class="ea-wrap">
+<div class="ea-wrap" id="essentialsCard">
   <div class="ea-header">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52B788" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="10"/>
@@ -129,6 +131,17 @@
     <span class="ea-val">Japanese · Google Translate camera mode is your friend</span>
   </div>
 </div>
+
+<script>
+  function postHeight() {
+    const h = document.getElementById('essentialsCard').offsetHeight;
+    window.parent.postMessage({ height: h }, '*');
+  }
+  document.fonts.ready.then(() => {
+    postHeight();
+    new ResizeObserver(postHeight).observe(document.getElementById('essentialsCard'));
+  });
+</script>
 
 </body>
 </html>
