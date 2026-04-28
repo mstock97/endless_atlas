@@ -1,36 +1,34 @@
-/* Endless-Atlas v1.2 Design Tokens */
+/* Endless-Atlas v1.2 — Design Tokens */
 :root {
-  /* Primary Palette */
-  --color-forest:  #1E4034;
-  --color-canopy:  #2D6A4F;
-  --color-moss:    #52B788;
+    /* Primary Palette */
+    --color-forest:    #1E4034;
+    --color-canopy:    #2D6A4F;
+    --color-moss:      #52B788;
+    
+    /* Secondary & Neutral */
+    --color-stone:     #5C5346;
+    --color-driftwood: #A8896A;
+    --color-fog:       #C9D4C5;
+    --color-paper:     #F7F5F0; /* Background */
+    --color-ink:       #0F0F0F; /* Headings */
+    --color-graphite:  #3D3D3D; /* Body Text */
+    --color-ash:       #8C8C8C;
+    --color-white:     #FFFFFF;
 
-  /* Secondary & Neutral */
-  --color-stone:     #5C5346;
-  --color-driftwood: #A8896A;
-  --color-fog:       #C9D4C5;
-  --color-paper:     #F7F5F0; /* Primary Background */
-  --color-ink:       #0F0F0F; /* Primary Headline */
-  --color-graphite:  #3D3D3D; /* Body Text */
-  --color-white:     #FFFFFF;
+    /* Spacing (Base-8 System) */
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 40px;
+    --space-2xl: 64px;
+    --space-3xl: 100px;
 
-  /* Alert System */
-  --alert-okay:     #34C759;
-  --alert-caution:  #FFD60A;
-  --alert-warning:  #FF9500;
-  --alert-critical: #FF3B30;
+    /* Typography */
+    --font-display:   'Bebas Neue', sans-serif;
+    --font-editorial: 'Playfair Display', serif;
+    --font-body:      'DM Sans', sans-serif;
 
-  /* Typography */
-  --font-display:   'Bebas Neue', sans-serif;
-  --font-editorial: 'Playfair Display', serif;
-  --font-body:      'DM Sans', sans-serif;
-
-  /* Spacing Scale (Base-8) */
-  --space-xs:  4px;
-  --space-sm:  8px;
-  --space-md:  16px;
-  --space-lg:  24px;
-  --space-xl:  40px;
-  --space-2xl: 64px;
-  --space-3xl: 100px;
+    /* Shared Utilities */
+    --max-width: 1400px;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
