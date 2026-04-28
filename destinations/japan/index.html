@@ -14,6 +14,23 @@
     <meta property="og:description" content="Your comprehensive guide to traveling Japan. Real-time FX rates, weather data, and travel essentials.">
     <meta property="og:image" content="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero.JPG">
 
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Japan | Endless Atlas">
+    <meta property="twitter:description" content="Real-time Japan travel data including currency, time, and climate.">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Japan Travel Guide - Endless Atlas",
+      "description": "Comprehensive travel information for Japan, including currency, time zones, and climate.",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Endless Atlas"
+      }
+    }
+    </script>
+
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/main.css">
 
@@ -37,17 +54,14 @@
             --warm-rule: #EAE6DB;
         }
 
-        /* ===== HEADER CONTAINERS ===== */
-        #site-header {
-            width: 100%;
-            z-index: 1001;
-            /* No sticky here so it scrolls away */
-        }
-
-        #japan-sub-header {
-            width: 100%;
+        /* ===== STICKY SUB-HEADER ===== */
+        .sticky-sub-nav {
+            position: sticky;
+            top: 0;
             z-index: 1000;
-            /* Sticky logic is handled in japan-components.js */
+            width: 100%;
+            background-color: var(--paper); /* Prevents content from showing through when scrolling */
+            border-bottom: 1px solid var(--warm-rule); /* Optional: adds a clean line separating it from scrolling content */
         }
 
         /* ===== HERO ===== */
@@ -100,6 +114,8 @@
             will-change: transform, opacity;
             transition: opacity 0.3s ease;
         }
+
+        .hero-container.pin-revealed .hero-title { opacity: 0 !important; }
 
         .geo-pin {
             position: absolute;
@@ -173,6 +189,8 @@
             flex-shrink: 0;
         }
 
+        .strip-link:hover { color: rgba(255,255,255,0.9); border-color: rgba(255,255,255,0.5); }
+
         /* ===== MAIN LAYOUT ===== */
         main {
             padding: 80px 10% 120px;
@@ -192,7 +210,16 @@
             .content-grid { grid-template-columns: 2fr 1fr; }
         }
 
-        .main-column, .support-column {
+        .main-column {
+            position: relative;
+            z-index: 10;
+            will-change: transform;
+        }
+
+        .support-column {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
             position: relative;
             z-index: 10;
             will-change: transform;
@@ -233,6 +260,12 @@
             color: var(--ink);
         }
 
+        .fact-value span {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--ash);
+        }
+
         /* ===== SECTION TITLES ===== */
         .section-title {
             font-family: 'Bebas Neue', sans-serif;
@@ -262,7 +295,38 @@
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
+            user-select: none;
             padding-bottom: 0.5rem;
+        }
+
+        .accordion-header .section-title {
+            margin: 0;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .accordion-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .best-months-label {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--forest);
+            background: var(--warm-rule);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            transition: opacity 0.3s ease, visibility 0.3s;
+            visibility: hidden;
+        }
+
+        .chevron {
+            font-size: 0.9rem;
+            color: var(--forest);
+            transition: transform 0.3s ease;
         }
 
         .accordion-content {
@@ -281,12 +345,22 @@
 
         .accordion-inner { overflow: hidden; }
 
+        .accordion-header.expanded .best-months-label { opacity: 0; visibility: hidden; }
+        .accordion-header.expanded .chevron { transform: rotate(180deg); }
+
+        @media (max-width: 600px) {
+            .accordion-header { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+            .accordion-meta { width: 100%; justify-content: space-between; }
+        }
+
         /* ===== SUPPORT COLUMN ===== */
         .support-title {
             font-family: 'Bebas Neue', sans-serif;
             font-size: 1.5rem;
             color: var(--forest);
+            margin-top: 0;
             margin-bottom: 1rem;
+            letter-spacing: 0.05em;
             border-bottom: 1px solid #D1CDC4;
             padding-bottom: 0.5rem;
         }
@@ -296,55 +370,78 @@
             height: 400px;
             border: none;
             border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             background-color: var(--warm-rule);
         }
 
         .dynamic-iframe-container {
             width: 100%;
+            position: relative;
+            overflow: visible;
+            border: none;
             border-radius: 8px;
-            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             background-color: transparent;
         }
 
         .dynamic-iframe {
             width: 100%;
+            height: 100%;
+            min-height: 50px;
             border: none;
             display: block;
+            overflow: hidden;
         }
+
+        .fx-container { background-color: var(--warm-rule); }
 
         .travel-tips-container {
             background-color: var(--warm-rule);
             border-radius: 8px;
             padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
+
+        .travel-tips-content {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--graphite);
+        }
+
+        .travel-tips-content ul { padding-left: 1.2rem; margin: 0; }
+        .travel-tips-content p { margin-top: 0; }
 
         /* ===== MOBILE ===== */
         @media (max-width: 600px) {
             main { padding: 60px 6% 80px; }
             .geo-pin { bottom: 65px; }
+            .location-strip.visible { height: 48px; }
+            .strip-text { font-size: 0.72rem; }
+            .strip-link { font-size: 0.68rem; padding: 0.15rem 0.5rem; }
         }
     </style>
 </head>
-
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-F7SKJN227T"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
+
   gtag('config', 'G-F7SKJN227T');
 </script>
-
 <body>
 
     <div id="site-header"></div>
     
-    <div id="japan-sub-header"></div>
+    <div id="japan-sub-header" class="sticky-sub-nav"></div>
 
     <section class="hero-container" id="heroContainer">
+
         <img src="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero-hd.JPG"
              class="hero-image img-low-res"
              id="mainHeroImage"
-             alt="Mount Fuji - Japan Destination"
+             alt="Mount Fuji with cherry blossoms - Japan Destination"
              referrerpolicy="no-referrer">
 
         <h1 class="hero-title" id="heroText">JAPAN</h1>
@@ -361,9 +458,13 @@
             <div class="strip-inner">
                 <span class="strip-dot"></span>
                 <span class="strip-text">Chureito Pagoda, Yamanashi, Japan</span>
-                <a class="strip-link" href="https://www.google.com/maps/search/Chureito+Pagoda+Yamanashi+Japan" target="_blank" rel="noopener noreferrer">Open in Maps ↗</a>
+                <a class="strip-link"
+                   href="https://www.google.com/maps/search/Chureito+Pagoda+Yamanashi+Japan"
+                   target="_blank"
+                   rel="noopener noreferrer">Open in Maps ↗</a>
             </div>
         </div>
+
     </section>
 
     <main>
@@ -376,12 +477,20 @@
                         <div class="fact-value">Tokyo</div>
                     </div>
                     <div class="fact-cell">
+                        <span class="fact-label">Population</span>
+                        <div class="fact-value">125.7M <span>national</span></div>
+                    </div>
+                    <div class="fact-cell">
                         <span class="fact-label">Time Zone</span>
                         <div class="fact-value">JST <span>(UTC +9)</span></div>
                     </div>
                     <div class="fact-cell">
                         <span class="fact-label">Local Time</span>
                         <div class="fact-value" id="current-jst-time">—</div>
+                    </div>
+                    <div class="fact-cell">
+                        <span class="fact-label">Language</span>
+                        <div class="fact-value">Japanese</div>
                     </div>
                     <div class="fact-cell">
                         <span class="fact-label">Currency</span>
@@ -395,32 +504,51 @@
 
                 <div class="weather-accordion">
                     <div class="accordion-header" id="weatherHeader" onclick="toggleWeather()">
-                        <h2 class="section-title">Climate & Weather</h2>
-                        <span class="chevron">▼</span>
+                        <h2 class="section-title">Climate & Weather in Japan</h2>
+                        <div class="accordion-meta">
+                            <span class="best-months-label" id="dynamicBestMonthsLabel"></span>
+                            <span class="chevron">▼</span>
+                        </div>
                     </div>
                     <div class="accordion-content" id="weatherContent">
                         <div class="accordion-inner">
                             <div class="dynamic-iframe-container">
-                                <iframe src="/support/html/japan_climate.html" class="dynamic-iframe" id="climateWidget" title="Japan Climate Data" scrolling="no" onload="extractBestTime()"></iframe>
+                                <iframe src="/support/html/japan_climate.html" class="dynamic-iframe" id="climateWidget" title="Japan Climate Data Chart" scrolling="no" onload="extractBestTime()"></iframe>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <h2 class="section-title">National Holidays</h2>
+                <h2 class="section-title">Japan National Holidays</h2>
                 <div class="dynamic-iframe-container">
-                    <iframe src="/support/html/japan_holidays.html" class="dynamic-iframe" title="Japan Holidays" scrolling="no"></iframe>
+                    <iframe src="/support/html/japan_holidays.html" class="dynamic-iframe" title="List of Japan Public Holidays" scrolling="no"></iframe>
                 </div>
 
             </article>
 
             <aside class="support-column" id="supportCol">
-                <iframe src="/support/html/japan_map.html" class="support-iframe" title="Japan Map" scrolling="no"></iframe>
+
+                <iframe src="/support/html/japan_map.html" class="support-iframe" title="Interactive Map of Japan" sandbox="allow-scripts allow-same-origin allow-top-navigation allow-top-navigation-by-user-activation allow-popups" scrolling="no"></iframe>
+
+                <div class="dynamic-iframe-container">
+                    <iframe src="/support/html/japan_essentials.html" class="dynamic-iframe" title="Japan Travel Essentials" scrolling="no"></iframe>
+                </div>
 
                 <div class="travel-tips-container">
                     <h3 class="support-title">Travel Tips</h3>
-                    <div class="travel-tips-content" id="travel-tips-content">Loading...</div>
+                    <div class="travel-tips-content" id="travel-tips-content">
+                        Loading travel tips...
+                    </div>
                 </div>
+                
+                <div class="dynamic-iframe-container">
+                    <iframe src="/support/html/japan_about_us.html" class="dynamic-iframe" title="About Endless Atlas — Japan" scrolling="no"></iframe>
+                </div>
+                
+                <div class="dynamic-iframe-container fx-container">
+                    <iframe src="/support/html/fx_usd_jpy.html" class="dynamic-iframe" title="USD to JPY Currency Converter Tool" scrolling="no"></iframe>
+                </div>
+
             </aside>
         </div>
     </main>
@@ -431,36 +559,223 @@
     <script src="/destinations/japan/japan-components.js"></script>
 
     <script>
-        /* ===== HERO IMAGE HANDLER ===== */
+        // ===== PROGRESSIVE IMAGE LOADER =====
+        // Stage 1: HD placeholder loads instantly via HTML, displayed blurry.
+        // Stage 2: Full-res loads silently in background, unblurs in when ready.
         const heroImg = document.getElementById('mainHeroImage');
         const fullUrl = "https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero.JPG";
+
         function revealFull() {
             heroImg.src = fullUrl;
+            // Short delay lets the browser paint the new src before the blur is removed
             setTimeout(() => {
                 heroImg.classList.remove('img-low-res');
                 heroImg.classList.add('img-loaded');
             }, 50);
         }
-        const fullLoader = new Image();
-        fullLoader.src = fullUrl;
-        fullLoader.onload = revealFull;
 
-        /* ===== JST CLOCK ===== */
+        const fullLoader = new Image();
+        fullLoader.referrerPolicy = 'no-referrer';
+        fullLoader.src = fullUrl;
+        if (fullLoader.complete) { revealFull(); } else { fullLoader.onload = revealFull; }
+
+        // ===== HERO SCROLL =====
+        window.addEventListener('scroll', function() {
+            const heroText = document.getElementById('heroText');
+            if (!heroText) return;
+            const s = window.scrollY;
+            heroText.style.transform = `scale(${1 + s / 600})`;
+            heroText.style.opacity   = Math.max(0, 1 - s / 400);
+        }, { passive: true });
+
+        // ===== JST CLOCK =====
         function updateJSTTime() {
             const el = document.getElementById('current-jst-time');
-            if (el) el.textContent = new Date().toLocaleTimeString('en-US', {
+            if (!el) return;
+            el.textContent = new Date().toLocaleTimeString('en-US', {
                 timeZone: 'Asia/Tokyo', hour: 'numeric', minute: '2-digit', hour12: true
             });
         }
         updateJSTTime();
         setInterval(updateJSTTime, 30000);
 
-        /* ===== LAYOUT & SCROLL HANDLERS ===== */
-        function toggleWeather() {
-            document.getElementById('weatherContent').classList.toggle('expanded');
+        // ===== LIVE FX RATE =====
+        function updateHeaderFX() {
+            fetch('https://api.frankfurter.dev/v2/rates?quotes=USD,JPY')
+                .then(res => res.json())
+                .then(data => {
+                    if (!Array.isArray(data)) return;
+                    let usd, jpy;
+                    data.forEach(item => {
+                        if (item.quote === 'USD') usd = item.rate;
+                        if (item.quote === 'JPY') jpy = item.rate;
+                    });
+                    if (usd && jpy) {
+                        const rate = (jpy / usd).toFixed(2);
+                        document.getElementById('live-fx-rate').textContent = `· 1 USD = ${rate}`;
+                        setTimeout(calculateLayout, 50);
+                    }
+                })
+                .catch(() => {});
+        }
+        updateHeaderFX();
+
+        // ===== PROPORTIONAL SCROLL =====
+        const layoutState  = { gridTop: 0, maxScroll: 0, diff: 0, taller: null };
+        const mainState    = { currentY: 0, targetY: 0 };
+        const supportState = { currentY: 0, targetY: 0 };
+
+        const gridEl     = document.getElementById('contentGrid');
+        const mainCol    = document.getElementById('mainCol');
+        const supportCol = document.getElementById('supportCol');
+
+        function calculateLayout() {
+            if (window.innerWidth <= 900) {
+                mainCol.style.transform    = 'none';
+                supportCol.style.transform = 'none';
+                mainState.currentY = 0; mainState.targetY = 0;
+                supportState.currentY = 0; supportState.targetY = 0;
+                return;
+            }
+            const mainH    = mainCol.offsetHeight;
+            const supportH = supportCol.offsetHeight;
+            const rect     = gridEl.getBoundingClientRect();
+            layoutState.gridTop = window.scrollY + rect.top - 100;
+
+            if (Math.abs(mainH - supportH) < 50) {
+                layoutState.diff = 0; layoutState.taller = 'equal';
+            } else if (mainH > supportH) {
+                layoutState.taller    = 'main';
+                layoutState.diff      = mainH - supportH;
+                layoutState.maxScroll = Math.max(window.innerHeight / 1.5, mainH - window.innerHeight + 100);
+            } else {
+                layoutState.taller    = 'support';
+                layoutState.diff      = supportH - mainH;
+                layoutState.maxScroll = Math.max(window.innerHeight / 1.5, supportH - window.innerHeight + 100);
+            }
+            handleProportionalScroll();
         }
 
-        // Logic for parallax or proportional scrolling could go here if needed
+        function handleProportionalScroll() {
+            if (window.innerWidth <= 900) return;
+            if (layoutState.diff <= 0 || layoutState.maxScroll <= 0) {
+                mainState.targetY = 0; supportState.targetY = 0; return;
+            }
+            let progress = (window.scrollY - layoutState.gridTop) / layoutState.maxScroll;
+            progress = Math.max(0, Math.min(1, progress));
+            const yOffset = progress * layoutState.diff;
+
+            if (layoutState.taller === 'main') {
+                supportState.targetY = yOffset; mainState.targetY = 0;
+            } else if (layoutState.taller === 'support') {
+                mainState.targetY = yOffset; supportState.targetY = 0;
+            } else {
+                mainState.targetY = 0; supportState.targetY = 0;
+            }
+        }
+
+        function renderLoop() {
+            mainState.currentY    += (mainState.targetY    - mainState.currentY)    * 0.08;
+            supportState.currentY += (supportState.targetY - supportState.currentY) * 0.08;
+            if (window.innerWidth > 900) {
+                mainCol.style.transform    = `translate3d(0, ${mainState.currentY}px, 0)`;
+                supportCol.style.transform = `translate3d(0, ${supportState.currentY}px, 0)`;
+            }
+            requestAnimationFrame(renderLoop);
+        }
+
+        requestAnimationFrame(renderLoop);
+        window.addEventListener('scroll', handleProportionalScroll, { passive: true });
+        window.addEventListener('resize', calculateLayout);
+
+        let resizeTimeout;
+        const columnObserver = new ResizeObserver(() => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(calculateLayout, 50);
+        });
+        if (mainCol)    columnObserver.observe(mainCol);
+        if (supportCol) columnObserver.observe(supportCol);
+
+        // ===== IFRAME MESSAGING =====
+        window.addEventListener('message', function(e) {
+            if (e.origin !== window.location.origin) return;
+            if (e.data && e.data.height) {
+                const iframes = document.querySelectorAll('iframe');
+                iframes.forEach(iframe => {
+                    if (iframe.contentWindow === e.source) {
+                        const newHeight = e.data.height + 'px';
+                        iframe.style.height = newHeight;
+                        if (iframe.parentElement.classList.contains('dynamic-iframe-container')) {
+                            iframe.parentElement.style.height = newHeight;
+                        }
+                        setTimeout(calculateLayout, 50);
+                    }
+                });
+            }
+        });
+
+        // ===== FETCH CONTENT =====
+        fetch('/support/text/japan_country_paragraph.html')
+            .then(res => res.ok ? res.text() : Promise.reject())
+            .then(html => {
+                document.getElementById('dynamic-text-block').innerHTML = html;
+                setTimeout(calculateLayout, 50);
+            })
+            .catch(() => document.getElementById('dynamic-text-block').innerHTML = "Could not load the description.");
+
+        fetch('/support/text/japan_travel_tips.html')
+            .then(res => res.ok ? res.text() : Promise.reject())
+            .then(html => {
+                document.getElementById('travel-tips-content').innerHTML = html;
+                setTimeout(calculateLayout, 50);
+            })
+            .catch(() => document.getElementById('travel-tips-content').innerHTML = "Travel tips are currently unavailable.");
+
+        // ===== ACCORDION =====
+        function toggleWeather() {
+            document.getElementById('weatherHeader').classList.toggle('expanded');
+            document.getElementById('weatherContent').classList.toggle('expanded');
+            setTimeout(calculateLayout, 450);
+        }
+
+        function extractBestTime() {
+            const climateIframe = document.getElementById('climateWidget');
+            const labelElement  = document.getElementById('dynamicBestMonthsLabel');
+            try {
+                const iframeDoc  = climateIframe.contentDocument || climateIframe.contentWindow.document;
+                const sourceData = iframeDoc.getElementById('widget-best-time');
+                if (sourceData && sourceData.innerText) {
+                    labelElement.textContent = `Best time: ${sourceData.innerText}`;
+                    labelElement.style.visibility = 'visible';
+                }
+            } catch (error) {
+                console.warn("Could not extract widget data.", error);
+            }
+        }
+
+        // ===== GEO PIN =====
+        (function() {
+            const hero  = document.getElementById('heroContainer');
+            const pin   = document.getElementById('geoPin');
+            const strip = document.getElementById('locationStrip');
+            let locked  = false;
+            const isMobile = () => window.matchMedia('(hover: none)').matches;
+
+            function showStrip()      { strip.classList.add('visible'); pin.classList.add('active'); }
+            function hideStrip()      { if (locked) return; strip.classList.remove('visible'); pin.classList.remove('active'); }
+            function clearOverlay()   { hero.classList.add('pin-revealed'); }
+            function restoreOverlay() { hero.classList.remove('pin-revealed'); }
+
+            pin.addEventListener('mouseenter', () => { if (!isMobile()) { showStrip(); clearOverlay(); } });
+            pin.addEventListener('mouseleave', () => { if (!isMobile()) { hideStrip(); restoreOverlay(); } });
+            strip.addEventListener('mouseenter', () => { if (!isMobile()) clearOverlay(); });
+            strip.addEventListener('mouseleave', () => { if (!isMobile()) restoreOverlay(); });
+            pin.addEventListener('click', (e) => { e.stopPropagation(); locked = true; showStrip(); });
+            pin.addEventListener('touchend', (e) => { e.preventDefault(); locked = true; showStrip(); }, { passive: false });
+        })();
+
+        window.addEventListener('load', () => setTimeout(calculateLayout, 100));
+        requestAnimationFrame(calculateLayout);
     </script>
 </body>
 </html>
