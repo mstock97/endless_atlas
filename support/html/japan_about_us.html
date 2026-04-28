@@ -44,7 +44,7 @@
   .slideshow {
     position: relative;
     width: 100%;
-    height: 100svh;
+    aspect-ratio: 1 / 1;
     overflow: hidden;
     background: var(--ink);
   }
@@ -105,37 +105,43 @@
     opacity: 0;
   }
 
-  /* Slide counter */
+  /* Slide counter — tappable dots at bottom center */
   .slide-counter {
     position: absolute;
-    bottom: 60px;
-    right: 20px;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 6;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 5px;
+    gap: 7px;
   }
 
   .counter-dot {
-    width: 4px;
-    height: 4px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.3);
-    transition: background 0.3s, height 0.3s;
+    background: rgba(255,255,255,0.35);
+    transition: background 0.3s, width 0.3s;
+    cursor: pointer;
+    /* larger tap target */
+    padding: 6px;
+    margin: -6px;
+    box-sizing: content-box;
   }
 
   .counter-dot.active {
     background: var(--white);
-    height: 16px;
-    border-radius: 2px;
+    width: 18px;
+    border-radius: 3px;
   }
 
   /* ─── GEO PIN ─── */
   .geo-pin {
     position: absolute;
-    bottom: 112px;
-    left: 20px;
+    bottom: 48px;
+    left: 16px;
     z-index: 5;
     cursor: pointer;
     display: flex;
@@ -215,34 +221,6 @@
     white-space: nowrap;
     flex-shrink: 0;
     font-family: 'DM Sans', sans-serif;
-  }
-
-  /* ─── SWIPE HINT ─── */
-  .swipe-hint {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 6;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    opacity: 0.45;
-    animation: fadeHint 3s ease 2s forwards;
-  }
-
-  .swipe-hint span {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.6rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: white;
-  }
-
-  @keyframes fadeHint {
-    0%   { opacity: 0.45; }
-    80%  { opacity: 0.45; }
-    100% { opacity: 0; pointer-events: none; }
   }
 
   /* ─── ABOUT SECTION ─── */
@@ -450,19 +428,11 @@
     </div>
   </div>
 
-  <!-- Slide indicator dots -->
+  <!-- Slide indicator dots — tap to navigate -->
   <div class="slide-counter" id="slideCounter">
-    <div class="counter-dot active"></div>
-    <div class="counter-dot"></div>
-    <div class="counter-dot"></div>
-  </div>
-
-  <!-- Swipe hint -->
-  <div class="swipe-hint">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
-      <path d="M5 12h14M12 5l7 7-7 7"/>
-    </svg>
-    <span>Swipe</span>
+    <div class="counter-dot active" data-index="0"></div>
+    <div class="counter-dot" data-index="1"></div>
+    <div class="counter-dot" data-index="2"></div>
   </div>
 
 </div><!-- /slideshow -->
@@ -562,7 +532,7 @@ loadProgressiveImage(0);
 
 
 /* ─────────────────────────────────────────────
-   SLIDESHOW — touch swipe + auto-advance
+   SLIDESHOW — touch swipe + dot tap + auto-advance
 ───────────────────────────────────────────── */
 const slideshow   = document.getElementById('slideshow');
 const slides      = Array.from(document.querySelectorAll('.slide'));
@@ -587,7 +557,20 @@ function resetAutoAdvance() {
   autoTimer = setInterval(() => goToSlide(currentSlide + 1), 20000);
 }
 
-// Touch handlers
+// Dot tap navigation
+dots.forEach(dot => {
+  dot.addEventListener('click', e => {
+    e.stopPropagation();
+    goToSlide(parseInt(dot.dataset.index));
+  });
+  dot.addEventListener('touchend', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    goToSlide(parseInt(dot.dataset.index));
+  }, { passive: false });
+});
+
+// Touch swipe handlers
 slideshow.addEventListener('touchstart', e => {
   touchStartX = e.touches[0].clientX;
   touchStartY = e.touches[0].clientY;
@@ -596,7 +579,6 @@ slideshow.addEventListener('touchstart', e => {
 slideshow.addEventListener('touchend', e => {
   const dx = e.changedTouches[0].clientX - touchStartX;
   const dy = e.changedTouches[0].clientY - touchStartY;
-  // Only register as a swipe if horizontal movement dominates
   if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
     if (dx < 0) goToSlide(currentSlide + 1);
     else        goToSlide(currentSlide - 1);
