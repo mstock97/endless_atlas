@@ -54,14 +54,24 @@
             --warm-rule: #EAE6DB;
         }
 
-        /* ===== STICKY SUB-HEADER ===== */
+        /* ===== HEADER BEHAVIOR ===== */
+        
+        /* 1. Force the main site header to be relative so it naturally scrolls away */
+        #site-header, #site-header > * {
+            position: relative !important;
+            top: auto !important;
+            z-index: 999; 
+            /* Added !important to override any fixed/sticky classes from components.js */
+        }
+
+        /* 2. Keep the Japan sub-header sticky at the top */
         .sticky-sub-nav {
             position: sticky;
             top: 0;
             z-index: 1000;
             width: 100%;
-            background-color: var(--paper); /* Prevents content from showing through when scrolling */
-            border-bottom: 1px solid var(--warm-rule); /* Optional: adds a clean line separating it from scrolling content */
+            background-color: var(--paper); 
+            border-bottom: 1px solid var(--warm-rule); 
         }
 
         /* ===== HERO ===== */
@@ -556,18 +566,15 @@
     <div id="site-footer"></div>
 
     <script src="/components.js"></script>
-    <script src="/destinations/japan/japan-components.js"></script>
+    <script src="/destinations/japan/japan_components.js"></script>
 
     <script>
         // ===== PROGRESSIVE IMAGE LOADER =====
-        // Stage 1: HD placeholder loads instantly via HTML, displayed blurry.
-        // Stage 2: Full-res loads silently in background, unblurs in when ready.
         const heroImg = document.getElementById('mainHeroImage');
         const fullUrl = "https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero.JPG";
 
         function revealFull() {
             heroImg.src = fullUrl;
-            // Short delay lets the browser paint the new src before the blur is removed
             setTimeout(() => {
                 heroImg.classList.remove('img-low-res');
                 heroImg.classList.add('img-loaded');
