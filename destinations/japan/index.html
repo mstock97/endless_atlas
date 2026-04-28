@@ -105,7 +105,7 @@
             transition: opacity 0.3s ease;
         }
 
-        .hero-container.pin-revealed .hero-title { opacity: 0; }
+        .hero-container.pin-revealed .hero-title { opacity: 0 !important; }
 
         .geo-pin {
             position: absolute;
@@ -417,6 +417,8 @@
     <div id="site-header"></div>
 
     <section class="hero-container" id="heroContainer">
+
+        <!-- Stage 1: HD placeholder loads instantly, displayed blurry -->
         <img src="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero-hd.JPG"
              class="hero-image img-low-res"
              id="mainHeroImage"
@@ -443,6 +445,7 @@
                    rel="noopener noreferrer">Open in Maps ↗</a>
             </div>
         </div>
+
     </section>
 
     <main>
@@ -508,21 +511,21 @@
             <aside class="support-column" id="supportCol">
 
                 <iframe src="/support/html/japan_map.html" class="support-iframe" title="Interactive Map of Japan" sandbox="allow-scripts allow-same-origin allow-top-navigation allow-top-navigation-by-user-activation allow-popups" scrolling="no"></iframe>
-                
-                
+
+                <div class="dynamic-iframe-container">
+                    <iframe src="/support/html/japan_about_us.html" class="dynamic-iframe" title="About Endless Atlas — Japan" scrolling="no"></iframe>
+                </div>
+
                 <div class="dynamic-iframe-container">
                     <iframe src="/support/html/japan_essentials.html" class="dynamic-iframe" title="Japan Travel Essentials" scrolling="no"></iframe>
                 </div>
 
-                
                 <div class="travel-tips-container">
                     <h3 class="support-title">Travel Tips</h3>
                     <div class="travel-tips-content" id="travel-tips-content">
                         Loading travel tips...
                     </div>
                 </div>
-
-
 
                 <div class="dynamic-iframe-container fx-container">
                     <iframe src="/support/html/fx_usd_jpy.html" class="dynamic-iframe" title="USD to JPY Currency Converter Tool" scrolling="no"></iframe>
@@ -539,11 +542,14 @@
 
     <script>
         // ===== PROGRESSIVE IMAGE LOADER =====
+        // Stage 1: HD placeholder loads instantly via HTML, displayed blurry.
+        // Stage 2: Full-res loads silently in background, unblurs in when ready.
         const heroImg = document.getElementById('mainHeroImage');
         const fullUrl = "https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero.JPG";
 
         function revealFull() {
             heroImg.src = fullUrl;
+            // Short delay lets the browser paint the new src before the blur is removed
             setTimeout(() => {
                 heroImg.classList.remove('img-low-res');
                 heroImg.classList.add('img-loaded');
