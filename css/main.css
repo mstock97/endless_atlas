@@ -2,13 +2,14 @@
    Imports brand tokens and modular styles 
 */
 
-/* 1. Global Font Imports (Updated for Bebas Neue) */
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
-
-/* 2. Brand Modules */
+/* Move imports to the absolute top */
 @import url('variables.css');
 @import url('typography.css');
 @import url('components.css');
+
+/* 1. Global Font Imports */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
+
 
 /* 3. Base Resets */
 *, *::before, *::after { 
