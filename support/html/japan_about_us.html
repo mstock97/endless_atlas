@@ -152,7 +152,7 @@
   /* ─── GEO PIN ─── */
   .geo-pin {
     position: absolute;
-    bottom: 48px;
+    bottom: 40px;
     left: 16px;
     z-index: 5;
     cursor: pointer;
@@ -179,35 +179,45 @@
     transform: scale(1.15);
   }
 
-  /* ─── LOCATION STRIP ─── */
+  /* ─── LOCATION PILL ─── */
   .location-strip {
     position: absolute;
-    bottom: 0; left: 0;
-    width: 100%;
+    bottom: 44px;
+    left: 52px;
     z-index: 4;
-    background: rgba(8,8,8,0.82);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border-top: 1px solid rgba(255,255,255,0.08);
+    background: rgba(10,10,10,0.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 0 12px 0 10px;
     height: 0;
     overflow: hidden;
-    transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transform: translateY(4px);
+    transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.3s ease,
+                transform 0.3s ease;
     display: flex;
     align-items: center;
-    padding: 0 20px;
+    white-space: nowrap;
   }
 
-  .location-strip.visible { height: 52px; }
+  .location-strip.visible {
+    height: 30px;
+    opacity: 1;
+    transform: translateY(0);
+  }
 
   .strip-inner {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 7px;
     width: 100%;
   }
 
   .strip-dot {
-    width: 6px; height: 6px;
+    width: 5px; height: 5px;
     border-radius: 50%;
     background: var(--moss);
     flex-shrink: 0;
@@ -215,24 +225,30 @@
 
   .strip-text {
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.8);
+    color: rgba(255,255,255,0.85);
     flex: 1;
   }
 
   .strip-link {
-    font-size: 0.68rem;
-    color: rgba(255,255,255,0.45);
+    font-size: 0.6rem;
+    color: rgba(255,255,255,0.4);
     text-decoration: none;
-    border: 1px solid rgba(255,255,255,0.18);
-    padding: 0.18rem 0.6rem;
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 0.14rem 0.5rem;
     border-radius: 20px;
     transition: color 0.2s, border-color 0.2s;
     white-space: nowrap;
     flex-shrink: 0;
     font-family: 'DM Sans', sans-serif;
+    margin-left: 8px;
+  }
+
+  .strip-link:hover {
+    color: rgba(255,255,255,0.9);
+    border-color: rgba(255,255,255,0.45);
   }
 
   /* ─── ABOUT SECTION ─── */
@@ -597,12 +613,17 @@ dots.forEach(dot => {
 });
 
 // Touch swipe handlers
+let touchStartedOnPin = false;
+
 slideshow.addEventListener('touchstart', e => {
   touchStartX = e.touches[0].clientX;
   touchStartY = e.touches[0].clientY;
+  // If the touch originated on a geo pin or location strip, don't treat it as a swipe
+  touchStartedOnPin = !!e.target.closest('.geo-pin, .location-strip, .slide-counter');
 }, { passive: true });
 
 slideshow.addEventListener('touchend', e => {
+  if (touchStartedOnPin) { touchStartedOnPin = false; return; }
   const dx = e.changedTouches[0].clientX - touchStartX;
   const dy = e.changedTouches[0].clientY - touchStartY;
   if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
