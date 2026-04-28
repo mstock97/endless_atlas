@@ -1,27 +1,24 @@
-/* Endless-Atlas: Main Entry Point
-   Imports brand tokens and modular styles 
-*/
-
-/* Move imports to the absolute top */
 @import url('variables.css');
 @import url('typography.css');
 @import url('components.css');
 
-/* 1. Global Font Imports */
+/* Global Font Import */
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-
-/* 3. Base Resets */
-*, *::before, *::after { 
-    box-sizing: border-box; 
-    margin: 0; 
-    padding: 0; 
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-    background-color: var(--color-paper); /* Using the brand Paper #F7F5F0 */
+    background-color: var(--color-paper);
+    /* Brand Value: Dot Grid Background */
+    background-image: radial-gradient(var(--color-driftwood) 0.5px, transparent 0.5px);
+    background-size: 24px 24px;
     font-family: var(--font-body);
     color: var(--color-graphite);
-    line-height: 1.7;
     -webkit-font-smoothing: antialiased;
+}
+
+main {
+    padding: var(--space-3xl) 10%;
+    max-width: var(--max-width);
+    margin: 0 auto;
 }
