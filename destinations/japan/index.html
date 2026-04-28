@@ -1,14 +1,15 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
-<head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-F7SKJN227T"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-F7SKJN227T');
-    </script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-F7SKJN227T"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'G-F7SKJN227T');
+</script>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -39,40 +40,177 @@
     }
     </script>
 
-    <link rel="stylesheet" href="css/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/main.css">
 
     <style>
-        /* Bridge Mapping: Connects local component logic to Brand Tokens */
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         :root {
-            --forest:    var(--color-forest);
-            --canopy:    var(--color-canopy);
-            --moss:      var(--color-moss);
-            --stone:     var(--color-stone);
-            --driftwood: var(--color-driftwood);
-            --fog:       var(--color-fog);
-            --ink:       var(--color-ink);
-            --graphite:  var(--color-graphite);
-            --ash:       var(--color-ash);
-            --paper:     var(--color-paper);
-            --white:     var(--color-white);
-            --warm-rule: var(--color-warm-rule); 
+            --forest:    #1E4034;
+            --canopy:    #2D6A4F;
+            --moss:      #52B788;
+            --stone:     #5C5346;
+            --driftwood: #A8896A;
+            --fog:       #C9D4C5;
+            --ink:       #0F0F0F;
+            --graphite:  #3D3D3D;
+            --ash:       #8C8C8C;
+            --cloud:     #EFEFEF;
+            --paper:     #F7F5F0;
+            --white:     #FFFFFF;
+            --warm-rule: #EAE6DB;
         }
 
-        /* Page Layout & Sticky Logic */
+        /* ===== STICKY SUB-HEADER ===== */
         .sticky-sub-nav {
             position: sticky;
-            top: 70px; /* Offset to sit below main site-header */
-            z-index: 999;
+            top: 0;
+            z-index: 1000;
             width: 100%;
+            background-color: var(--paper); /* Prevents content from showing through when scrolling */
+            border-bottom: 1px solid var(--warm-rule); /* Optional: adds a clean line separating it from scrolling content */
+        }
+
+        /* ===== HERO ===== */
+        .hero-container {
+            position: relative;
+            height: 75vh;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--ink);
+        }
+
+        .hero-image {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            object-position: center center;
+            z-index: 0;
+            transition: filter 0.8s ease-in-out, transform 0.8s ease-in-out;
+            will-change: filter;
+        }
+
+        .img-low-res { filter: blur(15px); transform: scale(1.05); }
+        .img-loaded  { filter: blur(0) !important; transform: scale(1) !important; }
+
+        .hero-container::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(15, 15, 15, 0.6);
+            z-index: 1;
+            transition: opacity 0.4s ease;
+        }
+
+        .hero-container.pin-revealed::after { opacity: 0; }
+
+        .hero-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(5rem, 20vw, 15rem);
+            color: var(--white);
+            margin: 0;
+            z-index: 2;
+            letter-spacing: 0.05em;
+            text-align: center;
+            pointer-events: none;
+            will-change: transform, opacity;
+            transition: opacity 0.3s ease;
+        }
+
+        .hero-container.pin-revealed .hero-title { opacity: 0 !important; }
+
+        .geo-pin {
+            position: absolute;
+            bottom: 60px; left: 5%;
+            z-index: 5;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .geo-pin-icon {
+            width: 32px; height: 32px;
+            opacity: 0.22;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .geo-pin-icon svg { width: 26px; height: 26px; }
+
+        .geo-pin:hover .geo-pin-icon,
+        .geo-pin.active .geo-pin-icon { opacity: 1; transform: scale(1.15); }
+
+        .location-strip {
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%;
+            z-index: 4;
+            background: rgba(8, 8, 8, 0.78);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border-top: 1px solid rgba(255,255,255,0.08);
+            height: 0;
+            overflow: hidden;
+            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
+        }
+
+        .location-strip.visible { height: 46px; }
+
+        .strip-inner { display: flex; align-items: center; gap: 10px; width: 100%; }
+
+        .strip-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            flex-shrink: 0;
+        }
+
+        .strip-text {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.78rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.8);
+            flex: 1;
+        }
+
+        .strip-link {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.45);
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.18);
+            padding: 0.18rem 0.6rem;
+            border-radius: 20px;
+            transition: color 0.2s, border-color 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .strip-link:hover { color: rgba(255,255,255,0.9); border-color: rgba(255,255,255,0.5); }
+
+        /* ===== MAIN LAYOUT ===== */
+        main {
+            padding: 80px 10% 120px;
             background-color: var(--paper);
-            border-bottom: 1px solid var(--warm-rule);
         }
 
         .content-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 3rem;
-            max-width: var(--max-width);
+            max-width: 1400px;
             margin: 0 auto;
             align-items: start;
         }
@@ -81,13 +219,81 @@
             .content-grid { grid-template-columns: 2fr 1fr; }
         }
 
-        .main-column, .support-column {
+        .main-column {
             position: relative;
             z-index: 10;
             will-change: transform;
         }
 
-        /* Weather Accordion UI */
+        .support-column {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            position: relative;
+            z-index: 10;
+            will-change: transform;
+        }
+
+        /* ===== QUICK FACTS STRIP ===== */
+        .quick-facts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1px;
+            background: var(--warm-rule);
+            border: 1px solid var(--warm-rule);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 2.5rem;
+        }
+
+        .fact-cell {
+            flex: 1 1 140px;
+            background: var(--white);
+            padding: 1.1rem 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .fact-label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--ash);
+        }
+
+        .fact-value {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--ink);
+        }
+
+        .fact-value span {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--ash);
+        }
+
+        /* ===== SECTION TITLES ===== */
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            color: var(--forest);
+            margin: 4rem 0 1.5rem 0;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid var(--warm-rule);
+            padding-bottom: 0.5rem;
+        }
+
+        .description-block {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--graphite);
+        }
+
+        /* ===== ACCORDION ===== */
         .weather-accordion {
             margin: 4rem 0 1.5rem 0;
             border-bottom: 2px solid var(--warm-rule);
@@ -98,61 +304,149 @@
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
+            user-select: none;
             padding-bottom: 0.5rem;
         }
 
-        .accordion-meta { display: flex; align-items: center; gap: 1rem; }
+        .accordion-header .section-title {
+            margin: 0;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .accordion-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
 
         .best-months-label {
-            font-family: var(--font-body);
+            font-family: 'DM Sans', sans-serif;
             font-size: 0.95rem;
             font-weight: 500;
             color: var(--forest);
             background: var(--warm-rule);
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
+            transition: opacity 0.3s ease, visibility 0.3s;
             visibility: hidden;
         }
 
-        .chevron { color: var(--forest); transition: transform 0.3s ease; }
+        .chevron {
+            font-size: 0.9rem;
+            color: var(--forest);
+            transition: transform 0.3s ease;
+        }
 
         .accordion-content {
             display: grid;
             grid-template-rows: 0fr;
-            transition: all 0.4s ease-in-out;
+            transition: grid-template-rows 0.4s ease-in-out, margin-top 0.4s ease;
             opacity: 0;
-            overflow: hidden;
         }
 
         .accordion-content.expanded {
             grid-template-rows: 1fr;
             opacity: 1;
-            margin: 1.5rem 0;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
+        .accordion-inner { overflow: hidden; }
+
+        .accordion-header.expanded .best-months-label { opacity: 0; visibility: hidden; }
         .accordion-header.expanded .chevron { transform: rotate(180deg); }
 
-        /* Widget Containers */
-        .dynamic-iframe-container {
+        @media (max-width: 600px) {
+            .accordion-header { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+            .accordion-meta { width: 100%; justify-content: space-between; }
+        }
+
+        /* ===== SUPPORT COLUMN ===== */
+        .support-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            color: var(--forest);
+            margin-top: 0;
+            margin-bottom: 1rem;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #D1CDC4;
+            padding-bottom: 0.5rem;
+        }
+
+        .support-iframe {
             width: 100%;
+            height: 400px;
+            border: none;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            background-color: var(--warm-rule);
+        }
+
+        .dynamic-iframe-container {
+            width: 100%;
+            position: relative;
+            overflow: visible;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            background-color: transparent;
+        }
+
+        .dynamic-iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 50px;
+            border: none;
+            display: block;
             overflow: hidden;
         }
+
+        .fx-container { background-color: var(--warm-rule); }
 
         .travel-tips-container {
             background-color: var(--warm-rule);
             border-radius: 8px;
             padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .travel-tips-content {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--graphite);
+        }
+
+        .travel-tips-content ul { padding-left: 1.2rem; margin: 0; }
+        .travel-tips-content p { margin-top: 0; }
+
+        /* ===== MOBILE ===== */
+        @media (max-width: 600px) {
+            main { padding: 60px 6% 80px; }
+            .geo-pin { bottom: 65px; }
+            .location-strip.visible { height: 48px; }
+            .strip-text { font-size: 0.72rem; }
+            .strip-link { font-size: 0.68rem; padding: 0.15rem 0.5rem; }
         }
     </style>
 </head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-F7SKJN227T"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-F7SKJN227T');
+</script>
 <body>
 
     <div id="site-header"></div>
+    
     <div id="japan-sub-header" class="sticky-sub-nav"></div>
 
     <section class="hero-container" id="heroContainer">
+
         <img src="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero-hd.JPG"
              class="hero-image img-low-res"
              id="mainHeroImage"
@@ -163,7 +457,9 @@
 
         <div class="geo-pin" id="geoPin" aria-label="View photo location">
             <div class="geo-pin-icon">
-                <svg viewBox="0 0 24 24" fill="white"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
             </div>
         </div>
 
@@ -171,27 +467,39 @@
             <div class="strip-inner">
                 <span class="strip-dot"></span>
                 <span class="strip-text">Chureito Pagoda, Yamanashi, Japan</span>
-                <a class="strip-link" href="#" target="_blank">Open in Maps ↗</a>
+                <a class="strip-link"
+                   href="https://www.google.com/maps/search/Chureito+Pagoda+Yamanashi+Japan"
+                   target="_blank"
+                   rel="noopener noreferrer">Open in Maps ↗</a>
             </div>
         </div>
+
     </section>
 
     <main>
         <div class="content-grid" id="contentGrid">
-            
             <article class="main-column" id="mainCol">
+
                 <div class="quick-facts">
                     <div class="fact-cell">
                         <span class="fact-label">Capital</span>
                         <div class="fact-value">Tokyo</div>
                     </div>
                     <div class="fact-cell">
+                        <span class="fact-label">Population</span>
+                        <div class="fact-value">125.7M <span>national</span></div>
+                    </div>
+                    <div class="fact-cell">
                         <span class="fact-label">Time Zone</span>
-                        <div class="fact-value">JST (UTC +9)</div>
+                        <div class="fact-value">JST <span>(UTC +9)</span></div>
                     </div>
                     <div class="fact-cell">
                         <span class="fact-label">Local Time</span>
                         <div class="fact-value" id="current-jst-time">—</div>
+                    </div>
+                    <div class="fact-cell">
+                        <span class="fact-label">Language</span>
+                        <div class="fact-value">Japanese</div>
                     </div>
                     <div class="fact-cell">
                         <span class="fact-label">Currency</span>
@@ -199,188 +507,284 @@
                     </div>
                 </div>
 
-                <div class="body-text" id="dynamic-text-block">
-                    </div>
+                <div class="description-block" id="dynamic-text-block">
+                    Discover essential travel information about Japan.
+                </div>
 
                 <div class="weather-accordion">
                     <div class="accordion-header" id="weatherHeader" onclick="toggleWeather()">
-                        <h2 class="section-title" style="margin:0; border:none;">Climate & Weather</h2>
+                        <h2 class="section-title">Climate & Weather in Japan</h2>
                         <div class="accordion-meta">
                             <span class="best-months-label" id="dynamicBestMonthsLabel"></span>
                             <span class="chevron">▼</span>
                         </div>
                     </div>
                     <div class="accordion-content" id="weatherContent">
-                        <div class="dynamic-iframe-container">
-                            <iframe src="/support/html/japan_climate.html" class="dynamic-iframe" id="climateWidget" scrolling="no" onload="extractBestTime()"></iframe>
+                        <div class="accordion-inner">
+                            <div class="dynamic-iframe-container">
+                                <iframe src="/support/html/japan_climate.html" class="dynamic-iframe" id="climateWidget" title="Japan Climate Data Chart" scrolling="no" onload="extractBestTime()"></iframe>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <h2 class="section-title">National Holidays</h2>
+                <h2 class="section-title">Japan National Holidays</h2>
                 <div class="dynamic-iframe-container">
-                    <iframe src="/support/html/japan_holidays.html" class="dynamic-iframe" scrolling="no"></iframe>
+                    <iframe src="/support/html/japan_holidays.html" class="dynamic-iframe" title="List of Japan Public Holidays" scrolling="no"></iframe>
                 </div>
+
             </article>
 
             <aside class="support-column" id="supportCol">
-                <iframe src="/support/html/japan_map.html" class="support-iframe" scrolling="no"></iframe>
+
+                <iframe src="/support/html/japan_map.html" class="support-iframe" title="Interactive Map of Japan" sandbox="allow-scripts allow-same-origin allow-top-navigation allow-top-navigation-by-user-activation allow-popups" scrolling="no"></iframe>
+
+                <div class="dynamic-iframe-container">
+                    <iframe src="/support/html/japan_essentials.html" class="dynamic-iframe" title="Japan Travel Essentials" scrolling="no"></iframe>
+                </div>
 
                 <div class="travel-tips-container">
                     <h3 class="support-title">Travel Tips</h3>
-                    <div id="travel-tips-content" class="body-text" style="font-size: 0.95rem;">
-                        Loading field notes...
+                    <div class="travel-tips-content" id="travel-tips-content">
+                        Loading travel tips...
                     </div>
                 </div>
                 
-                <div class="dynamic-iframe-container" style="background: var(--warm-rule);">
-                    <iframe src="/support/html/fx_usd_jpy.html" class="dynamic-iframe" scrolling="no"></iframe>
+                <div class="dynamic-iframe-container">
+                    <iframe src="/support/html/japan_about_us.html" class="dynamic-iframe" title="About Endless Atlas — Japan" scrolling="no"></iframe>
                 </div>
-            </aside>
+                
+                <div class="dynamic-iframe-container fx-container">
+                    <iframe src="/support/html/fx_usd_jpy.html" class="dynamic-iframe" title="USD to JPY Currency Converter Tool" scrolling="no"></iframe>
+                </div>
 
+            </aside>
         </div>
     </main>
 
     <div id="site-footer"></div>
 
-    <script src="components.js"></script>
+    <script src="/components.js"></script>
     <script src="/destinations/japan/japan-components.js"></script>
 
     <script>
-        // 1. PROGRESSIVE IMAGE LOADER
+        // ===== PROGRESSIVE IMAGE LOADER =====
+        // Stage 1: HD placeholder loads instantly via HTML, displayed blurry.
+        // Stage 2: Full-res loads silently in background, unblurs in when ready.
         const heroImg = document.getElementById('mainHeroImage');
         const fullUrl = "https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero.JPG";
-        
-        const fullLoader = new Image();
-        fullLoader.src = fullUrl;
-        fullLoader.onload = () => {
+
+        function revealFull() {
             heroImg.src = fullUrl;
+            // Short delay lets the browser paint the new src before the blur is removed
             setTimeout(() => {
                 heroImg.classList.remove('img-low-res');
                 heroImg.classList.add('img-loaded');
             }, 50);
-        };
+        }
 
-        // 2. HERO PARALLAX
-        window.addEventListener('scroll', () => {
+        const fullLoader = new Image();
+        fullLoader.referrerPolicy = 'no-referrer';
+        fullLoader.src = fullUrl;
+        if (fullLoader.complete) { revealFull(); } else { fullLoader.onload = revealFull; }
+
+        // ===== HERO SCROLL =====
+        window.addEventListener('scroll', function() {
             const heroText = document.getElementById('heroText');
             if (!heroText) return;
             const s = window.scrollY;
             heroText.style.transform = `scale(${1 + s / 600})`;
-            heroText.style.opacity = Math.max(0, 1 - s / 400);
+            heroText.style.opacity   = Math.max(0, 1 - s / 400);
         }, { passive: true });
 
-        // 3. JST CLOCK
+        // ===== JST CLOCK =====
         function updateJSTTime() {
             const el = document.getElementById('current-jst-time');
-            if (el) el.textContent = new Date().toLocaleTimeString('en-US', {
+            if (!el) return;
+            el.textContent = new Date().toLocaleTimeString('en-US', {
                 timeZone: 'Asia/Tokyo', hour: 'numeric', minute: '2-digit', hour12: true
             });
         }
         updateJSTTime();
         setInterval(updateJSTTime, 30000);
 
-        // 4. FX RATES
+        // ===== LIVE FX RATE =====
         function updateHeaderFX() {
             fetch('https://api.frankfurter.dev/v2/rates?quotes=USD,JPY')
                 .then(res => res.json())
                 .then(data => {
-                    if (data.rates) {
-                        const rate = (data.rates.JPY / data.rates.USD).toFixed(2);
+                    if (!Array.isArray(data)) return;
+                    let usd, jpy;
+                    data.forEach(item => {
+                        if (item.quote === 'USD') usd = item.rate;
+                        if (item.quote === 'JPY') jpy = item.rate;
+                    });
+                    if (usd && jpy) {
+                        const rate = (jpy / usd).toFixed(2);
                         document.getElementById('live-fx-rate').textContent = `· 1 USD = ${rate}`;
+                        setTimeout(calculateLayout, 50);
                     }
-                }).catch(() => {});
+                })
+                .catch(() => {});
         }
         updateHeaderFX();
 
-        // 5. PROPORTIONAL SCROLL ENGINE
-        const layoutState = { gridTop: 0, maxScroll: 0, diff: 0, taller: null };
-        const mainState = { currentY: 0, targetY: 0 };
+        // ===== PROPORTIONAL SCROLL =====
+        const layoutState  = { gridTop: 0, maxScroll: 0, diff: 0, taller: null };
+        const mainState    = { currentY: 0, targetY: 0 };
         const supportState = { currentY: 0, targetY: 0 };
-        const gridEl = document.getElementById('contentGrid');
-        const mainCol = document.getElementById('mainCol');
+
+        const gridEl     = document.getElementById('contentGrid');
+        const mainCol    = document.getElementById('mainCol');
         const supportCol = document.getElementById('supportCol');
 
         function calculateLayout() {
             if (window.innerWidth <= 900) {
-                mainCol.style.transform = 'none'; supportCol.style.transform = 'none'; return;
+                mainCol.style.transform    = 'none';
+                supportCol.style.transform = 'none';
+                mainState.currentY = 0; mainState.targetY = 0;
+                supportState.currentY = 0; supportState.targetY = 0;
+                return;
             }
-            const mainH = mainCol.offsetHeight;
+            const mainH    = mainCol.offsetHeight;
             const supportH = supportCol.offsetHeight;
-            const rect = gridEl.getBoundingClientRect();
+            const rect     = gridEl.getBoundingClientRect();
             layoutState.gridTop = window.scrollY + rect.top - 100;
 
-            if (mainH > supportH) {
-                layoutState.taller = 'main';
-                layoutState.diff = mainH - supportH;
-                layoutState.maxScroll = Math.max(600, mainH - window.innerHeight + 100);
+            if (Math.abs(mainH - supportH) < 50) {
+                layoutState.diff = 0; layoutState.taller = 'equal';
+            } else if (mainH > supportH) {
+                layoutState.taller    = 'main';
+                layoutState.diff      = mainH - supportH;
+                layoutState.maxScroll = Math.max(window.innerHeight / 1.5, mainH - window.innerHeight + 100);
             } else {
-                layoutState.taller = 'support';
-                layoutState.diff = supportH - mainH;
-                layoutState.maxScroll = Math.max(600, supportH - window.innerHeight + 100);
+                layoutState.taller    = 'support';
+                layoutState.diff      = supportH - mainH;
+                layoutState.maxScroll = Math.max(window.innerHeight / 1.5, supportH - window.innerHeight + 100);
             }
+            handleProportionalScroll();
         }
 
-        function renderLoop() {
+        function handleProportionalScroll() {
+            if (window.innerWidth <= 900) return;
+            if (layoutState.diff <= 0 || layoutState.maxScroll <= 0) {
+                mainState.targetY = 0; supportState.targetY = 0; return;
+            }
             let progress = (window.scrollY - layoutState.gridTop) / layoutState.maxScroll;
             progress = Math.max(0, Math.min(1, progress));
             const yOffset = progress * layoutState.diff;
 
-            if (layoutState.taller === 'main') supportState.targetY = yOffset;
-            else if (layoutState.taller === 'support') mainState.targetY = yOffset;
+            if (layoutState.taller === 'main') {
+                supportState.targetY = yOffset; mainState.targetY = 0;
+            } else if (layoutState.taller === 'support') {
+                mainState.targetY = yOffset; supportState.targetY = 0;
+            } else {
+                mainState.targetY = 0; supportState.targetY = 0;
+            }
+        }
 
-            mainState.currentY += (mainState.targetY - mainState.currentY) * 0.08;
+        function renderLoop() {
+            mainState.currentY    += (mainState.targetY    - mainState.currentY)    * 0.08;
             supportState.currentY += (supportState.targetY - supportState.currentY) * 0.08;
-
             if (window.innerWidth > 900) {
-                mainCol.style.transform = `translate3d(0, ${mainState.currentY}px, 0)`;
+                mainCol.style.transform    = `translate3d(0, ${mainState.currentY}px, 0)`;
                 supportCol.style.transform = `translate3d(0, ${supportState.currentY}px, 0)`;
             }
             requestAnimationFrame(renderLoop);
         }
 
-        // 6. DYNAMIC CONTENT & UI
+        requestAnimationFrame(renderLoop);
+        window.addEventListener('scroll', handleProportionalScroll, { passive: true });
+        window.addEventListener('resize', calculateLayout);
+
+        let resizeTimeout;
+        const columnObserver = new ResizeObserver(() => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(calculateLayout, 50);
+        });
+        if (mainCol)    columnObserver.observe(mainCol);
+        if (supportCol) columnObserver.observe(supportCol);
+
+        // ===== IFRAME MESSAGING =====
+        window.addEventListener('message', function(e) {
+            if (e.origin !== window.location.origin) return;
+            if (e.data && e.data.height) {
+                const iframes = document.querySelectorAll('iframe');
+                iframes.forEach(iframe => {
+                    if (iframe.contentWindow === e.source) {
+                        const newHeight = e.data.height + 'px';
+                        iframe.style.height = newHeight;
+                        if (iframe.parentElement.classList.contains('dynamic-iframe-container')) {
+                            iframe.parentElement.style.height = newHeight;
+                        }
+                        setTimeout(calculateLayout, 50);
+                    }
+                });
+            }
+        });
+
+        // ===== FETCH CONTENT =====
+        fetch('/support/text/japan_country_paragraph.html')
+            .then(res => res.ok ? res.text() : Promise.reject())
+            .then(html => {
+                document.getElementById('dynamic-text-block').innerHTML = html;
+                setTimeout(calculateLayout, 50);
+            })
+            .catch(() => document.getElementById('dynamic-text-block').innerHTML = "Could not load the description.");
+
+        fetch('/support/text/japan_travel_tips.html')
+            .then(res => res.ok ? res.text() : Promise.reject())
+            .then(html => {
+                document.getElementById('travel-tips-content').innerHTML = html;
+                setTimeout(calculateLayout, 50);
+            })
+            .catch(() => document.getElementById('travel-tips-content').innerHTML = "Travel tips are currently unavailable.");
+
+        // ===== ACCORDION =====
         function toggleWeather() {
             document.getElementById('weatherHeader').classList.toggle('expanded');
             document.getElementById('weatherContent').classList.toggle('expanded');
+            setTimeout(calculateLayout, 450);
         }
 
         function extractBestTime() {
+            const climateIframe = document.getElementById('climateWidget');
+            const labelElement  = document.getElementById('dynamicBestMonthsLabel');
             try {
-                const iframe = document.getElementById('climateWidget');
-                const doc = iframe.contentDocument || iframe.contentWindow.document;
-                const data = doc.getElementById('widget-best-time');
-                if (data) {
-                    const label = document.getElementById('dynamicBestMonthsLabel');
-                    label.textContent = `Best time: ${data.innerText}`;
-                    label.style.visibility = 'visible';
+                const iframeDoc  = climateIframe.contentDocument || climateIframe.contentWindow.document;
+                const sourceData = iframeDoc.getElementById('widget-best-time');
+                if (sourceData && sourceData.innerText) {
+                    labelElement.textContent = `Best time: ${sourceData.innerText}`;
+                    labelElement.style.visibility = 'visible';
                 }
-            } catch (e) {}
+            } catch (error) {
+                console.warn("Could not extract widget data.", error);
+            }
         }
 
-        // Initialize
-        window.addEventListener('load', () => {
-            calculateLayout();
-            requestAnimationFrame(renderLoop);
-        });
-        window.addEventListener('resize', calculateLayout);
-
-        // Fetch blocks
-        fetch('/support/text/japan_country_paragraph.html').then(r => r.text()).then(h => document.getElementById('dynamic-text-block').innerHTML = h);
-        fetch('/support/text/japan_travel_tips.html').then(r => r.text()).then(h => document.getElementById('travel-tips-content').innerHTML = h);
-
-        // Geo-pin UI logic
+        // ===== GEO PIN =====
         (function() {
-            const pin = document.getElementById('geoPin');
+            const hero  = document.getElementById('heroContainer');
+            const pin   = document.getElementById('geoPin');
             const strip = document.getElementById('locationStrip');
-            const hero = document.getElementById('heroContainer');
-            pin.addEventListener('click', (e) => {
-                e.stopPropagation();
-                strip.classList.toggle('visible');
-                pin.classList.toggle('active');
-                hero.classList.toggle('pin-revealed');
-            });
+            let locked  = false;
+            const isMobile = () => window.matchMedia('(hover: none)').matches;
+
+            function showStrip()      { strip.classList.add('visible'); pin.classList.add('active'); }
+            function hideStrip()      { if (locked) return; strip.classList.remove('visible'); pin.classList.remove('active'); }
+            function clearOverlay()   { hero.classList.add('pin-revealed'); }
+            function restoreOverlay() { hero.classList.remove('pin-revealed'); }
+
+            pin.addEventListener('mouseenter', () => { if (!isMobile()) { showStrip(); clearOverlay(); } });
+            pin.addEventListener('mouseleave', () => { if (!isMobile()) { hideStrip(); restoreOverlay(); } });
+            strip.addEventListener('mouseenter', () => { if (!isMobile()) clearOverlay(); });
+            strip.addEventListener('mouseleave', () => { if (!isMobile()) restoreOverlay(); });
+            pin.addEventListener('click', (e) => { e.stopPropagation(); locked = true; showStrip(); });
+            pin.addEventListener('touchend', (e) => { e.preventDefault(); locked = true; showStrip(); }, { passive: false });
         })();
+
+        window.addEventListener('load', () => setTimeout(calculateLayout, 100));
+        requestAnimationFrame(calculateLayout);
     </script>
 </body>
 </html>

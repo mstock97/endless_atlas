@@ -1,15 +1,14 @@
 /**
- * Endless-Atlas Components (v1.2)
- * Orchestrates brand-compliant Header, Footer, and QA Banner.
+ * components.js
+ * Loads shared header and footer with a polished dropdown and mobile menu.
  */
 
 const SITE_CONFIG = {
-  name: 'Endless',
-  nameAccent: 'Atlas',
-  // Updated tagline to reflect "Editorial Intelligence" brand value
-  tagline: 'The trail starts where the itinerary ends.', 
-  isQA: window.location.hostname.startsWith('qa.') || window.location.hostname.includes('github.io'),
-  basePath: '/',
+  name:        'Endless ',
+  nameAccent:  'Atlas',
+  tagline:     'Traveling the World',
+  isQA:        window.location.hostname.startsWith('qa.'),
+  basePath:    '/',
 };
 
 const NAV_LINKS = [
@@ -19,55 +18,33 @@ const NAV_LINKS = [
     children: [
       { label: 'Japan', href: '/destinations/japan' },
       { label: 'Europe', href: '/destinations/europe' },
-      { label: 'Pacific Northwest', href: '/destinations/pnw' },
-      { label: 'All Trails', href: '/destinations' }
+      { label: 'All Destinations', href: '/destinations' }
     ]
   },
   { label: 'Travel Tips',  href: '/tips' },
-  { label: 'Gear Lab',     href: '/gear' }, // Renamed to "Gear Lab" for a more "National Geographic" feel
-  { label: 'Join the Expedition',  href: '/newsletter', cta: true }, // High-impact CTA text
+  { label: 'Gear',          href: '/gear' },
+  { label: 'Newsletter',   href: '/newsletter', cta: true },
 ];
 
 const FOOTER_COLS = [
   {
     title: 'Explore',
     links: [
-      { label: 'Japan Guide',     href: '/destinations/japan' },
-      { label: 'European Trails', href: '/destinations/europe' },
-      { label: 'Hidden Gems',     href: '/destinations/hidden-gems' },
-      { label: 'Map Archive',     href: '/maps' },
+      { label: 'All Destinations', href: '/destinations' },
+      { label: 'Europe',            href: '/destinations/europe' },
+      { label: 'Asia',              href: '/destinations/asia' },
+      { label: 'Americas',          href: '/destinations/americas' },
     ],
   },
   {
-    title: 'The Archive',
+    title: 'Content',
     links: [
-      { label: 'Field Notes',    href: '/tips/' },
-      { label: 'Essential Gear', href: '/gear/' },
-      { label: 'Stories',        href: '/stories/' },
-    ],
-  },
-  {
-    title: 'Organization',
-    links: [
-      { label: 'About Atlas', href: '/about' },
-      { label: 'Privacy',     href: '/privacy' },
-      { label: 'Contact',     href: '/contact' },
+      { label: 'Travel Tips', href: '/tips/' },
+      { label: 'Gear Guide',  href: '/gear/' },
+      { label: 'Itineraries', href: '/itineraries/' },
     ],
   }
 ];
-
-/**
- * Renders the QA Banner for staging/preview environments
- */
-function renderQABanner() {
-  if (!SITE_CONFIG.isQA) return '';
-  return `
-    <div class="qa-banner">
-      STAGING ENVIRONMENT &nbsp;—&nbsp; Previewing Endless-Atlas v1.2 &nbsp;—&nbsp; 
-      <a href="https://github.com/your-repo" target="_blank">View Docs</a>
-    </div>
-  `;
-}
 
 function renderHeader() {
   const navLinksHTML = NAV_LINKS.map(link => {
@@ -92,16 +69,13 @@ function renderHeader() {
   }).join('');
 
   return `
-    ${renderQABanner()}
     <header class="site-header">
       <nav class="nav-inner">
-        <a href="/" class="nav-logo">
-          ${SITE_CONFIG.name}<span>${SITE_CONFIG.nameAccent}</span>
-        </a>
+        <a href="/" class="nav-logo">${SITE_CONFIG.name}<span>${SITE_CONFIG.nameAccent}</span></a>
         <ul class="nav-links" id="navLinks">${navLinksHTML}</ul>
         
         <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Menu">
-          <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="square">
+          <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <line x1="3" y1="12" x2="21" y2="12"></line>
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <line x1="3" y1="18" x2="21" y2="18"></line>
@@ -133,7 +107,7 @@ function renderFooter() {
           ${colsHTML}
         </div>
         <div class="footer-bottom">
-          <span class="caption">© ${new Date().getFullYear()} ${SITE_CONFIG.name}${SITE_CONFIG.nameAccent}. Built for explorers.</span>
+          <span>© ${new Date().getFullYear()} ${SITE_CONFIG.name}${SITE_CONFIG.nameAccent}.</span>
         </div>
       </div>
     </footer>
@@ -143,8 +117,7 @@ function renderFooter() {
 function setActiveNavLink() {
   const path = window.location.pathname;
   document.querySelectorAll('.nav-links a').forEach(link => {
-    const href = link.getAttribute('href');
-    if (href !== '/' && path.startsWith(href)) {
+    if (link.getAttribute('href') !== '/' && path.startsWith(link.getAttribute('href'))) {
       link.classList.add('active');
     }
   });
@@ -164,16 +137,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const navLinks = document.getElementById('navLinks');
   
   if (mobileMenuBtn && navLinks) {
-    mobileMenuBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
+    mobileMenuBtn.addEventListener('click', () => {
       navLinks.classList.toggle('active');
-    });
-
-    // Close menu when clicking outside
-    document.addEventListener('click', () => {
-      if (navLinks.classList.contains('active')) {
-        navLinks.classList.remove('active');
-      }
     });
   }
 });
