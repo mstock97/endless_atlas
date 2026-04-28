@@ -608,56 +608,6 @@
 
         .info-card-body li + li { margin-top: 0.4rem; }
 
-        /* Essentials list */
-        .essentials-card {
-            background: var(--forest);
-            border-radius: 6px;
-            overflow: hidden;
-            color: var(--white);
-        }
-
-        .essentials-header {
-            padding: 1.1rem 1.25rem 0.6rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .essentials-header .support-title {
-            color: rgba(255,255,255,0.9);
-            border-bottom: none;
-            padding-bottom: 0;
-            margin-bottom: 0;
-        }
-
-        .essentials-list {
-            padding: 0.5rem 0;
-        }
-
-        .essential-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            padding: 0.65rem 1.25rem;
-            border-bottom: 1px solid rgba(255,255,255,0.07);
-            gap: 1rem;
-        }
-
-        .essential-row:last-child { border-bottom: none; }
-
-        .essential-key {
-            font-size: 0.72rem;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.45);
-            flex-shrink: 0;
-        }
-
-        .essential-val {
-            font-size: 0.88rem;
-            font-weight: 500;
-            color: rgba(255,255,255,0.85);
-            text-align: right;
-        }
-
         /* ===== MOBILE ===== */
         @media (max-width: 600px) {
             main { padding: 60px 6% 80px; }
@@ -932,37 +882,15 @@
                 </div>
             </div>
 
-            <!-- Essentials -->
-            <div class="essentials-card">
-                <div class="essentials-header">
-                    <h3 class="support-title">Essentials</h3>
-                </div>
-                <div class="essentials-list">
-                    <div class="essential-row">
-                        <span class="essential-key">Voltage</span>
-                        <span class="essential-val">100V · Type A plug</span>
-                    </div>
-                    <div class="essential-row">
-                        <span class="essential-key">Tipping</span>
-                        <span class="essential-val">Not customary — never tip</span>
-                    </div>
-                    <div class="essential-row">
-                        <span class="essential-key">Tap Water</span>
-                        <span class="essential-val">Safe to drink</span>
-                    </div>
-                    <div class="essential-row">
-                        <span class="essential-key">Emergency</span>
-                        <span class="essential-val">Police 110 · Fire/EMS 119</span>
-                    </div>
-                    <div class="essential-row">
-                        <span class="essential-key">Best Time</span>
-                        <span class="essential-val">Mar–May · Oct–Nov</span>
-                    </div>
-                    <div class="essential-row">
-                        <span class="essential-key">Visa</span>
-                        <span class="essential-val">90 days visa-free (most passports)</span>
-                    </div>
-                </div>
+            <!-- Essentials — sourced from standalone widget -->
+            <div class="dynamic-iframe-container">
+                <iframe
+                    src="/support/html/japan_essentials.html"
+                    class="dynamic-iframe"
+                    id="essentialsWidget"
+                    title="Tokyo Travel Essentials"
+                    scrolling="no">
+                </iframe>
             </div>
 
         </aside>
