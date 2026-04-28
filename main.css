@@ -1,241 +1,52 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=Bebas+Neue&display=swap');
 
-/* ============================================
-   DESIGN TOKENS
-   ============================================ */
 :root {
-    /* Global Colors */
-    --sand:        #F7F5F0;
-    --sand-dark:   #E8E0D0;
-    --clay:        #C4956A;
-    --clay-dark:   #A87850;
-    --ocean:       #2C5F7A;
-    --ocean-light: #3D7A9A;
-    --ink:         #1A1A2E;
-    --ink-light:   #4A4A6A;
-    --white:       #FFFFFF;
-    --mist:        #F8F6F2;
-    --warm-rule:   #EAE6DB;
+  /* Core Brand: Forest Theme */
+  --forest:      #1E4034;
+  --canopy:      #2D6A4F;
+  --moss:        #52B788;
+  --stone:       #5C5346;
+  --driftwood:   #A8896A;
+  --fog:         #C9D4C5;
+  --ink:         #0F0F0F;
+  --graphite:    #3D3D3D;
+  --ash:         #8C8C8C;
+  --paper:       #F7F5F0;
+  --white:       #FFFFFF;
+  --warm-rule:   #EAE6DB;
 
-    /* Destination: Forest Palette */
-    --forest:      #1E4034;
-    --canopy:      #2D6A4F;
-    --moss:        #52B788;
-    --stone:       #5C5346;
-    --driftwood:   #A8896A;
-    --fog:         #C9D4C5;
-    --graphite:    #3D3D3D;
-    --ash:         #8C8C8C;
+  /* Typography */
+  --font-display: 'Playfair Display', serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-accent:  'Bebas Neue', sans-serif;
 
-    /* Typography */
-    --font-display: 'Playfair Display', Georgia, serif;
-    --font-body:    'DM Sans', sans-serif;
-    --font-accent:  'Bebas Neue', sans-serif;
-
-    --radius-sm: 8px;
-    --radius-md: 16px;
-    --radius-lg: 24px;
-
-    --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ============================================
-   RESET & BASE
-   ============================================ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+/* Base Layout */
 body {
-    font-family: var(--font-body);
-    background: var(--sand);
-    color: var(--ink);
-    line-height: 1.7;
-    -webkit-font-smoothing: antialiased;
-}
-img { max-width: 100%; display: block; }
-a { color: inherit; text-decoration: none; }
-
-/* ============================================
-   DESTINATION PAGE COMPONENTS
-   ============================================ */
-
-/* Sticky Sub-Nav */
-.sticky-sub-nav {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    width: 100%;
-    background-color: var(--sand);
-    border-bottom: 1px solid var(--warm-rule);
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.7;
 }
 
-/* Hero Container & Geo-Pin */
-.hero-container {
-    position: relative;
-    height: 75vh;
-    width: 100%;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #000;
+/* Reusable Destination Components */
+.section-title-accent {
+  font-family: var(--font-accent);
+  font-size: 2.5rem;
+  color: var(--forest);
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--warm-rule);
+  padding-bottom: 0.5rem;
+  margin: 3rem 0 1.5rem;
 }
 
-.hero-image {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;
-    z-index: 0;
-    transition: filter 0.8s ease-in-out, transform 0.8s ease-in-out;
-}
-
-.img-low-res { filter: blur(15px); transform: scale(1.05); }
-.img-loaded  { filter: blur(0); transform: scale(1); }
-
-.hero-container::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(15, 15, 15, 0.6);
-    z-index: 1;
-    transition: opacity 0.4s ease;
-}
-.hero-container.pin-revealed::after { opacity: 0; }
-
-.hero-title-large {
-    font-family: var(--font-accent);
-    font-size: clamp(5rem, 20vw, 15rem);
-    color: var(--white);
-    z-index: 2;
-    letter-spacing: 0.05em;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-.hero-container.pin-revealed .hero-title-large { opacity: 0; }
-
-.geo-pin {
-    position: absolute;
-    bottom: 60px; left: 5%;
-    z-index: 5;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-}
-.geo-pin-icon {
-    width: 32px; height: 32px;
-    opacity: 0.22;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-.geo-pin:hover .geo-pin-icon, .geo-pin.active .geo-pin-icon { opacity: 1; transform: scale(1.15); }
-
-.location-strip {
-    position: absolute;
-    bottom: 0; left: 0;
-    width: 100%;
-    z-index: 4;
-    background: rgba(8, 8, 8, 0.78);
-    backdrop-filter: blur(6px);
-    height: 0;
-    overflow: hidden;
-    transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    align-items: center;
-    padding: 0 5%;
-}
-.location-strip.visible { height: 46px; }
-
-/* Content Grid Layout */
-.dest-main-layout {
-    padding: 80px 10% 120px;
-}
-.content-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 3rem;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-@media (min-width: 900px) {
-    .content-grid { grid-template-columns: 2fr 1fr; }
-}
-
-/* Quick Facts */
-.quick-facts {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1px;
-    background: var(--warm-rule);
-    border: 1px solid var(--warm-rule);
-    border-radius: 6px;
-    overflow: hidden;
-    margin-bottom: 2.5rem;
-}
-.fact-cell {
-    flex: 1 1 140px;
-    background: var(--white);
-    padding: 1.1rem 1.25rem;
-    display: flex;
-    flex-direction: column;
-}
-.fact-label {
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--ash);
-}
-.fact-value {
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--ink);
-}
-
-/* Accordion */
-.weather-accordion {
-    margin: 4rem 0 1.5rem 0;
-    border-bottom: 2px solid var(--warm-rule);
-}
-.accordion-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    padding-bottom: 0.5rem;
-}
-.accordion-content {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.4s ease-in-out, opacity 0.4s ease;
-    opacity: 0;
-}
-.accordion-content.expanded {
-    grid-template-rows: 1fr;
-    opacity: 1;
-    margin: 1.5rem 0;
-}
-
-/* Support Column Items */
-.support-iframe {
-    width: 100%;
-    height: 400px;
-    border: none;
-    border-radius: var(--radius-sm);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    background-color: var(--warm-rule);
-}
-.travel-tips-container {
-    background-color: var(--warm-rule);
-    border-radius: var(--radius-sm);
-    padding: 1.5rem;
-}
-
-/* Utility Section Title for Destinations */
-.dest-section-title {
-    font-family: var(--font-accent);
-    font-size: 2.5rem;
-    color: var(--forest);
-    margin: 4rem 0 1.5rem 0;
-    border-bottom: 2px solid var(--warm-rule);
-    padding-bottom: 0.5rem;
+.iframe-wrapper {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  background: var(--white);
+  border: 1px solid var(--warm-rule);
 }
