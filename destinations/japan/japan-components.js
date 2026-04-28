@@ -1,300 +1,548 @@
 /**
  * japan-components.js
- * Injects a Japan-specific sticky sub-header below the main site header.
- * The global header scrolls away naturally; this bar remains pinned.
- * Include this script on every page in the /destinations/japan/ section.
+ * Endless-Atlas · Japan Section Navigation
+ * Two-tier bar: brand strip (top) + destination sub-nav with dropdowns.
+ * Drop this script on every page under /destinations/japan/
  */
 
 const JAPAN_NAV = {
   home: { label: 'Japan', href: '/destinations/japan' },
   links: [
-    { label: 'Tokyo',        href: '/destinations/japan/tokyo',        icon: '🗼' },
-    { label: 'Osaka',        href: '/destinations/japan/osaka',        icon: '🏯' },
-    { label: 'Kyoto',        href: '/destinations/japan/kyoto',        icon: '⛩️' },
-    { label: 'Hiroshima',    href: '/destinations/japan/hiroshima',    icon: '🕊️' },
-    { label: 'Hokkaido',     href: '/destinations/japan/hokkaido',     icon: '🌨️' },
-    { label: 'Transit Tips', href: '/destinations/japan/transit',      icon: '🚄' },
-    { label: 'Food Guide',   href: '/destinations/japan/food',         icon: '🍜' },
+    {
+      label: 'Tokyo',
+      href: '/destinations/japan/tokyo',
+      dropdown: [
+        { label: 'Neighborhoods',  href: '/destinations/japan/tokyo/neighborhoods' },
+        { label: 'Where to Eat',   href: '/destinations/japan/tokyo/food' },
+        { label: 'Day Trips',      href: '/destinations/japan/tokyo/day-trips' },
+        { label: 'Itineraries',    href: '/destinations/japan/tokyo/itineraries' },
+      ],
+    },
+    {
+      label: 'Osaka',
+      href: '/destinations/japan/osaka',
+      dropdown: [
+        { label: 'Neighborhoods',  href: '/destinations/japan/osaka/neighborhoods' },
+        { label: 'Street Food',    href: '/destinations/japan/osaka/street-food' },
+        { label: 'Day Trips',      href: '/destinations/japan/osaka/day-trips' },
+        { label: 'Itineraries',    href: '/destinations/japan/osaka/itineraries' },
+      ],
+    },
+    {
+      label: 'Kyoto',
+      href: '/destinations/japan/kyoto',
+      dropdown: [
+        { label: 'Temples & Shrines', href: '/destinations/japan/kyoto/temples' },
+        { label: 'Traditional Arts',  href: '/destinations/japan/kyoto/arts' },
+        { label: 'Day Trips',         href: '/destinations/japan/kyoto/day-trips' },
+        { label: 'Itineraries',       href: '/destinations/japan/kyoto/itineraries' },
+      ],
+    },
+    {
+      label: 'Transit Tips',
+      href: '/destinations/japan/transit',
+      dropdown: [
+        { label: 'JR Pass Guide',  href: '/destinations/japan/transit/jr-pass' },
+        { label: 'IC Cards',       href: '/destinations/japan/transit/ic-cards' },
+        { label: 'Shinkansen',     href: '/destinations/japan/transit/shinkansen' },
+        { label: 'Getting Around', href: '/destinations/japan/transit/local' },
+      ],
+    },
+    {
+      label: 'Food Guide',
+      href: '/destinations/japan/food',
+      dropdown: [
+        { label: 'Regional Dishes',    href: '/destinations/japan/food/regional' },
+        { label: 'Ramen Deep Dive',    href: '/destinations/japan/food/ramen' },
+        { label: 'Izakaya Culture',    href: '/destinations/japan/food/izakaya' },
+        { label: 'Vegetarian & Vegan', href: '/destinations/japan/food/vegetarian' },
+      ],
+    },
   ],
 };
 
-const JAPAN_SUBNAV_STYLES = `
+/* ─────────────────────────────────────────────
+   Brand palette (Endless-Atlas style guide v1.2)
+   Forest #1E4034 · Canopy #2D6A4F · Moss #52B788
+   Driftwood #A8896A · Paper #F7F5F0 · Ink #0F0F0F
+   Fonts: Bebas Neue (display) / DM Sans (body)
+───────────────────────────────────────────── */
+
+const STYLES = `
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap');
+
   :root {
-    --japan-bar-height: 46px;
-    --japan-bar-bg: rgba(14, 30, 24, 0.97);
-    --japan-bar-border: rgba(234, 230, 219, 0.12);
-    --japan-accent: #C8A97E;
-    --japan-text: rgba(234, 230, 219, 0.85);
-    --japan-text-hover: #EAE6DB;
-    --japan-active: #C8A97E;
+    --ea-forest:    #1E4034;
+    --ea-canopy:    #2D6A4F;
+    --ea-moss:      #52B788;
+    --ea-drift:     #A8896A;
+    --ea-paper:     #F7F5F0;
+    --ea-ink:       #0F0F0F;
+    --ea-stone:     #5C5346;
+
+    --jn-strip-h:   26px;
+    --jn-bar-h:     46px;
+    --jn-total-h:   72px;
+    --jn-drop-bg:   #122B21;
+    --jn-bdr:       rgba(168, 137, 106, 0.15);
+    --jn-txt:       rgba(247, 245, 240, 0.62);
+    --jn-txt-h:     #F7F5F0;
   }
 
-  /* Push body content down to account for both headers */
   body {
-    padding-top: var(--japan-bar-height) !important;
+    padding-top: var(--jn-total-h) !important;
   }
 
-  /* ---- GLOBAL HEADER: scroll-aware ---- */
-  /* The main site header is position:sticky by default in main.css.
-     We let it scroll away naturally — no changes needed to it. */
-
-  /* ---- JAPAN SUB-HEADER ---- */
-  .japan-subnav {
+  .ea-japan-header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: var(--japan-bar-height);
     z-index: 9999;
-    background: var(--japan-bar-bg);
-    border-bottom: 1px solid var(--japan-bar-border);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                box-shadow 0.3s ease;
-    box-shadow: 0 1px 0 rgba(200, 169, 126, 0.08);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .japan-subnav.hidden {
+  .ea-japan-header.hidden {
     transform: translateY(-100%);
-    box-shadow: none;
   }
 
-  .japan-subnav-inner {
+  /* ── BRAND STRIP ── */
+  .ea-japan-strip {
+    background: var(--ea-ink);
+    height: var(--jn-strip-h);
+    display: flex;
+    align-items: center;
+  }
+
+  .ea-japan-strip-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 5%;
+  }
+
+  .ea-japan-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.22em;
+    color: var(--ea-paper);
+    opacity: 0.9;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: opacity 0.18s;
+  }
+
+  .ea-japan-brand:hover {
+    opacity: 1;
+  }
+
+  .ea-japan-edition {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ea-drift);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ea-japan-edition::before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 1px;
+    background: var(--ea-drift);
+    opacity: 0.4;
+  }
+
+  /* ── MAIN NAV BAR ── */
+  .ea-japan-bar {
+    background: var(--ea-forest);
+    height: var(--jn-bar-h);
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--jn-bdr);
+    position: relative;
+    overflow: visible;
+  }
+
+  .ea-japan-bar-inner {
     display: flex;
     align-items: center;
     height: 100%;
     padding: 0 5%;
-    gap: 0;
     max-width: 1600px;
     margin: 0 auto;
+    width: 100%;
+    overflow: visible;
   }
 
-  /* ---- HOME PILL ---- */
-  .japan-subnav-home {
+  /* ── REGION LABEL ── */
+  .ea-japan-region {
     display: flex;
     align-items: center;
-    gap: 0.45rem;
-    text-decoration: none;
-    color: var(--japan-accent);
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.1rem;
-    letter-spacing: 0.1em;
-    white-space: nowrap;
-    padding-right: 1.2rem;
-    margin-right: 0.5rem;
-    border-right: 1px solid var(--japan-bar-border);
-    transition: color 0.2s ease;
+    gap: 9px;
+    padding-right: 18px;
+    margin-right: 4px;
+    border-right: 1px solid var(--jn-bdr);
     flex-shrink: 0;
   }
 
-  .japan-subnav-home:hover {
-    color: var(--japan-text-hover);
+  .ea-japan-flag {
+    width: 17px;
+    height: 12px;
+    background: #fff;
+    border-radius: 1px;
+    position: relative;
+    flex-shrink: 0;
   }
 
-  .japan-subnav-home-flag {
-    font-size: 0.95rem;
+  .ea-japan-flag::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #BC002D;
+  }
+
+  .ea-japan-region-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.06rem;
+    letter-spacing: 0.13em;
+    color: var(--ea-paper);
     line-height: 1;
-  }
-
-  /* ---- SCROLLABLE LINK STRIP ---- */
-  .japan-subnav-links {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    flex: 1;
-    height: 100%;
-  }
-
-  .japan-subnav-links::-webkit-scrollbar {
-    display: none;
-  }
-
-  .japan-subnav-link {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
     text-decoration: none;
-    color: var(--japan-text);
+    transition: color 0.18s;
+  }
+
+  .ea-japan-region-label:hover {
+    color: var(--ea-moss);
+  }
+
+  /* ── LINK STRIP ── */
+  .ea-japan-links {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    flex: 1;
+    overflow: visible;
+  }
+
+  .ea-japan-item {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  /* ── NAV LINK ── */
+  .ea-japan-link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--jn-txt);
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.8rem;
+    font-size: 0.68rem;
     font-weight: 500;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     white-space: nowrap;
-    padding: 0 0.95rem;
+    padding: 0 14px;
     height: 100%;
-    border-right: 1px solid var(--japan-bar-border);
-    transition: color 0.2s ease, background 0.2s ease;
+    border-right: 1px solid var(--jn-bdr);
+    text-decoration: none;
+    cursor: pointer;
     position: relative;
+    transition: color 0.15s ease, background 0.15s ease;
   }
 
-  .japan-subnav-link:first-child {
-    border-left: 1px solid var(--japan-bar-border);
+  .ea-japan-item:first-child .ea-japan-link {
+    border-left: 1px solid var(--jn-bdr);
   }
 
-  .japan-subnav-link:hover {
-    color: var(--japan-text-hover);
-    background: rgba(234, 230, 219, 0.04);
+  .ea-japan-item:hover .ea-japan-link {
+    color: var(--jn-txt-h);
+    background: rgba(82, 183, 136, 0.06);
   }
 
-  .japan-subnav-link.active {
-    color: var(--japan-active);
+  .ea-japan-link.active {
+    color: #fff;
   }
 
-  .japan-subnav-link.active::after {
+  .ea-japan-link.active::after,
+  .ea-japan-item:hover .ea-japan-link::after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
     height: 2px;
-    background: var(--japan-accent);
+    background: var(--ea-moss);
   }
 
-  .japan-link-icon {
-    font-size: 0.85rem;
+  .ea-japan-chev {
+    font-size: 0.45rem;
+    opacity: 0.35;
+    margin-left: 1px;
+    transition: transform 0.18s ease, opacity 0.18s ease;
+    display: inline-block;
     line-height: 1;
   }
 
-  /* ---- SCROLL HINT FADE (desktop) ---- */
-  .japan-subnav-fade {
+  .ea-japan-item:hover .ea-japan-chev {
+    transform: rotate(180deg);
+    opacity: 0.6;
+  }
+
+  /* ── DROPDOWN ── */
+  .ea-japan-drop {
     position: absolute;
-    right: 0;
-    top: 0;
-    width: 40px;
-    height: 100%;
-    background: linear-gradient(to right, transparent, var(--japan-bar-bg));
+    top: 100%;
+    left: 0;
+    min-width: 178px;
+    background: var(--jn-drop-bg);
+    border: 1px solid var(--jn-bdr);
+    border-top: 2px solid var(--ea-moss);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s;
     pointer-events: none;
-    display: none;
+    z-index: 500;
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.48), 0 4px 12px rgba(0, 0, 0, 0.24);
   }
 
-  @media (max-width: 768px) {
-    .japan-subnav-fade {
-      display: block;
+  .ea-japan-item:hover .ea-japan-drop {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .ea-japan-drop-head {
+    display: block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.16em;
+    color: var(--ea-drift);
+    text-transform: uppercase;
+    padding: 10px 14px 6px;
+    border-bottom: 1px solid var(--jn-bdr);
+  }
+
+  .ea-japan-drop-link {
+    display: flex;
+    align-items: center;
+    padding: 8px 14px;
+    color: rgba(247, 245, 240, 0.62);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    border-radius: 0;
+    transition: color 0.13s ease, background 0.13s ease, padding-left 0.13s ease, border-color 0.13s ease;
+  }
+
+  .ea-japan-drop-link::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--ea-drift);
+    opacity: 0.4;
+    margin-right: 9px;
+    flex-shrink: 0;
+    transition: background 0.13s ease, opacity 0.13s ease;
+  }
+
+  .ea-japan-drop-link:hover {
+    color: #F7F5F0;
+    background: rgba(82, 183, 136, 0.07);
+    padding-left: 18px;
+    border-left-color: var(--ea-moss);
+  }
+
+  .ea-japan-drop-link:hover::before {
+    background: var(--ea-moss);
+    opacity: 1;
+  }
+
+  .ea-japan-drop-link:last-child {
+    margin-bottom: 4px;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .ea-japan-links {
+      overflow-x: auto;
+      overflow-y: visible;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
 
-    .japan-subnav-link {
-      font-size: 0.75rem;
-      padding: 0 0.7rem;
-    }
+    .ea-japan-links::-webkit-scrollbar { display: none; }
 
-    .japan-subnav-home {
-      font-size: 1rem;
-      padding-right: 0.85rem;
-    }
-
-    .japan-link-icon {
-      display: none;
+    .ea-japan-link {
+      font-size: 0.65rem;
+      padding: 0 11px;
     }
   }
 
-  @media (max-width: 480px) {
-    .japan-subnav-inner {
+  @media (max-width: 600px) {
+    .ea-japan-bar-inner,
+    .ea-japan-strip-inner {
       padding: 0 3%;
     }
   }
 `;
 
-function renderJapanSubnav() {
+/* ─────────────────────────────────────────────
+   RENDER
+───────────────────────────────────────────── */
+
+function renderHeader() {
+  const path = window.location.pathname;
+
   const linksHTML = JAPAN_NAV.links.map(link => {
-    const path = window.location.pathname;
-    const isActive = path === link.href || path.startsWith(link.href + '/') || path.startsWith(link.href + '?');
+    const isActive =
+      path === link.href ||
+      path.startsWith(link.href + '/') ||
+      path.startsWith(link.href + '?');
+
+    const dropHTML = link.dropdown && link.dropdown.length
+      ? `<div class="ea-japan-drop" role="menu" aria-label="${link.label} pages">
+           <span class="ea-japan-drop-head">${link.label}</span>
+           ${link.dropdown.map(d => `<a href="${d.href}" class="ea-japan-drop-link" role="menuitem">${d.label}</a>`).join('')}
+         </div>`
+      : '';
+
+    const chev = link.dropdown && link.dropdown.length
+      ? `<span class="ea-japan-chev" aria-hidden="true">&#9660;</span>`
+      : '';
+
     return `
-      <a href="${link.href}" class="japan-subnav-link${isActive ? ' active' : ''}">
-        <span class="japan-link-icon">${link.icon}</span>
-        ${link.label}
-      </a>
-    `;
+      <div class="ea-japan-item">
+        <a href="${link.href}"
+           class="ea-japan-link${isActive ? ' active' : ''}"
+           ${link.dropdown ? 'aria-haspopup="true" aria-expanded="false"' : ''}
+        >${link.label}${chev}</a>
+        ${dropHTML}
+      </div>`;
   }).join('');
 
   return `
-    <nav class="japan-subnav" id="japanSubnav" aria-label="Japan section navigation">
-      <div class="japan-subnav-inner">
-        <a href="${JAPAN_NAV.home.href}" class="japan-subnav-home">
-          <span class="japan-subnav-home-flag">🇯🇵</span>
-          ${JAPAN_NAV.home.label}
-        </a>
-        <div class="japan-subnav-links" id="japanSubnavLinks">
-          ${linksHTML}
+    <header class="ea-japan-header" id="eaJapanHeader" aria-label="Japan section">
+      <div class="ea-japan-strip" role="banner">
+        <div class="ea-japan-strip-inner">
+          <a href="/" class="ea-japan-brand">Endless&#8202;Atlas</a>
+          <span class="ea-japan-edition">Japan Edition</span>
         </div>
-        <div class="japan-subnav-fade"></div>
       </div>
-    </nav>
-  `;
+      <nav class="ea-japan-bar" aria-label="Japan destinations">
+        <div class="ea-japan-bar-inner">
+          <div class="ea-japan-region">
+            <span class="ea-japan-flag" role="img" aria-label="Japan flag"></span>
+            <a href="${JAPAN_NAV.home.href}" class="ea-japan-region-label">${JAPAN_NAV.home.label}</a>
+          </div>
+          <div class="ea-japan-links" role="menubar">
+            ${linksHTML}
+          </div>
+        </div>
+      </nav>
+    </header>`;
 }
 
-function injectJapanStyles() {
-  const styleEl = document.createElement('style');
-  styleEl.id = 'japan-subnav-styles';
-  styleEl.textContent = JAPAN_SUBNAV_STYLES;
-  document.head.appendChild(styleEl);
+/* ─────────────────────────────────────────────
+   INIT
+───────────────────────────────────────────── */
+
+function injectStyles() {
+  const el = document.createElement('style');
+  el.id = 'ea-japan-styles';
+  el.textContent = STYLES;
+  document.head.appendChild(el);
 }
 
-function initJapanSubnav() {
-  injectJapanStyles();
+function initJapanHeader() {
+  injectStyles();
 
-  // Insert subnav as the very first element in <body>
   const wrapper = document.createElement('div');
-  wrapper.innerHTML = renderJapanSubnav();
+  wrapper.innerHTML = renderHeader().trim();
   document.body.insertBefore(wrapper.firstElementChild, document.body.firstChild);
 
-  // Scroll-hide logic: hide only when scrolling DOWN past the main site header.
-  // Reappear instantly on scroll UP.
-  let lastScrollY = window.scrollY;
+  let lastY = window.scrollY;
   let ticking = false;
+  const THRESHOLD = 60;
 
-  // Approximate main header height — adjust if your main.css changes this
-  const MAIN_HEADER_THRESHOLD = 60;
-
-  function onScroll() {
+  window.addEventListener('scroll', () => {
     if (!ticking) {
       window.requestAnimationFrame(() => {
-        const subnav = document.getElementById('japanSubnav');
-        if (!subnav) { ticking = false; return; }
-
-        const currentY = window.scrollY;
-        const scrollingDown = currentY > lastScrollY;
-
-        // Hide sub-nav when scrolling DOWN and past the main header;
-        // show it the moment the user scrolls UP at all.
-        if (scrollingDown && currentY > MAIN_HEADER_THRESHOLD) {
-          subnav.classList.add('hidden');
-        } else if (!scrollingDown) {
-          subnav.classList.remove('hidden');
+        const header = document.getElementById('eaJapanHeader');
+        if (!header) { ticking = false; return; }
+        const y = window.scrollY;
+        if (y > lastY && y > THRESHOLD) {
+          header.classList.add('hidden');
+        } else if (y < lastY) {
+          header.classList.remove('hidden');
         }
-
-        lastScrollY = currentY;
+        lastY = y;
         ticking = false;
       });
       ticking = true;
     }
-  }
+  }, { passive: true });
 
-  window.addEventListener('scroll', onScroll, { passive: true });
+  document.querySelectorAll('.ea-japan-item').forEach(item => {
+    const trigger = item.querySelector('.ea-japan-link');
+    const drop = item.querySelector('.ea-japan-drop');
+    if (!drop) return;
 
-  // Scroll active link into view on mobile
-  const activeLink = document.querySelector('.japan-subnav-link.active');
-  if (activeLink) {
-    const strip = document.getElementById('japanSubnavLinks');
+    trigger.addEventListener('keydown', e => {
+      if (['Enter', ' ', 'ArrowDown'].includes(e.key)) {
+        e.preventDefault();
+        trigger.setAttribute('aria-expanded', 'true');
+        Object.assign(drop.style, { opacity:'1', visibility:'visible', transform:'translateY(0)', pointerEvents:'auto' });
+        drop.querySelector('.ea-japan-drop-link')?.focus();
+      }
+    });
+
+    drop.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        trigger.setAttribute('aria-expanded', 'false');
+        Object.assign(drop.style, { opacity:'', visibility:'', transform:'', pointerEvents:'' });
+        trigger.focus();
+      }
+    });
+  });
+
+  const active = document.querySelector('.ea-japan-link.active');
+  if (active) {
+    const strip = active.closest('.ea-japan-links');
     if (strip) {
       setTimeout(() => {
-        const linkLeft = activeLink.offsetLeft;
-        const linkWidth = activeLink.offsetWidth;
-        const stripWidth = strip.offsetWidth;
-        strip.scrollLeft = linkLeft - (stripWidth / 2) + (linkWidth / 2);
-      }, 50);
+        const item = active.parentElement;
+        strip.scrollLeft = item.offsetLeft - (strip.offsetWidth / 2) + (item.offsetWidth / 2);
+      }, 60);
     }
   }
 }
 
-// Fire after DOM is ready
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initJapanSubnav);
+  document.addEventListener('DOMContentLoaded', initJapanHeader);
 } else {
-  initJapanSubnav();
+  initJapanHeader();
 }
