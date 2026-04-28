@@ -1,4 +1,4 @@
-/**
+/** 
  * japan-components.js
  * Endless-Atlas · Japan Section Navigation
  * Two-tier bar: brand strip (top) + destination sub-nav with dropdowns.
