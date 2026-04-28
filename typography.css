@@ -1,0 +1,39 @@
+/* All-Caps Display for Heroes */
+h1, .display-xl {
+  font-family: var(--font-display);
+  font-size: 6rem; /* 96px */
+  text-transform: uppercase;
+  color: var(--color-ink);
+  line-height: 1;
+}
+
+/* Editorial Headlines */
+h2, .headline-editorial {
+  font-family: var(--font-editorial);
+  font-size: 2.25rem; /* 36px */
+  font-weight: 400;
+  color: var(--color-ink);
+}
+
+/* Subtitles */
+.subtitle-italic {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 1.5rem; /* 24px */
+  color: var(--color-stone);
+}
+
+/* Long-form Body Copy */
+p, .body-text {
+  font-family: var(--font-body);
+  font-size: 1.0625rem; /* 17px */
+  color: var(--color-graphite);
+  line-height: 1.7;
+}
+
+/* Photo Captions */
+figcaption, .caption {
+  font-family: var(--font-body);
+  font-size: 0.6875rem; /* 11px */
+  color: var(--color-ash);
+}
