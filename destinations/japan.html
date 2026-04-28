@@ -77,8 +77,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 15, 15, 0.6); 
+            background: rgba(15, 15, 15, 0.6);
             z-index: 1;
+            transition: opacity 0.4s ease;
+        }
+
+        .hero-container.pin-revealed::after {
+            opacity: 0;
         }
 
         .hero-title {
@@ -91,11 +96,131 @@
             text-align: center;
             pointer-events: none;
             will-change: transform, opacity;
+            transition: opacity 0.3s ease;
         }
 
+        .hero-container.pin-revealed .hero-title {
+            opacity: 0;
+        }
+
+        /* --- GEO PIN --- */
+        .geo-pin {
+            position: absolute;
+            bottom: 60px;
+            left: 5%;
+            z-index: 5;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .geo-pin-icon {
+            width: 32px;
+            height: 32px;
+            opacity: 0.22;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .geo-pin-icon svg {
+            width: 26px;
+            height: 26px;
+        }
+
+        .geo-pin:hover .geo-pin-icon,
+        .geo-pin.active .geo-pin-icon {
+            opacity: 1;
+            transform: scale(1.15);
+        }
+
+        /* --- LOCATION STRIP --- */
+        .location-strip {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 4;
+            background: rgba(8, 8, 8, 0.78);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            height: 0;
+            overflow: hidden;
+            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
+        }
+
+        .location-strip.visible {
+            height: 46px;
+        }
+
+        .strip-inner {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .strip-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            flex-shrink: 0;
+        }
+
+        .strip-text {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.78rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.8);
+            flex: 1;
+        }
+
+        .strip-link {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.45);
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 0.18rem 0.6rem;
+            border-radius: 20px;
+            transition: color 0.2s, border-color 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .strip-link:hover {
+            color: rgba(255, 255, 255, 0.9);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        @media (max-width: 600px) {
+            .geo-pin {
+                bottom: 65px;
+            }
+            .location-strip.visible {
+                height: 48px;
+            }
+            .strip-text {
+                font-size: 0.72rem;
+            }
+            .strip-link {
+                font-size: 0.68rem;
+                padding: 0.15rem 0.5rem;
+            }
+        }
+
+        /* --- MAIN LAYOUT --- */
         main {
             padding: 100px 10%;
-            background-color: #F7F5F0; 
+            background-color: #F7F5F0;
         }
 
         .content-grid {
@@ -104,7 +229,7 @@
             gap: 3rem;
             max-width: 1400px;
             margin: 0 auto;
-            align-items: start; 
+            align-items: start;
         }
 
         @media (min-width: 900px) {
@@ -127,7 +252,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 2rem;
-            margin-bottom: 2rem; 
+            margin-bottom: 2rem;
             justify-content: flex-start;
         }
 
@@ -205,7 +330,7 @@
         .dynamic-iframe-container {
             width: 100%;
             position: relative;
-            overflow: visible; 
+            overflow: visible;
             border: none;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
@@ -218,11 +343,11 @@
             min-height: 50px;
             border: none;
             display: block;
-            overflow: hidden; 
+            overflow: hidden;
         }
 
         .fx-container {
-            background-color: #EAE6DB; 
+            background-color: #EAE6DB;
         }
 
         /* --- ACCORDION STYLES --- */
@@ -261,7 +386,7 @@
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
             transition: opacity 0.3s ease, visibility 0.3s;
-            visibility: hidden; 
+            visibility: hidden;
         }
 
         .chevron {
@@ -334,12 +459,12 @@
             line-height: 1.6;
             color: #333;
         }
-        
+
         .travel-tips-content ul {
             padding-left: 1.2rem;
             margin: 0;
         }
-        
+
         .travel-tips-content p {
             margin-top: 0;
         }
@@ -349,14 +474,35 @@
 
     <div id="site-header"></div>
 
-    <section class="hero-container">
-        <img src="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero-hd.JPG" 
-             class="hero-image img-low-res" 
+    <section class="hero-container" id="heroContainer">
+        <img src="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero-hd.JPG"
+             class="hero-image img-low-res"
              id="mainHeroImage"
              alt="Mount Fuji with cherry blossoms - Japan Destination"
              referrerpolicy="no-referrer">
-        
+
         <h1 class="hero-title" id="heroText">JAPAN</h1>
+
+        <!-- Geo Pin -->
+        <div class="geo-pin" id="geoPin" aria-label="View photo location">
+            <div class="geo-pin-icon">
+                <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Location Strip -->
+        <div class="location-strip" id="locationStrip">
+            <div class="strip-inner">
+                <span class="strip-dot"></span>
+                <span class="strip-text">Chureito Pagoda, Yamanashi, Japan</span>
+                <a class="strip-link"
+                   href="https://www.google.com/maps/search/Chureito+Pagoda+Yamanashi+Japan"
+                   target="_blank"
+                   rel="noopener noreferrer">Open in Maps ↗</a>
+            </div>
+        </div>
     </section>
 
     <main>
@@ -408,7 +554,7 @@
 
             <aside class="support-column" id="supportCol">
                 <iframe src="/support/html/japan_map.html" class="support-iframe" title="Interactive Map of Japan" sandbox="allow-scripts allow-same-origin allow-top-navigation allow-top-navigation-by-user-activation allow-popups" scrolling="no"></iframe>
-                
+
                 <div class="travel-tips-container">
                     <h3 class="support-title">Travel Tips</h3>
                     <div class="travel-tips-content" id="travel-tips-content">
@@ -430,15 +576,12 @@
     <script>
         /**
          * PROGRESSIVE IMAGE LOADER
-         * Stage 1: HD loads instantly via HTML, blurry
-         * Stage 2: full-res loads in background, unblurs on ready
          */
         const heroImg = document.getElementById('mainHeroImage');
         const fullUrl = "https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero.JPG";
 
         function revealFull() {
             heroImg.src = fullUrl;
-
             setTimeout(() => {
                 heroImg.classList.remove('img-low-res');
                 heroImg.classList.add('img-loaded');
@@ -462,7 +605,7 @@
             if (!heroText) return;
             const scale = 1 + (scrollValue / 600);
             const opacity = 1 - (scrollValue / 400);
-            
+
             if (opacity >= 0) {
                 heroText.style.transform = `scale(${scale})`;
                 heroText.style.opacity = opacity;
@@ -473,16 +616,16 @@
 
         function updateJSTTime() {
             const timeSpan = document.getElementById('current-jst-time');
-            if(!timeSpan) return;
-            
+            if (!timeSpan) return;
+
             const now = new Date();
-            const timeString = now.toLocaleTimeString('en-US', { 
+            const timeString = now.toLocaleTimeString('en-US', {
                 timeZone: 'Asia/Tokyo',
                 hour: 'numeric',
                 minute: '2-digit',
                 hour12: true
             });
-            
+
             timeSpan.textContent = `Current Time: ${timeString}`;
         }
         updateJSTTime();
@@ -490,7 +633,6 @@
 
         /**
          * ENTERPRISE PROPORTIONAL SCROLL LOGIC
-         * V3: Independent Column State Tracking
          */
         const layoutState = {
             gridTop: 0,
@@ -498,7 +640,7 @@
             diff: 0,
             taller: null
         };
-        
+
         const mainState = { currentY: 0, targetY: 0 };
         const supportState = { currentY: 0, targetY: 0 };
 
@@ -518,12 +660,12 @@
             const mainHeight = mainCol.offsetHeight;
             const supportHeight = supportCol.offsetHeight;
             const rect = gridEl.getBoundingClientRect();
-            
+
             layoutState.gridTop = window.scrollY + rect.top - 100;
-            
+
             if (Math.abs(mainHeight - supportHeight) < 50) {
-                 layoutState.diff = 0;
-                 layoutState.taller = 'equal';
+                layoutState.diff = 0;
+                layoutState.taller = 'equal';
             } else if (mainHeight > supportHeight) {
                 layoutState.taller = 'main';
                 layoutState.diff = mainHeight - supportHeight;
@@ -570,10 +712,10 @@
                 mainCol.style.transform = `translate3d(0, ${mainState.currentY}px, 0)`;
                 supportCol.style.transform = `translate3d(0, ${supportState.currentY}px, 0)`;
             }
-            
+
             window.requestAnimationFrame(renderLoop);
         }
-        
+
         window.requestAnimationFrame(renderLoop);
 
         window.addEventListener('scroll', handleProportionalScroll, { passive: true });
@@ -582,14 +724,14 @@
         let resizeTimeout;
         const columnObserver = new ResizeObserver(() => {
             clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(calculateLayout, 50); 
+            resizeTimeout = setTimeout(calculateLayout, 50);
         });
-        
+
         if (mainCol) columnObserver.observe(mainCol);
         if (supportCol) columnObserver.observe(supportCol);
 
         /**
-         * ASYNC DATA FETCHING & EVENT TRIGGERS
+         * IFRAME MESSAGING
          */
         window.addEventListener('message', function(e) {
             if (e.origin !== window.location.origin) return;
@@ -602,7 +744,7 @@
                         if (iframe.parentElement.classList.contains('dynamic-iframe-container')) {
                             iframe.parentElement.style.height = newHeight;
                         }
-                        setTimeout(calculateLayout, 50); 
+                        setTimeout(calculateLayout, 50);
                     }
                 });
             }
@@ -658,29 +800,62 @@
         function toggleWeather() {
             const header = document.getElementById('weatherHeader');
             const content = document.getElementById('weatherContent');
-            
+
             header.classList.toggle('expanded');
             content.classList.toggle('expanded');
-            
-            setTimeout(calculateLayout, 450); 
+
+            setTimeout(calculateLayout, 450);
         }
 
         function extractBestTime() {
             const climateIframe = document.getElementById('climateWidget');
             const labelElement = document.getElementById('dynamicBestMonthsLabel');
-            
+
             try {
                 const iframeDoc = climateIframe.contentDocument || climateIframe.contentWindow.document;
                 const sourceData = iframeDoc.getElementById('widget-best-time');
-                
+
                 if (sourceData && sourceData.innerText) {
                     labelElement.textContent = `Best time: ${sourceData.innerText}`;
-                    labelElement.style.visibility = 'visible'; 
+                    labelElement.style.visibility = 'visible';
                 }
             } catch (error) {
                 console.warn("Could not extract widget data. Ensure both files are on the same domain (CORS).", error);
             }
         }
+
+        /**
+         * GEO PIN INTERACTION
+         * - Hover pin or strip: clears overlay + title
+         * - Mouse leave: restores overlay + title
+         * - Click/tap: locks strip open; overlay still only clears on active hover
+         */
+        (function() {
+            const hero = document.getElementById('heroContainer');
+            const pin = document.getElementById('geoPin');
+            const strip = document.getElementById('locationStrip');
+            let locked = false;
+            const isMobile = () => window.matchMedia('(hover: none)').matches;
+
+            function clearOverlay() { hero.classList.add('pin-revealed'); }
+            function restoreOverlay() { hero.classList.remove('pin-revealed'); }
+            function showStrip() { strip.classList.add('visible'); pin.classList.add('active'); }
+            function hideStrip() { if (locked) return; strip.classList.remove('visible'); pin.classList.remove('active'); }
+
+            // Pin hover
+            pin.addEventListener('mouseenter', () => { if (!isMobile()) { showStrip(); clearOverlay(); } });
+            pin.addEventListener('mouseleave', () => { if (!isMobile()) { hideStrip(); restoreOverlay(); } });
+
+            // Strip hover — keep overlay clear while browsing the strip
+            strip.addEventListener('mouseenter', () => { if (!isMobile()) clearOverlay(); });
+            strip.addEventListener('mouseleave', () => { if (!isMobile()) restoreOverlay(); });
+
+            // Click locks strip open; overlay only clears on hover
+            pin.addEventListener('click', (e) => { e.stopPropagation(); locked = true; showStrip(); });
+
+            // Mobile tap locks open
+            pin.addEventListener('touchend', (e) => { e.preventDefault(); locked = true; showStrip(); }, { passive: false });
+        })();
 
         window.addEventListener('load', () => {
             setTimeout(calculateLayout, 100);
