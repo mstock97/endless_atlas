@@ -1,167 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tokyo Essentials</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --forest:    #1E4034;
-            --canopy:    #2D6A4F;
-            --moss:      #52B788;
-            --ink:       #0F0F0F;
-            --ash:       #8C8C8C;
-            --warm-rule: #EAE6DB;
-            --white:     #FFFFFF;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Essentials</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        html, body {
-            width: 100%;
-            background: transparent;
-            overflow: hidden;
-        }
-
-        body {
-            font-family: 'DM Sans', sans-serif;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .essentials-card {
-            background: var(--forest);
-            border-radius: 6px;
-            overflow: hidden;
-            color: var(--white);
-            width: 100%;
-        }
-
-        .essentials-header {
-            padding: 1.1rem 1.25rem 0.75rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
-
-        .essentials-header-icon {
-            width: 18px;
-            height: 18px;
-            opacity: 0.45;
-            flex-shrink: 0;
-        }
-
-        .essentials-title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.4rem;
-            color: rgba(255,255,255,0.9);
-            letter-spacing: 0.06em;
-            line-height: 1;
-        }
-
-        .essentials-list {
-            padding: 0.25rem 0;
-        }
-
-        .essential-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            padding: 0.7rem 1.25rem;
-            border-bottom: 1px solid rgba(255,255,255,0.07);
-            gap: 1rem;
-            transition: background 0.15s ease;
-        }
-
-        .essential-row:last-child {
-            border-bottom: none;
-        }
-
-        .essential-row:hover {
-            background: rgba(255,255,255,0.04);
-        }
-
-        .essential-key {
-            font-size: 0.7rem;
-            font-weight: 500;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.38);
-            flex-shrink: 0;
-            padding-top: 0.1rem;
-        }
-
-        .essential-val {
-            font-size: 0.875rem;
-            font-weight: 400;
-            color: rgba(255,255,255,0.82);
-            text-align: right;
-            line-height: 1.4;
-        }
-
-        .essential-val strong {
-            font-weight: 500;
-            color: rgba(255,255,255,0.95);
-        }
-
-        /* Accent pip on Best Time row */
-        .essential-row.highlight .essential-val {
-            color: var(--moss);
-        }
-    </style>
+    .ea-wrap {
+      background: #1E4034;
+      border-radius: 6px;
+      overflow: hidden;
+      width: 100%;
+      font-family: 'DM Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .ea-header {
+      padding: 16px 20px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ea-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      color: #F7F5F0;
+      letter-spacing: 0.08em;
+      line-height: 1;
+    }
+    .ea-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      gap: 16px;
+    }
+    .ea-row:last-child { border-bottom: none; }
+    .ea-key {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #A8896A;
+      flex-shrink: 0;
+    }
+    .ea-val {
+      font-size: 0.875rem;
+      font-weight: 300;
+      color: #C9D4C5;
+      text-align: right;
+      line-height: 1.45;
+    }
+    .ea-val strong {
+      font-weight: 500;
+      color: #F7F5F0;
+    }
+    .plug-block {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .plug-label {
+      font-size: 0.78rem;
+      font-weight: 300;
+      color: #C9D4C5;
+      line-height: 1.4;
+      text-align: left;
+    }
+    .plug-label strong {
+      font-weight: 500;
+      color: #F7F5F0;
+      display: block;
+      font-size: 0.85rem;
+    }
+  </style>
 </head>
 <body>
 
-<div class="essentials-card" id="essentialsCard">
-    <div class="essentials-header">
-        <svg class="essentials-header-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8" x2="12" y2="12"/>
-            <line x1="12" y1="16" x2="12.01" y2="16"/>
-        </svg>
-        <span class="essentials-title">Essentials</span>
+<div class="ea-wrap">
+  <div class="ea-header">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52B788" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="8" x2="12" y2="12"/>
+      <line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <span class="ea-title">Essentials</span>
+  </div>
+
+  <div class="ea-row">
+    <span class="ea-key">Voltage</span>
+    <div class="plug-block">
+      <svg width="36" height="48" viewBox="0 0 36 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="16" width="26" height="20" rx="3" fill="rgba(255,255,255,0.08)" stroke="#A8896A" stroke-width="1"/>
+        <rect x="11" y="36" width="4" height="11" rx="1.5" fill="#C9D4C5"/>
+        <rect x="21" y="36" width="4" height="11" rx="1.5" fill="#C9D4C5"/>
+        <rect x="13" y="22" width="3" height="7" rx="1" fill="#52B788" fill-opacity="0.7"/>
+        <rect x="20" y="22" width="3" height="7" rx="1" fill="#52B788" fill-opacity="0.7"/>
+        <rect x="14" y="4" width="8" height="12" rx="2" fill="rgba(255,255,255,0.05)" stroke="#A8896A" stroke-width="1"/>
+        <text x="18" y="12.5" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6.5" font-weight="500" fill="#A8896A">A</text>
+      </svg>
+      <div class="plug-label">
+        <strong>100V · Type A</strong>
+        Flat parallel pins
+      </div>
     </div>
-    <div class="essentials-list">
-        <div class="essential-row">
-            <span class="essential-key">Voltage</span>
-            <span class="essential-val">100V · Type A plug</span>
-        </div>
-        <div class="essential-row">
-            <span class="essential-key">Tipping</span>
-            <span class="essential-val">Not customary — never tip</span>
-        </div>
-        <div class="essential-row">
-            <span class="essential-key">Tap Water</span>
-            <span class="essential-val">Safe to drink</span>
-        </div>
-        <div class="essential-row">
-            <span class="essential-key">Emergency</span>
-            <span class="essential-val">Police <strong>110</strong> · Fire/EMS <strong>119</strong></span>
-        </div>
-        <div class="essential-row highlight">
-            <span class="essential-key">Best Time</span>
-            <span class="essential-val">Mar–May · Oct–Nov</span>
-        </div>
-        <div class="essential-row">
-            <span class="essential-key">Visa</span>
-            <span class="essential-val">90 days visa-free (most passports)</span>
-        </div>
-    </div>
+  </div>
+
+  <div class="ea-row">
+    <span class="ea-key">Tipping</span>
+    <span class="ea-val">Not customary — never tip</span>
+  </div>
+
+  <div class="ea-row">
+    <span class="ea-key">Tap water</span>
+    <span class="ea-val">Safe to drink</span>
+  </div>
+
+  <div class="ea-row">
+    <span class="ea-key">Emergency</span>
+    <span class="ea-val">Police <strong>110</strong> · Fire/EMS <strong>119</strong></span>
+  </div>
+
+  <div class="ea-row">
+    <span class="ea-key">Language</span>
+    <span class="ea-val">Japanese · Google Translate camera mode is your friend</span>
+  </div>
 </div>
-
-<script>
-    // Post height to parent so the iframe auto-sizes
-    function postHeight() {
-        const h = document.getElementById('essentialsCard').offsetHeight;
-        window.parent.postMessage({ height: h }, '*');
-    }
-
-    document.fonts.ready.then(() => {
-        postHeight();
-        new ResizeObserver(postHeight).observe(document.getElementById('essentialsCard'));
-    });
-</script>
 
 </body>
 </html>
