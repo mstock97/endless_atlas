@@ -1,0 +1,30 @@
+/* The Anchor: Forest + Paper */
+.header-main, .hero-section {
+  background-color: var(--color-forest);
+  color: var(--color-paper);
+}
+
+/* The Workhorse: Canopy + White */
+.btn-primary {
+  background-color: var(--color-canopy);
+  color: var(--color-white);
+  padding: var(--space-md) var(--space-xl);
+  border: none;
+  font-family: var(--font-body);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Night Trail: Ink + Moss */
+.feature-dark {
+  background-color: var(--color-ink);
+  border-left: 4px solid var(--color-moss);
+  padding: var(--space-lg);
+}
+
+/* Brand Values: Dot Grid on Paper */
+.page-wrapper {
+  background-color: var(--color-paper);
+  background-image: radial-gradient(var(--color-driftwood) 0.5px, transparent 0.5px);
+  background-size: 24px 24px; /* Matches Base-8 logic */
+}
