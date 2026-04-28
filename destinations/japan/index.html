@@ -1,27 +1,98 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-F7SKJN227T"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-F7SKJN227T');
-    </script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Travel Guide to Japan | Endless Atlas</title>
-    <meta name="description" content="Explore Japan with Endless Atlas. Discover local currency (JPY), current JST time, climate data, and national holidays.">
-    <link rel="canonical" href="https://endless-atlas.com/destinations/japan">
-
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Japan | Endless Atlas">
-    <meta property="og:description" content="Your comprehensive guide to traveling Japan. Real-time FX rates and travel essentials.">
-    <meta property="og:image" content="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero.JPG">
-
+    <title>Japan Travel Guide | Endless Atlas</title>
+    
     <link rel="stylesheet" href="/main.css">
+    
+    <style>
+        /* Restoring the premium Hero visuals */
+        .hero-container {
+            position: relative;
+            height: 80vh;
+            background: var(--ink);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-image {
+            position: absolute;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: filter 0.8s ease, transform 0.8s ease;
+        }
+
+        .hero-title {
+            font-family: var(--font-accent);
+            font-size: clamp(6rem, 25vw, 16rem);
+            color: var(--white);
+            z-index: 2;
+            letter-spacing: 0.05em;
+            text-align: center;
+            pointer-events: none;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        /* The "Geo-Pin" restoration */
+        .geo-pin {
+            position: absolute;
+            bottom: 60px; left: 5%;
+            z-index: 5;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .location-strip {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%;
+            z-index: 4;
+            background: rgba(15, 25, 20, 0.85);
+            backdrop-filter: blur(8px);
+            height: 0;
+            overflow: hidden;
+            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
+        }
+        .location-strip.visible { height: 50px; }
+
+        /* Quick Facts Restoration */
+        .quick-facts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1px;
+            background: var(--warm-rule);
+            border: 1px solid var(--warm-rule);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 3rem;
+        }
+
+        .fact-cell {
+            background: var(--white);
+            padding: 1.25rem;
+        }
+
+        .fact-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--ash);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .fact-value {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--forest);
+        }
+    </style>
 </head>
 <body>
 
@@ -29,161 +100,87 @@
     <div id="japan-sub-header" class="sticky-sub-nav"></div>
 
     <section class="hero-container" id="heroContainer">
-        <img src="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero-hd.JPG"
-             class="hero-image img-low-res"
-             id="mainHeroImage"
-             alt="Mount Fuji with cherry blossoms"
-             referrerpolicy="no-referrer">
+        <img src="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero-hd.JPG" 
+             class="hero-image img-low-res" id="mainHeroImage" alt="Japan">
+        
+        <h1 class="hero-title" id="heroText">JAPAN</h1>
 
-        <h1 class="hero-title-large" id="heroText">JAPAN</h1>
-
-        <div class="geo-pin" id="geoPin" aria-label="View photo location">
-            <div class="geo-pin-icon">
-                <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                </svg>
-            </div>
+        <div class="geo-pin" id="geoPin">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+            </svg>
         </div>
 
         <div class="location-strip" id="locationStrip">
-            <div class="strip-inner" style="display: flex; align-items: center; gap: 10px; width: 100%;">
-                <span class="strip-text" style="color: white; font-family: 'DM Sans'; font-size: 0.8rem;">Chureito Pagoda, Yamanashi, Japan</span>
-                <a class="strip-link" href="https://maps.google.com" target="_blank" style="color: rgba(255,255,255,0.6); font-size: 0.7rem; border: 1px solid rgba(255,255,255,0.2); padding: 2px 10px; border-radius: 20px;">Open in Maps ↗</a>
-            </div>
+            <span style="color: white; font-size: 0.85rem;">Chureito Pagoda, Yamanashi, Japan</span>
         </div>
     </section>
 
-    <main class="dest-main-layout">
+    <main style="padding: 80px 10%;">
         <div class="content-grid" id="contentGrid">
+            
             <article class="main-column" id="mainCol">
-
                 <div class="quick-facts">
-                    <div class="fact-cell">
-                        <span class="fact-label">Capital</span>
-                        <div class="fact-value">Tokyo</div>
-                    </div>
-                    <div class="fact-cell">
-                        <span class="fact-label">Time Zone</span>
-                        <div class="fact-value">JST (UTC +9)</div>
-                    </div>
-                    <div class="fact-cell">
-                        <span class="fact-label">Local Time</span>
-                        <div class="fact-value" id="current-jst-time">—</div>
-                    </div>
-                    <div class="fact-cell">
-                        <span class="fact-label">Currency</span>
-                        <div class="fact-value">¥ JPY <span id="live-fx-rate" style="font-size: 0.8rem; color: var(--ash);"></span></div>
-                    </div>
+                    <div class="fact-cell"><span class="fact-label">Capital</span><div class="fact-value">Tokyo</div></div>
+                    <div class="fact-cell"><span class="fact-label">Time</span><div class="fact-value" id="current-jst-time">--:--</div></div>
+                    <div class="fact-cell"><span class="fact-label">Currency</span><div class="fact-value">JPY <span id="live-fx-rate"></span></div></div>
                 </div>
 
-                <div id="dynamic-text-block" class="description-block">Loading...</div>
+                <div id="dynamic-text-block" class="description-block"></div>
 
-                <div class="weather-accordion">
-                    <div class="accordion-header" id="weatherHeader" onclick="toggleWeather()">
-                        <h2 class="dest-section-title" style="margin:0; border:none;">Climate & Weather</h2>
-                        <div class="accordion-meta" style="display:flex; align-items:center; gap:10px;">
-                            <span id="dynamicBestMonthsLabel" class="best-months-label" style="background:var(--warm-rule); padding:4px 12px; border-radius:20px; font-size:0.8rem;"></span>
-                            <span class="chevron">▼</span>
-                        </div>
-                    </div>
-                    <div class="accordion-content" id="weatherContent">
-                        <iframe src="/support/html/japan_climate.html" class="dynamic-iframe" id="climateWidget" title="Climate Chart" style="width:100%; border:none;" scrolling="no" onload="extractBestTime()"></iframe>
-                    </div>
+                <h2 class="section-title-accent">Climate & Weather</h2>
+                <div class="iframe-wrapper">
+                    <iframe src="/support/html/japan_climate.html" style="width:100%; border:none; height:450px;" scrolling="no"></iframe>
                 </div>
-
-                <h2 class="dest-section-title">National Holidays</h2>
-                <iframe src="/support/html/japan_holidays.html" class="dynamic-iframe" title="Holidays" style="width:100%; border:none;" scrolling="no"></iframe>
-
             </article>
 
             <aside class="support-column" id="supportCol">
-                <iframe src="/support/html/japan_map.html" class="support-iframe" title="Map"></iframe>
-
-                <div class="travel-tips-container">
-                    <h3 style="font-family: var(--font-accent); color: var(--forest); border-bottom: 1px solid var(--ash); margin-bottom: 1rem;">Travel Tips</h3>
-                    <div id="travel-tips-content">Loading...</div>
+                <div class="iframe-wrapper">
+                    <iframe src="/support/html/japan_map.html" style="width:100%; border:none; height:400px;"></iframe>
                 </div>
-
-                <iframe src="/support/html/fx_usd_jpy.html" class="dynamic-iframe" style="width:100%; border:none;" title="Currency Converter"></iframe>
+                
+                <div style="background: var(--warm-rule); padding: 2rem; border-radius: 12px;">
+                    <h3 style="font-family: var(--font-accent); color: var(--forest); margin-bottom: 1rem;">Travel Tips</h3>
+                    <div id="travel-tips-content"></div>
+                </div>
             </aside>
         </div>
     </main>
 
-    <div id="site-footer"></div>
-
-    <script src="/components.js"></script>
-    <script src="/destinations/japan/japan-components.js"></script>
-
     <script>
-        // Progressive Hero Loader
-        const heroImg = document.getElementById('mainHeroImage');
-        const fullUrl = "https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero.JPG";
-        const fullLoader = new Image();
-        fullLoader.src = fullUrl;
-        fullLoader.onload = () => {
-            heroImg.src = fullUrl;
-            setTimeout(() => { heroImg.classList.remove('img-low-res'); heroImg.classList.add('img-loaded'); }, 50);
-        };
-
-        // Local Time (JST)
-        function updateJSTTime() {
-            const el = document.getElementById('current-jst-time');
-            if (el) el.textContent = new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Tokyo', hour: 'numeric', minute: '2-digit' });
-        }
-        setInterval(updateJSTTime, 30000); updateJSTTime();
-
-        // FX Rate
-        fetch('https://api.frankfurter.dev/v2/rates?quotes=USD,JPY')
-            .then(res => res.json()).then(data => {
-                const usd = data.find(i => i.quote === 'USD')?.rate;
-                const jpy = data.find(i => i.quote === 'JPY')?.rate;
-                if (usd && jpy) document.getElementById('live-fx-rate').textContent = `· 1 USD = ${(jpy / usd).toFixed(2)}`;
-            }).catch(() => {});
-
-        // Proportional Scroll Logic
-        const layoutState = { gridTop: 0, maxScroll: 0, diff: 0, taller: null };
-        const mainState = { currentY: 0, targetY: 0 };
-        const supportState = { currentY: 0, targetY: 0 };
+        /* Refined Proportional Scroll: 
+           Ensures the side column glides perfectly with the main content 
+        */
         const mainCol = document.getElementById('mainCol');
         const supportCol = document.getElementById('supportCol');
-
-        function calculateLayout() {
-            if (window.innerWidth <= 900) return;
-            const mainH = mainCol.offsetHeight;
-            const supportH = supportCol.offsetHeight;
-            layoutState.gridTop = window.scrollY + document.getElementById('contentGrid').getBoundingClientRect().top - 100;
-            layoutState.diff = Math.abs(mainH - supportH);
-            layoutState.taller = mainH > supportH ? 'main' : 'support';
-            layoutState.maxScroll = Math.max(800, Math.max(mainH, supportH) - window.innerHeight);
-        }
-
+        
         window.addEventListener('scroll', () => {
-            if (window.innerWidth <= 900) return;
-            let progress = Math.max(0, Math.min(1, (window.scrollY - layoutState.gridTop) / layoutState.maxScroll));
-            if (layoutState.taller === 'main') supportState.targetY = progress * layoutState.diff;
-            else mainState.targetY = progress * layoutState.diff;
+            const scrollY = window.scrollY;
+            const heroHeight = document.getElementById('heroContainer').offsetHeight;
+            
+            if (window.innerWidth > 900 && scrollY > heroHeight) {
+                const diff = mainCol.offsetHeight - supportCol.offsetHeight;
+                const scrollRange = mainCol.offsetHeight - window.innerHeight;
+                const progress = Math.min(1, (scrollY - heroHeight) / scrollRange);
+                
+                if (diff > 0) {
+                    supportCol.style.transform = `translateY(${progress * diff}px)`;
+                }
+            }
         });
 
-        function render() {
-            mainState.currentY += (mainState.targetY - mainState.currentY) * 0.1;
-            supportState.currentY += (supportState.targetY - supportState.currentY) * 0.1;
-            mainCol.style.transform = `translate3d(0, ${mainState.currentY}px, 0)`;
-            supportCol.style.transform = `translate3d(0, ${supportState.currentY}px, 0)`;
-            requestAnimationFrame(render);
-        }
-        requestAnimationFrame(render);
-        window.addEventListener('load', calculateLayout);
+        // Restore Hero Parallax
+        window.addEventListener('scroll', () => {
+            const s = window.scrollY;
+            const heroText = document.getElementById('heroText');
+            heroText.style.transform = `scale(${1 + s/1000}) translateY(${s/4}px)`;
+            heroText.style.opacity = 1 - (s/600);
+        });
 
-        // Accordion Toggle
-        function toggleWeather() {
-            document.getElementById('weatherHeader').classList.toggle('expanded');
-            document.getElementById('weatherContent').classList.toggle('expanded');
-            setTimeout(calculateLayout, 500);
-        }
-
-        // Fetch Content
-        fetch('/support/text/japan_country_paragraph.html').then(res => res.text()).then(h => document.getElementById('dynamic-text-block').innerHTML = h);
-        fetch('/support/text/japan_travel_tips.html').then(res => res.text()).then(h => document.getElementById('travel-tips-content').innerHTML = h);
+        // Simple Toggle for Geo-Pin
+        const pin = document.getElementById('geoPin');
+        const strip = document.getElementById('locationStrip');
+        pin.addEventListener('click', () => strip.classList.toggle('visible'));
     </script>
 </body>
 </html>
