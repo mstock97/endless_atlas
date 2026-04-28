@@ -93,10 +93,9 @@
     z-index: 1;
     background: linear-gradient(
       to bottom,
-      rgba(15,15,15,0.28) 0%,
-      rgba(15,15,15,0.05) 35%,
-      rgba(15,15,15,0.05) 55%,
-      rgba(30,64,52,0.72) 100%
+      transparent 0%,
+      transparent 55%,
+      rgba(15,15,15,0.65) 100%
     );
     transition: opacity 0.4s ease;
   }
@@ -498,29 +497,43 @@
 <script>
 /* ─────────────────────────────────────────────
    PROGRESSIVE IMAGE LOADER
-   Fires for all 3 slides; only loads full-res
-   for slides that have been viewed.
+   On page load: all 3 HD placeholders preload immediately.
+   On slide activation: full-res fires for that slide only,
+   unblurring in once it's ready.
 ───────────────────────────────────────────── */
 const imageData = [
   {
-    imgId: 'heroImg0',
+    imgId:   'heroImg0',
+    hdUrl:   'https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/about_us_1_3808-hd.JPG',
     fullUrl: 'https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/about_us_1_3808.JPG'
   },
   {
-    imgId: 'heroImg1',
+    imgId:   'heroImg1',
+    hdUrl:   'https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/about_us_2_5681.JPG',
     fullUrl: 'https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/about_us_2_5681.JPG'
   },
   {
-    imgId: 'heroImg2',
+    imgId:   'heroImg2',
+    hdUrl:   'https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/about_us_3_3082.JPG',
     fullUrl: 'https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/about_us_3_3082.JPG'
   }
 ];
 
-function loadProgressiveImage(index) {
+// Stage 1: preload all HD placeholders silently in the background right away.
+// The <img> tags already point to the HD src, so this just warms the cache
+// for slides 1 and 2 so they're ready when the slide transitions.
+imageData.forEach(({ hdUrl }) => {
+  const pre = new Image();
+  pre.referrerPolicy = 'no-referrer';
+  pre.src = hdUrl;
+});
+
+// Stage 2: swap in full-res for a specific slide when it becomes active.
+function loadFullRes(index) {
   const { imgId, fullUrl } = imageData[index];
   const heroImg = document.getElementById(imgId);
-  if (!heroImg || heroImg.dataset.loaded) return;
-  heroImg.dataset.loaded = 'true';
+  if (!heroImg || heroImg.dataset.fullLoaded) return;
+  heroImg.dataset.fullLoaded = 'true';
 
   function revealFull() {
     heroImg.src = fullUrl;
@@ -540,8 +553,8 @@ function loadProgressiveImage(index) {
   }
 }
 
-// Load slide 0 immediately
-loadProgressiveImage(0);
+// Kick off full-res for slide 0 immediately
+loadFullRes(0);
 
 
 /* ─────────────────────────────────────────────
@@ -561,7 +574,7 @@ function goToSlide(index) {
   currentSlide = (index + slides.length) % slides.length;
   slides[currentSlide].classList.add('active');
   dots[currentSlide].classList.add('active');
-  loadProgressiveImage(currentSlide);
+  loadFullRes(currentSlide);
   resetAutoAdvance();
 }
 
