@@ -3,27 +3,293 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Project Page</title>
-    
-    <!-- Link to your main.css -->
-    <!-- Use "main.css" if the HTML file is in the same folder as the CSS -->
-    <link rel="stylesheet" href="main.css">
+    <title>[Title] — Endless Atlas</title>
+
+    <!-- Canonical Font Import[cite: 1] -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+    <!-- CSS Links (Ensure these paths resolve correctly on your server) -->
+    <link rel="stylesheet" href="/theme.css">
+    <link rel="stylesheet" href="/main.css">
+
+    <!-- Page Specific Styles for Image Loader and Geo Pin[cite: 2, 3] -->
+    <style>
+        /* Progressive Image Loader CSS[cite: 3] */
+        .hero-image-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            overflow: hidden;
+            border-radius: var(--radius-md); 
+            margin: 2rem 0;
+        }
+
+        .hero-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center center;
+            z-index: 0;
+            transition: filter 0.8s ease-in-out, transform 0.8s ease-in-out;
+            will-change: filter;
+        }
+
+        .img-low-res {
+            filter: blur(15px);
+            transform: scale(1.05);
+        }
+
+        .img-loaded {
+            filter: blur(0) !important;
+            transform: scale(1) !important;
+        }
+
+        /* Geo Pin - Floating Pill Style for inline/compact containers[cite: 2] */
+        .geo-pin {
+            position: absolute;
+            bottom: 40px;
+            left: 16px;
+            z-index: 5;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .geo-pin-icon {
+            width: 32px;
+            height: 32px;
+            opacity: 0.28;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .geo-pin-icon svg { width: 26px; height: 26px; }
+
+        .geo-pin:hover .geo-pin-icon,
+        .geo-pin.active .geo-pin-icon {
+            opacity: 1;
+            transform: scale(1.15);
+        }
+
+        .location-strip {
+            position: absolute;
+            bottom: 44px;
+            left: 52px;
+            z-index: 4;
+            background: rgba(10, 10, 10, 0.72);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 0 12px 0 10px;
+            height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(4px);
+            transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                        opacity 0.3s ease,
+                        transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .location-strip.visible {
+            height: 30px;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .strip-inner {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            width: 100%;
+        }
+
+        .strip-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--moss); 
+            flex-shrink: 0;
+        }
+
+        .strip-text {
+            font-family: var(--font-body);
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.85);
+            flex: 1;
+        }
+
+        .strip-link {
+            font-family: var(--font-body);
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.4);
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 0.14rem 0.5rem;
+            border-radius: 20px;
+            transition: color 0.2s, border-color 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+            margin-left: 8px;
+        }
+
+        .strip-link:hover {
+            color: rgba(255,255,255,0.9);
+            border-color: rgba(255,255,255,0.45);
+        }
+
+        /* Overlay transition for pin revealed state[cite: 2] */
+        .hero-image-container::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.1); 
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .hero-image-container.pin-revealed::after {
+            opacity: 0;
+        }
+    </style>
 </head>
 <body>
 
-    <header>
-        <h1>Welcome to My New Page</h1>
+    <!-- Standard Header Setup -->
+    <header class="site-header">
+        <div class="nav-inner">
+            <div class="nav-logo">Endless<span>Atlas</span></div>
+        </div>
     </header>
 
-    <main>
-        <section>
-            <p>Your existing styles from main.css are now active on this page.</p>
-        </section>
+    <main class="article-layout">
+        <!-- Left Sidebar (Empty for spacing per main.css grid layout) -->
+        <aside class="article-sidebar-left"></aside>
+
+        <!-- Main Article Content -->
+        <article class="article-body">
+            
+            <h1 class="article-title">[Title]</h1>
+
+            <p class="article-subtitle">[LEADING SUMMARY PARAGRAPH]</p>
+
+            <h2>[HEADER]</h2>
+
+            <!-- Photo with Progressive Loader and Geo Pin -->
+            <div class="hero-image-container slide" id="slide-0">
+                
+                <!-- Stage 1 HD Image Request[cite: 3] -->
+                <img src="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/tokyo/senso-ji/1%20-%20arial%20photo-hd.jpg"
+                     class="hero-image img-low-res"
+                     id="mainHeroImage"
+                     alt="Asakusa Culture Tourist Information Center"
+                     referrerpolicy="no-referrer">
+
+                <!-- Geo Pin[cite: 2] -->
+                <div class="geo-pin" id="geoPin0" aria-label="View photo location">
+                    <div class="geo-pin-icon">
+                        <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Location Pill[cite: 2] -->
+                <div class="location-strip" id="locationStrip0">
+                    <div class="strip-inner">
+                        <span class="strip-dot"></span>
+                        <span class="strip-text">Asakusa Culture Tourist Information Center</span>
+                        <!-- Text Search Fallback used since exact coords weren't supplied[cite: 2] -->
+                        <a class="strip-link"
+                           href="https://www.google.com/maps/search/Asakusa+Culture+Tourist+Information+Center"
+                           target="_blank"
+                           rel="noopener noreferrer">Open in Maps ↗</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Caption utilizing DM Sans font and Ash color scale[cite: 1] -->
+            <p class="card-excerpt" style="font-size: 0.85rem; color: var(--ash); text-align: center; margin-top: -1rem; margin-bottom: 2rem;">
+                [PHOTO CAPTION]
+            </p>
+
+            <h3>[SUB-HEADER]</h3>
+
+            <p>[normal paragraph words]</p>
+
+        </article>
+
+        <!-- Right Sidebar (Empty for spacing per main.css grid layout) -->
+        <aside class="article-sidebar-right"></aside>
     </main>
 
-    <footer>
-        <p>&copy; 2026 Your Name</p>
-    </footer>
+    <script>
+        /**
+         * PROGRESSIVE IMAGE LOADER[cite: 3]
+         * Stage 1: HD image loads instantly via HTML, displayed blurry
+         * Stage 2: Full-res loads in background, unblurs in when ready
+         */
+        const heroImg = document.getElementById('mainHeroImage');
+        const fullUrl = "https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/tokyo/senso-ji/1%20-%20arial%20photo.jpg";
 
+        function revealFull() {
+            heroImg.src = fullUrl;
+
+            setTimeout(() => {
+                heroImg.classList.remove('img-low-res');
+                heroImg.classList.add('img-loaded');
+            }, 50);
+        }
+
+        const fullLoader = new Image();
+        fullLoader.referrerPolicy = 'no-referrer';
+        fullLoader.src = fullUrl;
+
+        if (fullLoader.complete) {
+            revealFull();
+        } else {
+            fullLoader.onload = revealFull;
+        }
+
+        /**
+         * GEO PIN HOVER LOGIC[cite: 2]
+         * Single Image scope for floating pill styling
+         */
+        (function() {
+            const slide = document.getElementById('slide-0');
+            const pin   = document.getElementById('geoPin0');
+            const strip = document.getElementById('locationStrip0');
+            let locked  = false;
+            const isMobile = () => window.matchMedia('(hover: none)').matches;
+
+            function clearOverlay()   { slide.classList.add('pin-revealed'); }
+            function restoreOverlay() { slide.classList.remove('pin-revealed'); }
+            function showStrip()      { strip.classList.add('visible'); pin.classList.add('active'); }
+            function hideStrip()      { if (locked) return; strip.classList.remove('visible'); pin.classList.remove('active'); }
+
+            pin.addEventListener('mouseenter', () => { if (!isMobile()) { showStrip(); clearOverlay(); } });
+            pin.addEventListener('mouseleave', () => { if (!isMobile()) { hideStrip(); restoreOverlay(); } });
+
+            strip.addEventListener('mouseenter', () => { if (!isMobile()) clearOverlay(); });
+            strip.addEventListener('mouseleave', () => { if (!isMobile()) restoreOverlay(); });
+
+            pin.addEventListener('click', (e) => { e.stopPropagation(); locked = true; showStrip(); clearOverlay(); });
+            pin.addEventListener('touchend', (e) => { e.preventDefault(); locked = true; showStrip(); }, { passive: false });
+        })();
+    </script>
 </body>
 </html>
