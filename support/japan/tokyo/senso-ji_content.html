@@ -56,7 +56,7 @@
 <h3>Main Hall courtyard – make an offering and pull your fortune!</h3>
 <p>Once passing into the courtyard of the Main Hall, there are stalls on either side lining the approach to the Main Hall building that sell amulets, charms, and other traditional temple items. There are also booths where you can pull a fortune from by following the steps below:
 <ul style="padding-left: 60px;">
-    <li>Deposit ¥100 into the labeled slot</li>
+    <li>Deposit <span id="jpy-deposit-text">¥100</span> into the labeled slot</li>
     <li>Shake the long metal box until a numbered stick falls out</li>
     <li>Match the number on the stick to the corresponding drawer (then return the stick to the metal box)</li>
     <li>Open the drawer and pull the top fortune paper out – this is your fortune!</li>
@@ -71,4 +71,48 @@ If you would like to participate in purification before entering the main hall, 
 </p>
 
 
+<script>
+    
+    
+    
+    function updateHeaderFX() {
+    // We fetch the rates relative to the Euro (default for Frankfurter)
+    fetch('https://api.frankfurter.dev/v2/rates?quotes=USD,JPY')
+        .then(res => res.json())
+        .then(data => {
+            // The Frankfurter API returns an object with a 'rates' property, not an array
+            const rates = data.rates;
+            const usd = rates.USD;
+            const jpy = rates.JPY;
 
+            if (usd && jpy) {
+                // 1. Calculate the rate for 1 USD in JPY
+                const usdToJpyRate = (jpy / usd).toFixed(2);
+                
+                // Update your existing header element if it exists
+                const headerEl = document.getElementById('live-fx-rate');
+                if (headerEl) {
+                    headerEl.textContent = `· 1 USD = ${usdToJpyRate} JPY`;
+                }
+
+                // 2. Calculate the value of 100 JPY in USD
+                // Math: (100 / JPY_Rate) * USD_Rate
+                const usdValue = ((100 / jpy) * usd).toFixed(2);
+                
+                // Update the specific list item text
+                const depositEl = document.getElementById('jpy-deposit-text');
+                if (depositEl) {
+                    depositEl.textContent = `¥100 ($${usdValue} USD)`;
+                }
+
+                // Small delay to allow DOM updates before layout calculations
+                if (typeof calculateLayout === "function") {
+                    setTimeout(calculateLayout, 50);
+                }
+            }
+        })
+        .catch(err => console.error("FX Fetch Error:", err));
+}
+
+
+</script>
