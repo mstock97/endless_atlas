@@ -75,11 +75,12 @@ const STYLES = `
   /* ── Positioning ───────────────────────────────────────────── */
   #japan-sub-header {
     position: sticky;
-    top: 70px;                        /* sits flush under .site-header (70px tall) */
+    top: 0;                           /* JS sets this dynamically — see initJapanHeader */
     width: 100%;
     z-index: 200;                     /* above page content, below site dropdown (400) */
     background: #1E4034;              /* --forest */
     border-bottom: 1px solid rgba(168, 137, 106, 0.18);
+    transition: top 0.1s ease;
   }
 
   /* ── Inner wrapper — mirrors .nav-inner exactly ─────────────── */
@@ -483,6 +484,21 @@ function initJapanHeader() {
       }
     });
   }
+
+  /* ── Sticky offset: track site header so Japan bar locks under it
+     while it's visible, then snaps to top:0 once it scrolls away   ── */
+  function updateStickyTop() {
+    const siteHeader = document.querySelector('.site-header');
+    if (!siteHeader) { container.style.top = '0px'; return; }
+    const rect = siteHeader.getBoundingClientRect();
+    // rect.bottom = distance from viewport top to bottom of site header.
+    // Once <= 0, header is fully scrolled off — Japan bar locks to top:0.
+    container.style.top = Math.max(0, rect.bottom) + 'px';
+  }
+
+  updateStickyTop();
+  window.addEventListener('scroll', updateStickyTop, { passive: true });
+  window.addEventListener('resize', updateStickyTop, { passive: true });
 }
 
 /* Run after DOM is ready */
