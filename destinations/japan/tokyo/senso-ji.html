@@ -304,7 +304,8 @@
         }
 
         @media (min-width: 900px) {
-            .content-grid { grid-template-columns: 90% 10%; } 
+            /* Using fr units handles the 3rem gap without overflowing 100% width */
+            .content-grid { grid-template-columns: 9fr 1fr; } 
         }
 
         .main-column {
@@ -320,8 +321,33 @@
             position: relative;
             z-index: 10;
             will-change: transform;
-            /* Min height ensures the column is tall enough to demo scroll if empty */
             min-height: 50vh; 
+        }
+
+        /* ===== DUMMY WIDGETS (For visually testing the 10% sidebar) ===== */
+        .dummy-widget {
+            background: var(--warm-rule, #EAE6DB);
+            border: 1px dashed var(--ash, #8C8C8C);
+            border-radius: 8px;
+            padding: 1.5rem 0.5rem;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            color: var(--forest, #1E4034);
+        }
+
+        .dummy-widget strong {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .dummy-widget.tall {
+            min-height: 800px; /* Forces enough scroll height to see the async effect */
         }
 
         /* Mobile Adjustments */
@@ -387,13 +413,28 @@
 
                 <h3>[SUB-HEADER]</h3>
 
-                <p>[normal paragraph words]</p>
+                <p style="min-height: 600px;">[Placeholder for lots of normal paragraph words to allow scrolling...]</p>
+                <p style="min-height: 600px;">[Placeholder for lots of normal paragraph words to allow scrolling...]</p>
 
             </article>
 
             <!-- Right Sidebar (10%) -->
             <aside class="support-column" id="supportCol">
-                <!-- Add your 10% sidebar contents here -->
+                <!-- Dummy widgets added here so you can verify the layout and scroll behavior -->
+                <div class="dummy-widget">
+                    <strong>Widget 1</strong>
+                    <span>10% Width</span>
+                </div>
+                
+                <div class="dummy-widget tall">
+                    <strong>Widget 2</strong>
+                    <span>Scroll down to see the async effect sync up</span>
+                </div>
+                
+                <div class="dummy-widget">
+                    <strong>Widget 3</strong>
+                    <span>Bottom Alignment</span>
+                </div>
             </aside>
         </div>
     </main>
