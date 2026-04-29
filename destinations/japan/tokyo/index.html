@@ -35,7 +35,7 @@
             background-color: var(--ink);
         }
 
-        .hero-slide {
+        .hero-image {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
@@ -44,13 +44,20 @@
             z-index: 0;
             opacity: 0;
             transition: opacity 1.2s ease-in-out, filter 0.8s ease-in-out, transform 0.8s ease-in-out;
-            filter: blur(15px);
-            transform: scale(1.05);
-            will-change: opacity, filter, transform;
+            will-change: filter, opacity, transform;
         }
 
-        .hero-slide.active { opacity: 1; }
-        .hero-slide.loaded { filter: blur(0); transform: scale(1); }
+        .hero-image.active { opacity: 1; }
+
+        .img-low-res {
+            filter: blur(15px);
+            transform: scale(1.05);
+        }
+
+        .img-loaded {
+            filter: blur(0) !important;
+            transform: scale(1) !important;
+        }
 
         .hero-container::after {
             content: '';
@@ -290,8 +297,6 @@
 
         .city-headline em { font-style: italic; color: var(--canopy); }
 
-        .city-
-
         .city-body p + p { margin-top: 1rem; }
 
         /* ===== QUICK FACTS ===== */
@@ -362,7 +367,11 @@
             justify-content: center;
         }
 
-        .post-card-
+        .post-card-body {
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+        }
 
         .post-card-category {
             font-size: 0.68rem;
@@ -474,8 +483,6 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.04);
         }
 
-        .info-card-
-
         .info-card-body ul { padding-left: 1.1rem; margin: 0.5rem 0 0; }
         .info-card-body li + li { margin-top: 0.4rem; }
 
@@ -498,15 +505,15 @@
 <section class="hero-container" id="heroContainer">
 
     <img
-        src="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/tokyo/shinjuku_night_3635.jpg"
-        class="hero-slide active"
+        src="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/tokyo/shinjuku_night_3635-hd.jpg"
+        class="hero-image img-low-res active"
         id="heroSlide0"
         data-index="0"
         alt="Shinjuku at night, Tokyo"
         referrerpolicy="no-referrer">
 
-    <img src="" class="hero-slide" id="heroSlide1" data-index="1" alt="Tokyo hero image 2" referrerpolicy="no-referrer" style="display:none">
-    <img src="" class="hero-slide" id="heroSlide2" data-index="2" alt="Tokyo hero image 3" referrerpolicy="no-referrer" style="display:none">
+    <img src="" class="hero-image img-low-res" id="heroSlide1" data-index="1" alt="Tokyo hero image 2" referrerpolicy="no-referrer" style="display:none">
+    <img src="" class="hero-image img-low-res" id="heroSlide2" data-index="2" alt="Tokyo hero image 3" referrerpolicy="no-referrer" style="display:none">
 
     <div class="slide-counter" id="slideCounter">1 / 1</div>
 
@@ -736,16 +743,58 @@
         }
     });
 
-    // ===== PROGRESSIVE IMAGE LOADER =====
-    (function() {
-        const slide0 = document.getElementById('heroSlide0');
-        slide0.addEventListener('load', function() {
-            setTimeout(() => slide0.classList.add('loaded'), 50);
-        });
-        if (slide0.complete) {
-            setTimeout(() => slide0.classList.add('loaded'), 50);
+    /**
+     * PROGRESSIVE IMAGE LOADER — SLIDESHOW VARIANT
+     * On page load: all HD placeholders preloaded into cache immediately.
+     * On slide activation: full-res fetched and revealed for that slide only.
+     */
+    const imageData = [
+        {
+            imgId:   'heroSlide0',
+            hdUrl:   'https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/tokyo/shinjuku_night_3635-hd.jpg',
+            fullUrl: 'https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/tokyo/shinjuku_night_3635.jpg'
         }
-    })();
+        // Additional slides would be added here as they are populated
+    ];
+
+    // Stage 1: warm the cache for all HD placeholders immediately.
+    imageData.forEach(({ hdUrl }) => {
+        const pre = new Image();
+        pre.referrerPolicy = 'no-referrer';
+        pre.src = hdUrl;
+    });
+
+    // Stage 2: swap in full-res when a slide becomes active.
+    function loadFullRes(index) {
+        if(!imageData[index]) return; 
+
+        const { imgId, fullUrl } = imageData[index];
+        const heroImg = document.getElementById(imgId);
+        
+        if (!heroImg || heroImg.dataset.fullLoaded) return;
+        heroImg.dataset.fullLoaded = 'true';
+
+        function revealFull() {
+            heroImg.src = fullUrl;
+            setTimeout(() => {
+                heroImg.classList.remove('img-low-res');
+                heroImg.classList.add('img-loaded');
+            }, 50);
+        }
+
+        const fullLoader = new Image();
+        fullLoader.referrerPolicy = 'no-referrer';
+        fullLoader.src = fullUrl;
+        
+        if (fullLoader.complete) {
+            revealFull();
+        } else {
+            fullLoader.onload = revealFull;
+        }
+    }
+
+    // Kick off full-res for slide 0 immediately on page load
+    loadFullRes(0);
 
     // ===== SLIDESHOW ENGINE =====
     const SLIDES = [
@@ -800,13 +849,15 @@
         const prev = document.getElementById(SLIDES[currentSlide].id);
         currentSlide = (index + SLIDES.length) % SLIDES.length;
         const next = document.getElementById(SLIDES[currentSlide].id);
+        
         if (prev && prev !== next) prev.classList.remove('active');
+        
         if (next) {
             next.style.display = '';
-            if (SLIDES[currentSlide].src && !next.src) {
-                next.src = SLIDES[currentSlide].src;
-                next.addEventListener('load', () => setTimeout(() => next.classList.add('loaded'), 50), { once: true });
-            }
+            
+            // Call our new progressive loader function when a slide becomes active
+            loadFullRes(currentSlide);
+            
             next.classList.add('active');
         }
         updateDots(); updateCounter(); updateStrip();
