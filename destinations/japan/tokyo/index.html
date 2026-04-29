@@ -3,49 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Travel Guide to Tokyo | Endless Atlas</title>
     <meta name="description" content="Explore Tokyo with Endless Atlas. Discover the city's neighborhoods, food, culture, and everything you need to plan your trip to Japan's electric capital.">
     <meta name="keywords" content="Tokyo travel, Tokyo neighborhoods, Tokyo food, Japan travel, Endless Atlas">
     <link rel="canonical" href="https://endless-atlas.com/destinations/japan/tokyo">
-
     <meta property="og:type" content="website">
     <meta property="og:title" content="Tokyo | Endless Atlas">
     <meta property="og:description" content="Your guide to Tokyo — the city that never stops surprising.">
     <meta property="og:image" content="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/tokyo/shinjuku_night_3635.jpg">
 
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/theme.css">
+    <link rel="stylesheet" href="/main.css">
 
     <style>
-        /* ===== RESET & BASE ===== */
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        :root {
-            --forest:    #1E4034;
-            --canopy:    #2D6A4F;
-            --moss:      #52B788;
-            --stone:     #5C5346;
-            --driftwood: #A8896A;
-            --fog:       #C9D4C5;
-            --ink:       #0F0F0F;
-            --graphite:  #3D3D3D;
-            --ash:       #8C8C8C;
-            --cloud:     #EFEFEF;
-            --paper:     #F7F5F0;
-            --white:     #FFFFFF;
-            --warm-rule: #EAE6DB;
-        }
-
-        html { scroll-behavior: smooth; }
-
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background-color: var(--paper);
-            color: var(--graphite);
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* ===== HERO ===== */
+        /* ── SLIDESHOW HERO (82vh, multi-image) ── */
         .hero-container {
             position: relative;
             height: 82vh;
@@ -57,23 +32,6 @@
             justify-content: center;
             background-color: var(--ink);
         }
-
-        .hero-slide {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            object-fit: cover;
-            object-position: center center;
-            z-index: 0;
-            opacity: 0;
-            transition: opacity 1.2s ease-in-out, filter 0.8s ease-in-out, transform 0.8s ease-in-out;
-            filter: blur(15px);
-            transform: scale(1.05);
-            will-change: opacity, filter, transform;
-        }
-
-        .hero-slide.active { opacity: 1; }
-        .hero-slide.loaded { filter: blur(0); transform: scale(1); }
 
         .hero-container::after {
             content: '';
@@ -87,44 +45,8 @@
 
         .hero-container.pin-revealed::after { opacity: 0; }
 
-        .slideshow-dots {
-            position: absolute;
-            bottom: 72px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 5;
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .slideshow-dot {
-            width: 6px; height: 6px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.35);
-            cursor: pointer;
-            transition: background 0.3s, transform 0.3s;
-            border: none;
-        }
-
-        .slideshow-dot.active {
-            background: rgba(255,255,255,0.9);
-            transform: scale(1.4);
-        }
-
-        .slide-counter {
-            position: absolute;
-            top: 1.5rem; right: 5%;
-            z-index: 5;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.72rem;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.4);
-        }
-
         .hero-title {
-            font-family: 'Bebas Neue', sans-serif;
+            font-family: var(--font-display);
             font-size: clamp(6rem, 22vw, 18rem);
             color: var(--white);
             margin: 0;
@@ -139,59 +61,8 @@
 
         .hero-container.pin-revealed .hero-title { opacity: 0 !important; }
 
-        .hero-subtitle {
-            position: absolute;
-            bottom: 105px; left: 0;
-            width: 100%;
-            text-align: center;
-            z-index: 3;
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            font-size: clamp(0.9rem, 2vw, 1.2rem);
-            color: rgba(255,255,255,0.6);
-            letter-spacing: 0.04em;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .hero-container.pin-revealed .hero-subtitle { opacity: 0; }
-
-        .hero-breadcrumb {
-            position: absolute;
-            top: 1.5rem; left: 5%;
-            z-index: 5;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.72rem;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.45);
-        }
-
-        .hero-breadcrumb a { color: inherit; text-decoration: none; transition: color 0.2s; }
-        .hero-breadcrumb a:hover { color: rgba(255,255,255,0.85); }
-        .hero-breadcrumb span { margin: 0 0.5rem; opacity: 0.4; }
-
-        .geo-pin {
-            position: absolute;
-            bottom: 60px; left: 5%;
-            z-index: 5;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .geo-pin-icon {
-            width: 32px; height: 32px;
-            opacity: 0.22;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        .geo-pin-icon svg { width: 26px; height: 26px; }
-
-        .geo-pin:hover .geo-pin-icon,
-        .geo-pin.active .geo-pin-icon { opacity: 1; transform: scale(1.15); }
+        /* ── GEO PIN — full-bleed variant for slideshow ── */
+        .geo-pin { bottom: 60px; left: 5%; }
 
         .location-strip {
             position: absolute;
@@ -211,322 +82,11 @@
         }
 
         .location-strip.visible { height: 46px; }
+        .location-strip .strip-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); flex-shrink: 0; }
 
-        .strip-inner { display: flex; align-items: center; gap: 10px; width: 100%; }
-
-        .strip-dot {
-            width: 6px; height: 6px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.5);
-            flex-shrink: 0;
-        }
-
-        .strip-text {
-            font-size: 0.78rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.8);
-            flex: 1;
-        }
-
-        .strip-link {
-            font-size: 0.72rem;
-            color: rgba(255,255,255,0.45);
-            text-decoration: none;
-            border: 1px solid rgba(255,255,255,0.18);
-            padding: 0.18rem 0.6rem;
-            border-radius: 20px;
-            transition: color 0.2s, border-color 0.2s;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .strip-link:hover { color: rgba(255,255,255,0.9); border-color: rgba(255,255,255,0.5); }
-
-        /* ===== MAIN LAYOUT ===== */
-        main {
-            padding: 80px 10% 120px;
-            background-color: var(--paper);
-        }
-
-        .content-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 3rem;
-            max-width: 1400px;
-            margin: 0 auto;
-            align-items: start;
-        }
-
-        @media (min-width: 900px) {
-            .content-grid { grid-template-columns: 2fr 1fr; }
-        }
-
-        .main-column {
-            position: relative;
-            z-index: 10;
-            will-change: transform;
-        }
-
-        .support-column {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            position: relative;
-            z-index: 10;
-            will-change: transform;
-        }
-
-        /* ===== SECTION TITLES ===== */
-        .section-title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 2.5rem;
-            color: var(--forest);
-            margin: 4rem 0 1.5rem 0;
-            letter-spacing: 0.05em;
-            border-bottom: 2px solid var(--warm-rule);
-            padding-bottom: 0.5rem;
-        }
-
-        .section-title:first-child { margin-top: 0; }
-
-        /* ===== CITY INTRO ===== */
-        .city-intro { margin-bottom: 3rem; }
-
-        .city-kicker {
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 500;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--moss);
-            margin-bottom: 0.75rem;
-        }
-
-        .city-headline {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-            color: var(--ink);
-            line-height: 1.2;
-            margin-bottom: 1.25rem;
-        }
-
-        .city-headline em { font-style: italic; color: var(--canopy); }
-
-        .city-body {
-            font-family: 'DM Sans', sans-serif;
-            font-size: 1.05rem;
-            line-height: 1.8;
-            color: var(--graphite);
-        }
-
-        .city-body p + p { margin-top: 1rem; }
-
-        /* ===== QUICK FACTS ===== */
-        .quick-facts {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1px;
-            background: var(--warm-rule);
-            border: 1px solid var(--warm-rule);
-            border-radius: 6px;
-            overflow: hidden;
-            margin: 2.5rem 0;
-        }
-
-        .fact-cell {
-            flex: 1 1 140px;
-            background: var(--white);
-            padding: 1.1rem 1.25rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-
-        .fact-label {
-            font-size: 0.7rem;
-            font-weight: 500;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: var(--ash);
-        }
-
-        .fact-value { font-size: 1rem; font-weight: 500; color: var(--ink); }
-        .fact-value span { font-size: 0.8rem; font-weight: 400; color: var(--ash); }
-
-        /* ===== POST CARDS ===== */
-        .posts-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.25rem;
-            margin-top: 1.5rem;
-        }
-
-        @media (min-width: 600px) {
-            .posts-grid { grid-template-columns: 1fr 1fr; }
-        }
-
-        .post-card {
-            background: var(--white);
-            border-radius: 6px;
-            overflow: hidden;
-            border: 1px solid var(--warm-rule);
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-        }
-
-        .post-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(30,64,52,0.1);
-        }
-
-        .post-card-image-placeholder {
-            width: 100%;
-            aspect-ratio: 16/9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .post-card-body {
-            padding: 1.1rem 1.25rem 1.25rem;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 0.4rem;
-        }
-
-        .post-card-category {
-            font-size: 0.68rem;
-            font-weight: 500;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: var(--moss);
-        }
-
-        .post-card-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.05rem;
-            color: var(--ink);
-            line-height: 1.3;
-        }
-
-        .post-card-desc {
-            font-size: 0.85rem;
-            color: var(--stone);
-            line-height: 1.55;
-            margin-top: 0.2rem;
-            flex: 1;
-        }
-
-        .post-card-meta {
-            font-size: 0.7rem;
-            color: var(--ash);
-            letter-spacing: 0.06em;
-            margin-top: 0.5rem;
-        }
-
-        /* ===== SUPPORT COLUMN ===== */
-        .support-title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.5rem;
-            color: var(--forest);
-            margin-top: 0;
-            margin-bottom: 1rem;
-            letter-spacing: 0.05em;
-            border-bottom: 1px solid #D1CDC4;
-            padding-bottom: 0.5rem;
-        }
-
-        .map-card {
-            background: var(--white);
-            border-radius: 6px;
-            overflow: hidden;
-            border: 1px solid var(--warm-rule);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-        }
-
-        .map-card-header {
-            padding: 1.1rem 1.25rem 0.75rem;
-            border-bottom: 1px solid var(--warm-rule);
-        }
-
-        .map-embed {
-            width: 100%;
-            height: 320px;
-            border: none;
-            display: block;
-        }
-
-        .attraction-list {
-            padding: 0.75rem 1.25rem 1.25rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-        }
-
-        .attraction-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.65rem 0;
-            border-bottom: 1px solid var(--cloud);
-            text-decoration: none;
-            color: var(--graphite);
-            transition: color 0.2s;
-        }
-
-        .attraction-item:last-child { border-bottom: none; }
-        .attraction-item:hover { color: var(--canopy); }
-
-        .attraction-dot {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            background: var(--moss);
-            flex-shrink: 0;
-        }
-
-        .attraction-name { font-size: 0.88rem; font-weight: 500; flex: 1; }
-
-        .attraction-type {
-            font-size: 0.7rem;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--ash);
-        }
-
-        .attraction-arrow { font-size: 0.75rem; color: var(--ash); transition: transform 0.2s; }
-        .attraction-item:hover .attraction-arrow { transform: translateX(3px); }
-
-        .info-card {
-            background: var(--white);
-            border-radius: 6px;
-            border: 1px solid var(--warm-rule);
-            padding: 1.25rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-        }
-
-        .info-card-body {
-            font-size: 0.9rem;
-            line-height: 1.65;
-            color: var(--graphite);
-        }
-
-        .info-card-body ul { padding-left: 1.1rem; margin: 0.5rem 0 0; }
-        .info-card-body li + li { margin-top: 0.4rem; }
-
-
-
-        /* ===== MOBILE ===== */
         @media (max-width: 600px) {
-            main { padding: 60px 6% 80px; }
             .geo-pin { bottom: 65px; }
             .location-strip.visible { height: 48px; }
-            .strip-text { font-size: 0.72rem; }
-            .strip-link { font-size: 0.68rem; padding: 0.15rem 0.5rem; }
-            .hero-subtitle { display: none; }
         }
     </style>
 </head>
@@ -534,14 +94,14 @@
 
 <section class="hero-container" id="heroContainer">
 
-    <img
-        src="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/tokyo/shinjuku_night_3635.jpg"
-        class="hero-slide active"
-        id="heroSlide0"
-        data-index="0"
-        alt="Shinjuku at night, Tokyo"
-        referrerpolicy="no-referrer">
+    <img src="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/tokyo/shinjuku_night_3635.jpg"
+         class="hero-slide active"
+         id="heroSlide0"
+         data-index="0"
+         alt="Shinjuku at night, Tokyo"
+         referrerpolicy="no-referrer">
 
+    <!-- Additional slides added via SLIDES array in JS -->
     <img src="" class="hero-slide" id="heroSlide1" data-index="1" alt="Tokyo hero image 2" referrerpolicy="no-referrer" style="display:none">
     <img src="" class="hero-slide" id="heroSlide2" data-index="2" alt="Tokyo hero image 3" referrerpolicy="no-referrer" style="display:none">
 
@@ -556,6 +116,7 @@
     <div class="slide-counter" id="slideCounter">1 / 1</div>
 
     <h1 class="hero-title" id="heroText">TOKYO</h1>
+    <p class="hero-subtitle">Where ancient ritual meets neon overload.</p>
 
     <div class="slideshow-dots" id="slideshowDots">
         <button class="slideshow-dot active" data-index="0" aria-label="Slide 1"></button>
@@ -575,17 +136,15 @@
             <span class="strip-text" id="stripText">Shinjuku, Tokyo, Japan</span>
             <a class="strip-link" id="stripLink"
                href="https://www.google.com/maps/search/35.694,139.700"
-               target="_blank"
-               rel="noopener noreferrer">Open in Maps ↗</a>
+               target="_blank" rel="noopener noreferrer">Open in Maps ↗</a>
         </div>
     </div>
 
 </section>
 
-<main>
+<main class="dest-page-main">
     <div class="content-grid" id="contentGrid">
 
-        <!-- ===== MAIN COLUMN ===== -->
         <article class="main-column" id="mainCol">
 
             <div class="city-intro">
@@ -598,37 +157,19 @@
             </div>
 
             <div class="quick-facts">
-                <div class="fact-cell">
-                    <span class="fact-label">Population</span>
-                    <div class="fact-value">13.96M <span>city proper</span></div>
-                </div>
-                <div class="fact-cell">
-                    <span class="fact-label">Time Zone</span>
-                    <div class="fact-value">JST <span>(UTC +9)</span></div>
-                </div>
-                <div class="fact-cell">
-                    <span class="fact-label">Local Time</span>
-                    <div class="fact-value" id="tokyo-time">—</div>
-                </div>
-                <div class="fact-cell">
-                    <span class="fact-label">Language</span>
-                    <div class="fact-value">Japanese</div>
-                </div>
-                <div class="fact-cell">
-                    <span class="fact-label">Currency</span>
-                    <div class="fact-value">¥ JPY</div>
-                </div>
+                <div class="fact-cell"><span class="fact-label">Population</span><div class="fact-value">13.96M <span>city proper</span></div></div>
+                <div class="fact-cell"><span class="fact-label">Time Zone</span><div class="fact-value">JST <span>(UTC +9)</span></div></div>
+                <div class="fact-cell"><span class="fact-label">Local Time</span><div class="fact-value" id="tokyo-time">—</div></div>
+                <div class="fact-cell"><span class="fact-label">Language</span><div class="fact-value">Japanese</div></div>
+                <div class="fact-cell"><span class="fact-label">Currency</span><div class="fact-value">¥ JPY</div></div>
             </div>
 
             <h2 class="section-title">Stories from Tokyo</h2>
 
             <div class="posts-grid">
-
                 <a href="#" class="post-card">
-                    <div class="post-card-image-placeholder" style="background: linear-gradient(135deg, #1E4034 0%, #2D6A4F 60%, #52B788 100%);">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.2">
-                            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
-                        </svg>
+                    <div class="post-card-image-placeholder" style="background: linear-gradient(135deg, var(--forest) 0%, var(--canopy) 60%, var(--moss) 100%);">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                     </div>
                     <div class="post-card-body">
                         <span class="post-card-category">Neighborhoods</span>
@@ -637,12 +178,9 @@
                         <span class="post-card-meta">12 min read · Shinjuku</span>
                     </div>
                 </a>
-
                 <a href="#" class="post-card">
-                    <div class="post-card-image-placeholder" style="background: linear-gradient(135deg, #3D3D3D 0%, #5C5346 60%, #A8896A 100%);">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.2">
-                            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
-                        </svg>
+                    <div class="post-card-image-placeholder" style="background: linear-gradient(135deg, var(--graphite) 0%, var(--stone) 60%, var(--driftwood) 100%);">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                     </div>
                     <div class="post-card-body">
                         <span class="post-card-category">Food</span>
@@ -651,12 +189,9 @@
                         <span class="post-card-meta">8 min read · Tsukiji</span>
                     </div>
                 </a>
-
                 <a href="#" class="post-card">
-                    <div class="post-card-image-placeholder" style="background: linear-gradient(135deg, #1E4034 0%, #5C5346 100%);">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.2">
-                            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
-                        </svg>
+                    <div class="post-card-image-placeholder" style="background: linear-gradient(135deg, var(--forest) 0%, var(--stone) 100%);">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                     </div>
                     <div class="post-card-body">
                         <span class="post-card-category">Culture</span>
@@ -665,12 +200,9 @@
                         <span class="post-card-meta">10 min read · Shimokitazawa</span>
                     </div>
                 </a>
-
                 <a href="#" class="post-card">
-                    <div class="post-card-image-placeholder" style="background: linear-gradient(135deg, #2D6A4F 0%, #1E4034 100%);">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.2">
-                            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
-                        </svg>
+                    <div class="post-card-image-placeholder" style="background: linear-gradient(135deg, var(--canopy) 0%, var(--forest) 100%);">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                     </div>
                     <div class="post-card-body">
                         <span class="post-card-category">Planning</span>
@@ -679,69 +211,41 @@
                         <span class="post-card-meta">6 min read · Transit</span>
                     </div>
                 </a>
-
             </div>
 
         </article>
 
-        <!-- ===== SUPPORT COLUMN ===== -->
         <aside class="support-column" id="supportCol">
 
             <div class="map-card">
                 <div class="map-card-header">
                     <h3 class="support-title">Tokyo Attractions</h3>
                 </div>
-
-                <iframe
-                    class="map-embed"
+                <iframe class="map-embed"
                     src="https://www.openstreetmap.org/export/embed.html?bbox=139.6200%2C35.6500%2C139.8000%2C35.7400&layer=mapnik&marker=35.6762%2C139.6503"
-                    title="Map of Tokyo"
-                    allowfullscreen
-                    loading="lazy">
+                    title="Map of Tokyo" allowfullscreen loading="lazy">
                 </iframe>
-
                 <div class="attraction-list">
                     <a href="https://www.google.com/maps/search/Senso-ji+Temple+Asakusa+Tokyo" target="_blank" rel="noopener" class="attraction-item">
-                        <span class="attraction-dot"></span>
-                        <span class="attraction-name">Senso-ji Temple</span>
-                        <span class="attraction-type">Temple · Asakusa</span>
-                        <span class="attraction-arrow">→</span>
+                        <span class="attraction-dot"></span><span class="attraction-name">Senso-ji Temple</span><span class="attraction-type">Temple · Asakusa</span><span class="attraction-arrow">→</span>
                     </a>
                     <a href="https://www.google.com/maps/search/Shibuya+Crossing+Tokyo" target="_blank" rel="noopener" class="attraction-item">
-                        <span class="attraction-dot"></span>
-                        <span class="attraction-name">Shibuya Crossing</span>
-                        <span class="attraction-type">Landmark · Shibuya</span>
-                        <span class="attraction-arrow">→</span>
+                        <span class="attraction-dot"></span><span class="attraction-name">Shibuya Crossing</span><span class="attraction-type">Landmark · Shibuya</span><span class="attraction-arrow">→</span>
                     </a>
                     <a href="https://www.google.com/maps/search/Meiji+Shrine+Harajuku+Tokyo" target="_blank" rel="noopener" class="attraction-item">
-                        <span class="attraction-dot"></span>
-                        <span class="attraction-name">Meiji Jingu Shrine</span>
-                        <span class="attraction-type">Shrine · Harajuku</span>
-                        <span class="attraction-arrow">→</span>
+                        <span class="attraction-dot"></span><span class="attraction-name">Meiji Jingu Shrine</span><span class="attraction-type">Shrine · Harajuku</span><span class="attraction-arrow">→</span>
                     </a>
                     <a href="https://www.google.com/maps/search/Shinjuku+Gyoen+National+Garden+Tokyo" target="_blank" rel="noopener" class="attraction-item">
-                        <span class="attraction-dot"></span>
-                        <span class="attraction-name">Shinjuku Gyoen</span>
-                        <span class="attraction-type">Garden · Shinjuku</span>
-                        <span class="attraction-arrow">→</span>
+                        <span class="attraction-dot"></span><span class="attraction-name">Shinjuku Gyoen</span><span class="attraction-type">Garden · Shinjuku</span><span class="attraction-arrow">→</span>
                     </a>
                     <a href="https://www.google.com/maps/search/teamLab+Planets+Tokyo+Toyosu" target="_blank" rel="noopener" class="attraction-item">
-                        <span class="attraction-dot"></span>
-                        <span class="attraction-name">teamLab Planets</span>
-                        <span class="attraction-type">Art · Toyosu</span>
-                        <span class="attraction-arrow">→</span>
+                        <span class="attraction-dot"></span><span class="attraction-name">teamLab Planets</span><span class="attraction-type">Art · Toyosu</span><span class="attraction-arrow">→</span>
                     </a>
                     <a href="https://www.google.com/maps/search/Tsukiji+Outer+Market+Tokyo" target="_blank" rel="noopener" class="attraction-item">
-                        <span class="attraction-dot"></span>
-                        <span class="attraction-name">Tsukiji Outer Market</span>
-                        <span class="attraction-type">Food · Tsukiji</span>
-                        <span class="attraction-arrow">→</span>
+                        <span class="attraction-dot"></span><span class="attraction-name">Tsukiji Outer Market</span><span class="attraction-type">Food · Tsukiji</span><span class="attraction-arrow">→</span>
                     </a>
                     <a href="https://www.google.com/maps/search/Golden+Gai+Shinjuku+Tokyo" target="_blank" rel="noopener" class="attraction-item">
-                        <span class="attraction-dot"></span>
-                        <span class="attraction-name">Golden Gai</span>
-                        <span class="attraction-type">Bars · Shinjuku</span>
-                        <span class="attraction-arrow">→</span>
+                        <span class="attraction-dot"></span><span class="attraction-name">Golden Gai</span><span class="attraction-type">Bars · Shinjuku</span><span class="attraction-arrow">→</span>
                     </a>
                 </div>
             </div>
@@ -759,13 +263,11 @@
                 </div>
             </div>
 
-            <!-- ===== ESSENTIALS WIDGET (shared component) ===== -->
-            <iframe
-                src="/support/html/japan_essentials.html"
-                id="essentialsWidget"
-                title="Tokyo Travel Essentials"
-                scrolling="no"
-                style="width: 100%; border: none; display: block; border-radius: 6px; overflow: hidden;">
+            <iframe src="/support/html/japan_essentials.html"
+                    id="essentialsWidget"
+                    title="Tokyo Travel Essentials"
+                    scrolling="no"
+                    style="width:100%;border:none;display:block;border-radius:var(--radius-sm);overflow:hidden;">
             </iframe>
 
         </aside>
@@ -773,7 +275,7 @@
 </main>
 
 <script>
-    // ===== ESSENTIALS IFRAME AUTO-HEIGHT =====
+    // ESSENTIALS IFRAME HEIGHT
     window.addEventListener('message', function(e) {
         if (e.data && e.data.height) {
             const widget = document.getElementById('essentialsWidget');
@@ -781,24 +283,19 @@
         }
     });
 
-    // ===== PROGRESSIVE IMAGE LOADER =====
-    (function() {
-        const slide0 = document.getElementById('heroSlide0');
-        slide0.addEventListener('load', function() {
-            setTimeout(() => slide0.classList.add('loaded'), 50);
-        });
-        if (slide0.complete) {
-            setTimeout(() => slide0.classList.add('loaded'), 50);
-        }
-    })();
-
-    // ===== SLIDESHOW ENGINE =====
+    /**
+     * PROGRESSIVE IMAGE LOADER — SLIDESHOW VARIANT
+     * On page load: HD placeholder for slide 0 is already in the <img> src.
+     * On slide activation: full-res fetched for that slide only.
+     */
     const SLIDES = [
         {
             id: 'heroSlide0',
             location: 'Shinjuku, Tokyo, Japan',
             mapsUrl: 'https://www.google.com/maps/search/35.6938,139.7034',
         },
+        // Add more slides here as additional images become available:
+        // { id: 'heroSlide1', location: '...', mapsUrl: '...' },
     ];
 
     let currentSlide = 0;
@@ -810,13 +307,16 @@
     const stripText     = document.getElementById('stripText');
     const stripLink     = document.getElementById('stripLink');
 
+    // Kick off full-res for slide 0 immediately
+    (function() {
+        const slide0 = document.getElementById('heroSlide0');
+        function revealSlide0() { setTimeout(() => slide0.classList.add('loaded'), 50); }
+        if (slide0.complete) { revealSlide0(); } else { slide0.addEventListener('load', revealSlide0, { once: true }); }
+    })();
+
     function buildDots() {
         dotsContainer.innerHTML = '';
-        if (SLIDES.length <= 1) {
-            dotsContainer.style.display = 'none';
-            slideCounter.style.display = 'none';
-            return;
-        }
+        if (SLIDES.length <= 1) { dotsContainer.style.display = 'none'; slideCounter.style.display = 'none'; return; }
         SLIDES.forEach((_, i) => {
             const btn = document.createElement('button');
             btn.className = 'slideshow-dot' + (i === 0 ? ' active' : '');
@@ -829,17 +329,8 @@
     }
 
     function updateCounter() { slideCounter.textContent = `${currentSlide + 1} / ${SLIDES.length}`; }
-
-    function updateDots() {
-        dotsContainer.querySelectorAll('.slideshow-dot').forEach((d, i) => {
-            d.classList.toggle('active', i === currentSlide);
-        });
-    }
-
-    function updateStrip() {
-        const s = SLIDES[currentSlide];
-        if (s) { stripText.textContent = s.location; stripLink.href = s.mapsUrl; }
-    }
+    function updateDots() { dotsContainer.querySelectorAll('.slideshow-dot').forEach((d, i) => d.classList.toggle('active', i === currentSlide)); }
+    function updateStrip() { const s = SLIDES[currentSlide]; if (s) { stripText.textContent = s.location; stripLink.href = s.mapsUrl; } }
 
     function goToSlide(index) {
         const prev = document.getElementById(SLIDES[currentSlide].id);
@@ -859,35 +350,30 @@
         if (SLIDES.length > 1) startTimer();
     }
 
-    function startTimer() {
-        slideshowTimer = setInterval(() => goToSlide(currentSlide + 1), SLIDE_DURATION);
-    }
+    function startTimer() { slideshowTimer = setInterval(() => goToSlide(currentSlide + 1), SLIDE_DURATION); }
 
     buildDots();
     updateStrip();
     if (SLIDES.length > 1) startTimer();
 
-    // ===== HERO SCROLL =====
+    // HERO SCROLL
     window.addEventListener('scroll', function() {
         const heroText = document.getElementById('heroText');
         if (!heroText) return;
-        const scrollValue = window.scrollY;
-        heroText.style.transform = `scale(${1 + scrollValue / 700})`;
-        heroText.style.opacity   = Math.max(0, 1 - scrollValue / 380);
+        heroText.style.transform = `scale(${1 + window.scrollY / 700})`;
+        heroText.style.opacity   = Math.max(0, 1 - window.scrollY / 380);
     }, { passive: true });
 
-    // ===== JST CLOCK =====
+    // JST CLOCK
     function updateTokyoTime() {
         const el = document.getElementById('tokyo-time');
         if (!el) return;
-        el.textContent = new Date().toLocaleTimeString('en-US', {
-            timeZone: 'Asia/Tokyo', hour: 'numeric', minute: '2-digit', hour12: true
-        });
+        el.textContent = new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Tokyo', hour: 'numeric', minute: '2-digit', hour12: true });
     }
     updateTokyoTime();
     setInterval(updateTokyoTime, 30000);
 
-    // ===== GEO PIN =====
+    // GEO PIN
     (function() {
         const hero  = document.getElementById('heroContainer');
         const pin   = document.getElementById('geoPin');
@@ -908,58 +394,37 @@
         pin.addEventListener('touchend', (e) => { e.preventDefault(); locked = true; showStrip(); }, { passive: false });
     })();
 
-    // ===== PROPORTIONAL SCROLL =====
+    // PROPORTIONAL SCROLL ENGINE
     const layoutState  = { gridTop: 0, maxScroll: 0, diff: 0, taller: null };
     const mainState    = { currentY: 0, targetY: 0 };
     const supportState = { currentY: 0, targetY: 0 };
-
-    const gridEl     = document.getElementById('contentGrid');
-    const mainCol    = document.getElementById('mainCol');
-    const supportCol = document.getElementById('supportCol');
+    const gridEl       = document.getElementById('contentGrid');
+    const mainCol      = document.getElementById('mainCol');
+    const supportCol   = document.getElementById('supportCol');
 
     function calculateLayout() {
         if (window.innerWidth <= 900) {
-            mainCol.style.transform    = 'none';
-            supportCol.style.transform = 'none';
+            mainCol.style.transform = 'none'; supportCol.style.transform = 'none';
             mainState.currentY = 0; mainState.targetY = 0;
-            supportState.currentY = 0; supportState.targetY = 0;
-            return;
+            supportState.currentY = 0; supportState.targetY = 0; return;
         }
-        const mainH    = mainCol.offsetHeight;
-        const supportH = supportCol.offsetHeight;
-        const rect     = gridEl.getBoundingClientRect();
+        const mainH = mainCol.offsetHeight; const supportH = supportCol.offsetHeight;
+        const rect = gridEl.getBoundingClientRect();
         layoutState.gridTop = window.scrollY + rect.top - 100;
-
-        if (Math.abs(mainH - supportH) < 50) {
-            layoutState.diff = 0; layoutState.taller = 'equal';
-        } else if (mainH > supportH) {
-            layoutState.taller   = 'main';
-            layoutState.diff     = mainH - supportH;
-            layoutState.maxScroll = Math.max(window.innerHeight / 1.5, mainH - window.innerHeight + 100);
-        } else {
-            layoutState.taller   = 'support';
-            layoutState.diff     = supportH - mainH;
-            layoutState.maxScroll = Math.max(window.innerHeight / 1.5, supportH - window.innerHeight + 100);
-        }
+        if (Math.abs(mainH - supportH) < 50) { layoutState.diff = 0; layoutState.taller = 'equal'; }
+        else if (mainH > supportH) { layoutState.taller = 'main'; layoutState.diff = mainH - supportH; layoutState.maxScroll = Math.max(window.innerHeight / 1.5, mainH - window.innerHeight + 100); }
+        else { layoutState.taller = 'support'; layoutState.diff = supportH - mainH; layoutState.maxScroll = Math.max(window.innerHeight / 1.5, supportH - window.innerHeight + 100); }
         handleProportionalScroll();
     }
 
     function handleProportionalScroll() {
         if (window.innerWidth <= 900) return;
-        if (layoutState.diff <= 0 || layoutState.maxScroll <= 0) {
-            mainState.targetY = 0; supportState.targetY = 0; return;
-        }
-        let progress = (window.scrollY - layoutState.gridTop) / layoutState.maxScroll;
-        progress = Math.max(0, Math.min(1, progress));
+        if (layoutState.diff <= 0 || layoutState.maxScroll <= 0) { mainState.targetY = 0; supportState.targetY = 0; return; }
+        let progress = Math.max(0, Math.min(1, (window.scrollY - layoutState.gridTop) / layoutState.maxScroll));
         const yOffset = progress * layoutState.diff;
-
-        if (layoutState.taller === 'main') {
-            supportState.targetY = yOffset; mainState.targetY = 0;
-        } else if (layoutState.taller === 'support') {
-            mainState.targetY = yOffset; supportState.targetY = 0;
-        } else {
-            mainState.targetY = 0; supportState.targetY = 0;
-        }
+        if (layoutState.taller === 'main') { supportState.targetY = yOffset; mainState.targetY = 0; }
+        else if (layoutState.taller === 'support') { mainState.targetY = yOffset; supportState.targetY = 0; }
+        else { mainState.targetY = 0; supportState.targetY = 0; }
     }
 
     function renderLoop() {
@@ -977,10 +442,7 @@
     window.addEventListener('resize', calculateLayout);
 
     let resizeTimeout;
-    const columnObserver = new ResizeObserver(() => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(calculateLayout, 50);
-    });
+    const columnObserver = new ResizeObserver(() => { clearTimeout(resizeTimeout); resizeTimeout = setTimeout(calculateLayout, 50); });
     if (mainCol)    columnObserver.observe(mainCol);
     if (supportCol) columnObserver.observe(supportCol);
 

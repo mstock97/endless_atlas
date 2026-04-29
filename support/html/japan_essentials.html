@@ -2,16 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Essentials</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    <style>
+    
 
     html, body { width: 100%; background: transparent; overflow: hidden; }
 
     .ea-wrap {
-      background: #1E4034;
+      background: var(--forest);
       border-radius: 6px;
       overflow: hidden;
       width: 100%;
@@ -28,7 +30,7 @@
     .ea-title {
       font-family: 'Bebas Neue', sans-serif;
       font-size: 1.5rem;
-      color: #F7F5F0;
+      color: var(--paper);
       letter-spacing: 0.08em;
       line-height: 1;
     }
@@ -46,19 +48,19 @@
       font-weight: 500;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: #A8896A;
+      color: var(--driftwood);
       flex-shrink: 0;
     }
     .ea-val {
       font-size: 0.875rem;
       font-weight: 300;
-      color: #C9D4C5;
+      color: var(--fog);
       text-align: right;
       line-height: 1.45;
     }
     .ea-val strong {
       font-weight: 500;
-      color: #F7F5F0;
+      color: var(--paper);
     }
     .plug-block {
       display: flex;
@@ -68,17 +70,18 @@
     .plug-label {
       font-size: 0.78rem;
       font-weight: 300;
-      color: #C9D4C5;
+      color: var(--fog);
       line-height: 1.4;
       text-align: left;
     }
     .plug-label strong {
       font-weight: 500;
-      color: #F7F5F0;
+      color: var(--paper);
       display: block;
       font-size: 0.85rem;
     }
   </style>
+    <link rel="stylesheet" href="../../theme.css">
 </head>
 <body>
 

@@ -6,7 +6,7 @@
 const SITE_CONFIG = {
   name:        'Endless ',
   nameAccent:  'Atlas',
-  tagline:     'Traveling the World',
+  tagline:     'Go further. Write honestly.',
   isQA:        window.location.hostname.startsWith('qa.'),
   basePath:    '/',
 };
@@ -68,8 +68,12 @@ function renderHeader() {
     return `<li><a href="${link.href}" ${isCta}>${link.label}</a></li>`;
   }).join('');
 
+  const qaBanner = SITE_CONFIG.isQA
+    ? `<div class="qa-banner">⚠ QA ENVIRONMENT — Changes here are not live</div>`
+    : '';
+
   return `
-    <header class="site-header">
+    ${qaBanner}<header class="site-header">
       <nav class="nav-inner">
         <a href="/" class="nav-logo">${SITE_CONFIG.name}<span>${SITE_CONFIG.nameAccent}</span></a>
         <ul class="nav-links" id="navLinks">${navLinksHTML}</ul>
