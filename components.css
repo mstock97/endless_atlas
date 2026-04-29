@@ -652,23 +652,41 @@ a.btn-primary { display: inline-flex; }
 }
 
 
+
+
 /* ============================================
    DESTINATION SECTION TITLE
-   Bebas Neue section headings used on
-   country and city-level pages.
+   Bebas Neue section headings used on country
+   and city-level pages. Compound selectors ensure
+   this beats the global h2 rule in typography.css
+   (specificity 0,1,1 beats 0,0,1).
    ============================================ */
+h1.dest-section-title,
+h2.dest-section-title,
+h3.dest-section-title,
 .dest-section-title {
-  font-family: var(--font-display);
+  font-family: 'Bebas Neue', var(--font-display), sans-serif;
   font-size: 2.5rem;
+  font-weight: 400;
   color: var(--forest);
   margin: 4rem 0 1.5rem 0;
   letter-spacing: 0.05em;
   border-bottom: 2px solid var(--warm-rule);
   padding-bottom: 0.5rem;
+  line-height: 1.1;
 }
 
+h1.dest-section-title:first-child,
+h2.dest-section-title:first-child,
 .dest-section-title:first-child { margin-top: 0; }
 
+/* No bottom border when inside an accordion header */
+.accordion-header h2.dest-section-title,
+.accordion-header .dest-section-title {
+  margin: 0;
+  border-bottom: none;
+  padding-bottom: 0;
+}
 
 /* ============================================
    WEATHER ACCORDION

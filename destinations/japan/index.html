@@ -56,6 +56,60 @@
   <link rel="stylesheet" href="/navigation.css">
   <link rel="stylesheet" href="/footer.css">
   <link rel="stylesheet" href="/animations.css">
+
+  <!--
+    Page-specific layout styles.
+    These override global rules that would otherwise conflict.
+    Defined here to guarantee correct padding and font rendering
+    regardless of external CSS cascade order.
+  -->
+  <style>
+    /* Main content area padding — matches original exactly */
+    main {
+      padding: 80px 10% 120px;
+      background-color: var(--paper);
+    }
+
+    /* Content grid: stacked on mobile, 2:1 columns at 900px+ */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      align-items: start;
+    }
+
+    @media (min-width: 900px) {
+      .content-grid { grid-template-columns: 2fr 1fr; }
+    }
+
+    /* Destination section titles — Bebas Neue, overrides global h2 */
+    .dest-section-title {
+      font-family: 'Bebas Neue', var(--font-display), sans-serif;
+      font-size: 2.5rem;
+      color: var(--forest);
+      margin: 4rem 0 1.5rem 0;
+      letter-spacing: 0.05em;
+      border-bottom: 2px solid var(--warm-rule);
+      padding-bottom: 0.5rem;
+      line-height: 1.1;
+      font-weight: 400;
+    }
+
+    .dest-section-title:first-child { margin-top: 0; }
+
+    /* Accordion header keeps same title styles without bottom border */
+    .accordion-header .dest-section-title {
+      margin: 0;
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    @media (max-width: 600px) {
+      main { padding: 60px 6% 80px; }
+    }
+  </style>
 </head>
 
 <body>
