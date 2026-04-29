@@ -19,11 +19,12 @@
         /* Progressive Image Loader CSS */
         .hero-image-container {
             position: relative;
-            width: 100%;
+            width: 85%; /* Reduced from 100% */
+            max-width: 800px; /* Caps the size on extra wide screens */
             aspect-ratio: 16/9;
             overflow: hidden;
             border-radius: var(--radius-md); 
-            margin: 2rem 0;
+            margin: 2rem auto; /* auto centers the container horizontally */
         }
 
         .hero-image {
@@ -149,21 +150,6 @@
         .strip-link:hover {
             color: rgba(255,255,255,0.9);
             border-color: rgba(255,255,255,0.45);
-        }
-
-        /* Overlay transition for pin revealed state */
-        .hero-image-container::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.1); 
-            transition: opacity 0.4s ease;
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        .hero-image-container.pin-revealed::after {
-            opacity: 0;
         }
 
         /* ===== MAIN NAVBAR OVERRIDES (If needed) ===== */
@@ -479,24 +465,18 @@
          * Single Image scope for floating pill styling
          */
         (function() {
-            const slide = document.getElementById('slide-0');
             const pin   = document.getElementById('geoPin0');
             const strip = document.getElementById('locationStrip0');
             let locked  = false;
             const isMobile = () => window.matchMedia('(hover: none)').matches;
 
-            function clearOverlay()   { slide.classList.add('pin-revealed'); }
-            function restoreOverlay() { slide.classList.remove('pin-revealed'); }
             function showStrip()      { strip.classList.add('visible'); pin.classList.add('active'); }
             function hideStrip()      { if (locked) return; strip.classList.remove('visible'); pin.classList.remove('active'); }
 
-            pin.addEventListener('mouseenter', () => { if (!isMobile()) { showStrip(); clearOverlay(); } });
-            pin.addEventListener('mouseleave', () => { if (!isMobile()) { hideStrip(); restoreOverlay(); } });
+            pin.addEventListener('mouseenter', () => { if (!isMobile()) showStrip(); });
+            pin.addEventListener('mouseleave', () => { if (!isMobile()) hideStrip(); });
 
-            strip.addEventListener('mouseenter', () => { if (!isMobile()) clearOverlay(); });
-            strip.addEventListener('mouseleave', () => { if (!isMobile()) restoreOverlay(); });
-
-            pin.addEventListener('click', (e) => { e.stopPropagation(); locked = true; showStrip(); clearOverlay(); });
+            pin.addEventListener('click', (e) => { e.stopPropagation(); locked = true; showStrip(); });
             pin.addEventListener('touchend', (e) => { e.preventDefault(); locked = true; showStrip(); }, { passive: false });
         })();
 
