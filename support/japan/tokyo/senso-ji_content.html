@@ -56,7 +56,7 @@
 <h3>Main Hall courtyard – make an offering and pull your fortune!</h3>
 <p>Once passing into the courtyard of the Main Hall, there are stalls on either side lining the approach to the Main Hall building that sell amulets, charms, and other traditional temple items. There are also booths where you can pull a fortune from by following the steps below:
 <ul style="padding-left: 60px;">
-    <li>Deposit <span id="jpy-deposit-text">¥100 (... USD)</span> into the labeled slot</li>
+    <li>Deposit <span class="fx-convert-jpy" data-jpy="100"></span> into the labeled slot</li>
     <li>Shake the long metal box until a numbered stick falls out</li>
     <li>Match the number on the stick to the corresponding drawer (then return the stick to the metal box)</li>
     <li>Open the drawer and pull the top fortune paper out – this is your fortune!</li>
@@ -72,9 +72,9 @@ If you would like to participate in purification before entering the main hall, 
 
 
 <script>
-    
-    
-    
+    // A globally accessible variable storing the value of 1 JPY in USD.
+    let globalJpyToUsdRate = 0;
+
     function updateHeaderFX() {
         fetch('https://api.frankfurter.dev/v2/rates?quotes=USD,JPY')
             .then(res => res.json())
@@ -82,7 +82,7 @@ If you would like to participate in purification before entering the main hall, 
                 // Accessing the rates object from the API response
                 const usd = data.rates.USD;
                 const jpy = data.rates.JPY;
-    
+
                 if (usd && jpy) {
                     // 1. Calculate the standard 1 USD to JPY rate for your header
                     const usdToJpy = (jpy / usd).toFixed(2);
@@ -90,17 +90,29 @@ If you would like to participate in purification before entering the main hall, 
                     if (headerEl) {
                         headerEl.textContent = `· 1 USD = ${usdToJpy} JPY`;
                     }
-    
-                    // 2. Calculate the USD value of 100 JPY
-                    // Formula: (Amount / JPY Rate) * USD Rate
-                    const convertedUsd = ((100 / jpy) * usd).toFixed(2);
+
+                    // 2. Get the single number for how much 1 JPY is in USD
+                    const oneJpyToUsd = usd / jpy;
+                    globalJpyToUsdRate = oneJpyToUsd;
                     
-                    // 3. Update the list item to your specific format
-                    const depositEl = document.getElementById('jpy-deposit-text');
-                    if (depositEl) {
-                        depositEl.textContent = `¥100 (${convertedUsd} USD)`;
-                    }
-    
+                    // 3. Find ALL elements on the page with the class 'fx-convert-jpy'
+                    const conversionElements = document.querySelectorAll('.fx-convert-jpy');
+                    
+                    // 4. Loop through each element, read its amount, and update it
+                    conversionElements.forEach(el => {
+                        // Extract the amount from the data-jpy attribute and turn it into a number
+                        const jpyAmount = parseFloat(el.getAttribute('data-jpy'));
+                        
+                        // Make sure it's a valid number before doing the math
+                        if (!isNaN(jpyAmount)) {
+                            // Multiply by our single rate
+                            const convertedUsd = (jpyAmount * oneJpyToUsd).toFixed(2);
+                            
+                            // Update the text in the HTML for this specific element
+                            el.textContent = `¥${jpyAmount} (${convertedUsd} USD)`;
+                        }
+                    });
+
                     if (typeof calculateLayout === "function") {
                         setTimeout(calculateLayout, 50);
                     }
@@ -108,6 +120,4 @@ If you would like to participate in purification before entering the main hall, 
             })
             .catch(err => console.error("FX update failed:", err));
     }
-
-
 </script>
