@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>[Title] — Endless Atlas</title>
 
-    <!-- Canonical Font Import[cite: 1] -->
+    <!-- Canonical Font Import -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
@@ -14,9 +14,9 @@
     <link rel="stylesheet" href="/theme.css">
     <link rel="stylesheet" href="/main.css">
 
-    <!-- Page Specific Styles for Image Loader and Geo Pin[cite: 2, 3] -->
+    <!-- Page Specific Styles for Image Loader, Geo Pin, and Grid -->
     <style>
-        /* Progressive Image Loader CSS[cite: 3] */
+        /* Progressive Image Loader CSS */
         .hero-image-container {
             position: relative;
             width: 100%;
@@ -49,7 +49,7 @@
             transform: scale(1) !important;
         }
 
-        /* Geo Pin - Floating Pill Style for inline/compact containers[cite: 2] */
+        /* Geo Pin - Floating Pill Style for inline/compact containers */
         .geo-pin {
             position: absolute;
             bottom: 40px;
@@ -151,7 +151,7 @@
             border-color: rgba(255,255,255,0.45);
         }
 
-        /* Overlay transition for pin revealed state[cite: 2] */
+        /* Overlay transition for pin revealed state */
         .hero-image-container::after {
             content: '';
             position: absolute;
@@ -165,6 +165,7 @@
         .hero-image-container.pin-revealed::after {
             opacity: 0;
         }
+
         /* ===== MAIN NAVBAR OVERRIDES (If needed) ===== */
         .site-header {
             position: sticky;
@@ -292,6 +293,37 @@
             background: var(--moss, #52B788);
         }
 
+        /* ===== ASYNC SCROLL & GRID LAYOUT ===== */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            align-items: start;
+        }
+
+        @media (min-width: 900px) {
+            .content-grid { grid-template-columns: 90% 10%; } 
+        }
+
+        .main-column {
+            position: relative;
+            z-index: 10;
+            will-change: transform;
+        }
+
+        .support-column {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            position: relative;
+            z-index: 10;
+            will-change: transform;
+            /* Min height ensures the column is tall enough to demo scroll if empty */
+            min-height: 50vh; 
+        }
+
         /* Mobile Adjustments */
         @media (max-width: 768px) {
             .nav-links { display: none; /* Hide main links on mobile, normally handled by a hamburger menu JS */ }
@@ -304,69 +336,71 @@
     <div id="japan-sub-header"></div>
 
     <main class="article-layout">
-        <!-- Left Sidebar (Empty for spacing per main.css grid layout) -->
-        <aside class="article-sidebar-left"></aside>
-
-        <!-- Main Article Content -->
-        <article class="article-body">
-            
-            <h1 class="article-title">[Title]</h1>
-
-            <p class="article-subtitle">[LEADING SUMMARY PARAGRAPH]</p>
-
-            <h2>[HEADER]</h2>
-
-            <!-- Photo with Progressive Loader and Geo Pin -->
-            <div class="hero-image-container slide" id="slide-0">
+        
+        <div class="content-grid" id="contentGrid">
+            <!-- Main Article Content (90%) -->
+            <article class="main-column" id="mainCol">
                 
-                <!-- Stage 1 HD Image Request[cite: 3] -->
-                <img src="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/tokyo/senso-ji/1%20-%20arial%20photo-hd.jpg"
-                     class="hero-image img-low-res"
-                     id="mainHeroImage"
-                     alt="Asakusa Culture Tourist Information Center"
-                     referrerpolicy="no-referrer">
+                <h1 class="article-title">[Title]</h1>
 
-                <!-- Geo Pin[cite: 2] -->
-                <div class="geo-pin" id="geoPin0" aria-label="View photo location">
-                    <div class="geo-pin-icon">
-                        <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                        </svg>
+                <p class="article-subtitle">[LEADING SUMMARY PARAGRAPH]</p>
+
+                <h2>[HEADER]</h2>
+
+                <!-- Photo with Progressive Loader and Geo Pin -->
+                <div class="hero-image-container slide" id="slide-0">
+                    
+                    <!-- Stage 1 HD Image Request -->
+                    <img src="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/tokyo/senso-ji/1%20-%20arial%20photo-hd.jpg"
+                         class="hero-image img-low-res"
+                         id="mainHeroImage"
+                         alt="Asakusa Culture Tourist Information Center"
+                         referrerpolicy="no-referrer">
+
+                    <!-- Geo Pin -->
+                    <div class="geo-pin" id="geoPin0" aria-label="View photo location">
+                        <div class="geo-pin-icon">
+                            <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Location Pill -->
+                    <div class="location-strip" id="locationStrip0">
+                        <div class="strip-inner">
+                            <span class="strip-dot"></span>
+                            <span class="strip-text">Asakusa Culture Tourist Information Center</span>
+                            <!-- Text Search Fallback used since exact coords weren't supplied -->
+                            <a class="strip-link"
+                               href="https://www.google.com/maps/search/Asakusa+Culture+Tourist+Information+Center"
+                               target="_blank"
+                               rel="noopener noreferrer">Open in Maps ↗</a>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Location Pill[cite: 2] -->
-                <div class="location-strip" id="locationStrip0">
-                    <div class="strip-inner">
-                        <span class="strip-dot"></span>
-                        <span class="strip-text">Asakusa Culture Tourist Information Center</span>
-                        <!-- Text Search Fallback used since exact coords weren't supplied[cite: 2] -->
-                        <a class="strip-link"
-                           href="https://www.google.com/maps/search/Asakusa+Culture+Tourist+Information+Center"
-                           target="_blank"
-                           rel="noopener noreferrer">Open in Maps ↗</a>
-                    </div>
-                </div>
-            </div>
+                <!-- Caption utilizing DM Sans font and Ash color scale -->
+                <p class="card-excerpt" style="font-size: 0.85rem; color: var(--ash); text-align: center; margin-top: -1rem; margin-bottom: 2rem;">
+                    [PHOTO CAPTION]
+                </p>
 
-            <!-- Caption utilizing DM Sans font and Ash color scale[cite: 1] -->
-            <p class="card-excerpt" style="font-size: 0.85rem; color: var(--ash); text-align: center; margin-top: -1rem; margin-bottom: 2rem;">
-                [PHOTO CAPTION]
-            </p>
+                <h3>[SUB-HEADER]</h3>
 
-            <h3>[SUB-HEADER]</h3>
+                <p>[normal paragraph words]</p>
 
-            <p>[normal paragraph words]</p>
+            </article>
 
-        </article>
-
-        <!-- Right Sidebar (Empty for spacing per main.css grid layout) -->
-        <aside class="article-sidebar-right"></aside>
+            <!-- Right Sidebar (10%) -->
+            <aside class="support-column" id="supportCol">
+                <!-- Add your 10% sidebar contents here -->
+            </aside>
+        </div>
     </main>
 
     <script>
         /**
-         * PROGRESSIVE IMAGE LOADER[cite: 3]
+         * PROGRESSIVE IMAGE LOADER
          * Stage 1: HD image loads instantly via HTML, displayed blurry
          * Stage 2: Full-res loads in background, unblurs in when ready
          */
@@ -393,7 +427,7 @@
         }
 
         /**
-         * GEO PIN HOVER LOGIC[cite: 2]
+         * GEO PIN HOVER LOGIC
          * Single Image scope for floating pill styling
          */
         (function() {
@@ -417,6 +451,85 @@
             pin.addEventListener('click', (e) => { e.stopPropagation(); locked = true; showStrip(); clearOverlay(); });
             pin.addEventListener('touchend', (e) => { e.preventDefault(); locked = true; showStrip(); }, { passive: false });
         })();
+
+        // ===== PROPORTIONAL (ASYNC) SCROLL =====
+        const layoutState  = { gridTop: 0, maxScroll: 0, diff: 0, taller: null };
+        const mainState    = { currentY: 0, targetY: 0 };
+        const supportState = { currentY: 0, targetY: 0 };
+
+        const gridEl     = document.getElementById('contentGrid');
+        const mainCol    = document.getElementById('mainCol');
+        const supportCol = document.getElementById('supportCol');
+
+        function calculateLayout() {
+            if (window.innerWidth <= 900) {
+                mainCol.style.transform    = 'none';
+                supportCol.style.transform = 'none';
+                mainState.currentY = 0; mainState.targetY = 0;
+                supportState.currentY = 0; supportState.targetY = 0;
+                return;
+            }
+            const mainH    = mainCol.offsetHeight;
+            const supportH = supportCol.offsetHeight;
+            const rect     = gridEl.getBoundingClientRect();
+            layoutState.gridTop = window.scrollY + rect.top - 100; // Offset calculation
+
+            if (Math.abs(mainH - supportH) < 50) {
+                layoutState.diff = 0; layoutState.taller = 'equal';
+            } else if (mainH > supportH) {
+                layoutState.taller    = 'main';
+                layoutState.diff      = mainH - supportH;
+                layoutState.maxScroll = Math.max(window.innerHeight / 1.5, mainH - window.innerHeight + 100);
+            } else {
+                layoutState.taller    = 'support';
+                layoutState.diff      = supportH - mainH;
+                layoutState.maxScroll = Math.max(window.innerHeight / 1.5, supportH - window.innerHeight + 100);
+            }
+            handleProportionalScroll();
+        }
+
+        function handleProportionalScroll() {
+            if (window.innerWidth <= 900) return;
+            if (layoutState.diff <= 0 || layoutState.maxScroll <= 0) {
+                mainState.targetY = 0; supportState.targetY = 0; return;
+            }
+            let progress = (window.scrollY - layoutState.gridTop) / layoutState.maxScroll;
+            progress = Math.max(0, Math.min(1, progress));
+            const yOffset = progress * layoutState.diff;
+
+            if (layoutState.taller === 'main') {
+                supportState.targetY = yOffset; mainState.targetY = 0;
+            } else if (layoutState.taller === 'support') {
+                mainState.targetY = yOffset; supportState.targetY = 0;
+            } else {
+                mainState.targetY = 0; supportState.targetY = 0;
+            }
+        }
+
+        function renderLoop() {
+            mainState.currentY    += (mainState.targetY     - mainState.currentY)    * 0.08;
+            supportState.currentY += (supportState.targetY - supportState.currentY) * 0.08;
+            if (window.innerWidth > 900) {
+                mainCol.style.transform    = `translate3d(0, ${mainState.currentY}px, 0)`;
+                supportCol.style.transform = `translate3d(0, ${supportState.currentY}px, 0)`;
+            }
+            requestAnimationFrame(renderLoop);
+        }
+
+        requestAnimationFrame(renderLoop);
+        window.addEventListener('scroll', handleProportionalScroll, { passive: true });
+        window.addEventListener('resize', calculateLayout);
+
+        // ResizeObserver ensures grid layout recalcs if elements (like images or embeds) pop in
+        let resizeTimeout;
+        const columnObserver = new ResizeObserver(() => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(calculateLayout, 50);
+        });
+        if (mainCol)    columnObserver.observe(mainCol);
+        if (supportCol) columnObserver.observe(supportCol);
+        window.addEventListener('load', () => setTimeout(calculateLayout, 100));
+
     </script>
     <script src="/components.js"></script>
     <script src="/destinations/japan/japan-components.js"></script>
