@@ -76,7 +76,7 @@
   /* ── Typography ─────────────────────────────────────────── */
   --font-display:   'Bebas Neue', 'Arial Black', 'Impact', sans-serif;
   --font-editorial: 'Playfair Display', Georgia, serif;
-  --font-body:      'DM Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-body:      'Bebas Neue', 'Arial Black', 'Impact', sans-serif; /*'DM Sans', 'Helvetica Neue', Arial, sans-serif;*/
 
   /* ── Spacing (Base-8) ───────────────────────────────────── */
   --space-xs:  4px;
