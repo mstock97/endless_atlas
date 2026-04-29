@@ -1,111 +1,117 @@
 /* ============================================================
-   ENDLESS ATLAS — theme.css  v2.0
-   Design token source of truth. Aligned to Brand Style Guide v1.2.
-
-   THIS FILE: CSS custom properties only.
-   NO layout. NO component rules. NO overrides.
-
-   LOAD ORDER in every <head>:
-     1. Google Fonts (canonical string — see below)
-     2. /theme.css          ← this file
-     3. /main.css           ← layout & shared components
-     4. Page <style> block  ← page-specific only
-
-   CANONICAL FONT IMPORT (copy into every page <head>):
-   <link rel="preconnect" href="https://fonts.googleapis.com">
-   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue
-     &family=Playfair+Display:ital,wght@0,400;0,700;1,400
-     &family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400
-     &display=swap" rel="stylesheet">
+   ENDLESS ATLAS — theme.css
+   All design tokens. This is the single source of truth.
+   No layout or component styles belong here.
    ============================================================ */
 
+/* ============================================
+   FONTS
+   ============================================ */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap');
+
+/* ============================================
+   ROOT TOKENS
+   ============================================ */
 :root {
 
-  /* ── Primary Green Palette ──────────────────────────────── */
-  --forest:    #1E4034;   /* brand anchor · hero BGs, navbars, print */
-  --canopy:    #2D6A4F;   /* buttons, cards, section BGs, active states */
-  --moss:      #52B788;   /* accent · labels, tags, links, highlights */
+  /* --- Typography --- */
+  --font-editorial: 'Playfair Display', Georgia, serif;
+  --font-body:      'DM Sans', 'Noto Sans', Arial, sans-serif;
 
-  /* ── Secondary Warm Neutrals ────────────────────────────── */
-  --stone:     #5C5346;   /* sidebar BGs, bylines, footer text */
-  --driftwood: #A8896A;   /* borders, dividers, captions, badges */
-  --fog:       #C9D4C5;   /* disabled states, overlays, image tints */
+  /* --- Color Palette --- */
 
-  /* ── Black & White Scale ────────────────────────────────── */
-  --ink:       #0F0F0F;   /* headlines, display type, UI labels */
-  --graphite:  #3D3D3D;   /* body text — softer than ink */
-  --ash:       #8C8C8C;   /* captions, metadata, placeholders */
-  --cloud:     #EFEFEF;   /* dividers, table borders */
-  --paper:     #F7F5F0;   /* default page background — warm off-white */
-  --white:     #FFFFFF;   /* card and component surfaces */
+  /* Greens */
+  --forest:         #2D6A4F;
+  --canopy:         #1B4332;
+  --moss:           #52B788;
+  --sage:           #95D5B2;
 
-  /* ── Warm Rule (section separators) ────────────────────── */
-  --warm-rule: #EAE6DB;
+  /* Neutrals */
+  --ink:            #1A1A2E;
+  --graphite:       #5C5C7A;
+  --warm-rule:      #E8E4DF;
+  --paper:          #F7F5F0;
+  --white:          #FFFFFF;
 
-  /* ── Forest Tints (on white) ────────────────────────────── */
-  --forest-04: #F8FAF9;
-  --forest-08: #F1F4F3;
-  --forest-12: #EAEEED;
-  --forest-20: #DCDEDD;
-  --forest-40: #AFBCBA;
+  /* Accents */
+  --driftwood:      #C4956A;
+  --sand:           #E9D8C4;
+  --terracotta:     #C4654A;
 
-  /* ── Canopy Tints ───────────────────────────────────────── */
-  --canopy-08: #EEF3F1;
-  --canopy-20: #D5E1DD;
+  /* Tinted surfaces */
+  --forest-08:      rgba(45, 106, 79, 0.08);
+  --forest-15:      rgba(45, 106, 79, 0.15);
+  --moss-20:        rgba(82, 183, 136, 0.20);
+  --ink-60:         rgba(26, 26, 46, 0.60);
+  --white-10:       rgba(255, 255, 255, 0.10);
+  --white-15:       rgba(255, 255, 255, 0.15);
+  --white-60:       rgba(255, 255, 255, 0.60);
+  --white-70:       rgba(255, 255, 255, 0.70);
 
-  /* ── Moss Tints ─────────────────────────────────────────── */
-  --moss-12:   #E9F4EE;
-  --moss-20:   #DCEEE4;
+  /* --- Spacing Scale --- */
+  --space-1:   0.25rem;   /*  4px */
+  --space-2:   0.5rem;    /*  8px */
+  --space-3:   0.75rem;   /* 12px */
+  --space-4:   1rem;      /* 16px */
+  --space-5:   1.25rem;   /* 20px */
+  --space-6:   1.5rem;    /* 24px */
+  --space-8:   2rem;      /* 32px */
+  --space-10:  2.5rem;    /* 40px */
+  --space-12:  3rem;      /* 48px */
+  --space-16:  4rem;      /* 64px */
+  --space-20:  5rem;      /* 80px */
+  --space-24:  6rem;      /* 96px */
 
-  /* ── Ink Tints ──────────────────────────────────────────── */
-  --ink-08:    #EBEBEB;
-  --ink-12:    #E3E3E3;
-  --ink-20:    #D3D3D3;
+  /* --- Border Radius --- */
+  --radius-xs:  4px;
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  20px;
+  --radius-xl:  32px;
+  --radius-full: 9999px;
 
-  /* ── Alert System ───────────────────────────────────────── */
-  --alert-okay:         #34C759;
-  --alert-caution:      #FFD60A;
-  --alert-warning:      #FF9500;
-  --alert-critical:     #FF3B30;
-  --alert-okay-bg:      #EEF9F2;
-  --alert-caution-bg:   #FFFAE6;
-  --alert-warning-bg:   #FFF1DF;
-  --alert-critical-bg:  #FFF0EF;
+  /* --- Shadows --- */
+  --shadow-soft:  0 2px 16px rgba(26, 26, 46, 0.08);
+  --shadow-hover: 0 8px 32px rgba(26, 26, 46, 0.14);
+  --shadow-card:  0 4px 24px rgba(26, 26, 46, 0.10);
+  --shadow-modal: 0 24px 64px rgba(26, 26, 46, 0.20);
 
-  /* ── Typography ─────────────────────────────────────────── */
-  --font-display:   'Bebas Neue', 'Arial Black', 'Impact', sans-serif;
-  --font-editorial: 'Bebas Neue', 'Arial Black', 'Impact', sans-serif; /*'Playfair Display', Georgia, serif;*/
-  --font-body:      'Bebas Neue', 'Arial Black', 'Impact', sans-serif; /*'DM Sans', 'Helvetica Neue', Arial, sans-serif;*/
+  /* --- Transitions --- */
+  --transition:       0.22s ease;
+  --transition-slow:  0.4s ease;
+  --transition-spring: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  /* ── Spacing (Base-8) ───────────────────────────────────── */
-  --space-xs:  4px;
-  --space-sm:  8px;
-  --space-md:  16px;
-  --space-lg:  24px;
-  --space-xl:  40px;
-  --space-2xl: 64px;
-  --space-3xl: 100px;
+  /* --- Z-index Scale --- */
+  --z-base:    1;
+  --z-raised:  10;
+  --z-nav:     300;
+  --z-dropdown: 400;
+  --z-modal:   500;
+  --z-toast:   600;
 
-  /* ── Border Radius ──────────────────────────────────────── */
-  --radius-sm:   6px;
-  --radius-md:   12px;
-  --radius-lg:   20px;
-  --radius-pill: 100px;
+  /* --- Type Scale --- */
+  --text-xs:   0.72rem;
+  --text-sm:   0.8rem;
+  --text-base: 0.9rem;
+  --text-md:   1rem;
+  --text-lg:   1.1rem;
+  --text-xl:   1.2rem;
+  --text-2xl:  1.6rem;
+  --text-3xl:  2rem;
+  --text-4xl:  2.5rem;
+  --text-5xl:  3rem;
 
-  /* ── Elevation ──────────────────────────────────────────── */
-  --shadow-xs:   0 1px 4px rgba(15, 15, 15, 0.07);
-  --shadow-soft: 0 4px 24px rgba(15, 15, 15, 0.08);
-  --shadow-card: 0 8px 40px rgba(15, 15, 15, 0.11);
-  --shadow-hover:0 16px 48px rgba(15, 15, 15, 0.16);
+  /* --- Line Heights --- */
+  --leading-tight:  1.2;
+  --leading-snug:   1.35;
+  --leading-normal: 1.6;
+  --leading-relaxed: 1.75;
+  --leading-prose:  1.85;
 
-  /* ── Transitions ────────────────────────────────────────── */
-  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition:      0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 0.4s  cubic-bezier(0.4, 0, 0.2, 1);
-
-  /* ── Layout ─────────────────────────────────────────────── */
-  --content-max:  1400px;
-  --content-wide: 1280px;
-  --nav-height:   70px;
+  /* --- Font Weights --- */
+  --weight-light:   300;
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semi:    600;
+  --weight-bold:    700;
 }
