@@ -69,7 +69,7 @@ function renderHeader() {
   }).join('');
 
   const qaBanner = SITE_CONFIG.isQA
-    ? `<div class="qa-banner">⚠ QA ENVIRONMENT — Changes here are not live</div>`
+    ? `<div class="qa-banner">⚠ QA ENVIRONMENT — not live</div>`
     : '';
 
   return `

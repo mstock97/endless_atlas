@@ -3,9 +3,10 @@
 <head> 
     <base target="_top">
     <meta charset="UTF-8">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/theme.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Endless Atlas - Static Navigation Map</title>
     
@@ -16,7 +17,13 @@
     
     <style>
         /* --- Brand Variables --- */
-        
+        :root {
+            --forest: #1E4034;
+            --canopy: #2D6A4F;
+            --moss: #52B788;
+            --paper: #F7F5F0;
+            --ink: #0F0F0F;
+        }
 
         /* --- Base Structure --- */
         body {
@@ -92,7 +99,6 @@
         .marker-link:hover .pos-top { margin-bottom: 12px; background-color: var(--paper); box-shadow: 0 4px 10px rgba(30, 64, 52, 0.3); }
         .marker-link:hover .pos-bottom { margin-top: 12px; background-color: var(--paper); box-shadow: 0 4px 10px rgba(30, 64, 52, 0.3); }
     </style>
-    <link rel="stylesheet" href="../../theme.css">
 </head>
 <body>
 

@@ -3,9 +3,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/theme.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>National Holiday Lookup</title>
 
@@ -34,7 +35,28 @@
 
 <style>
 /* ── tokens ── */
+:root {
+  --forest:    #1E4034;
+  --canopy:    #2D6A4F;
+  --moss:      #52B788;
+  --driftwood: #A8896A;
+  --fog:       #C9D4C5;
+  --ink:       #0F0F0F;
+  --graphite:  #3D3D3D;
+  --ash:       #8C8C8C;
+  --cloud:     #EFEFEF;
+  --paper:     #F7F5F0;
+  --white:     #FFFFFF;
+  --forest-06: #F4F7F6;
+  --forest-10: #ECF0EF;
+  --moss-15:   #E2F2EB;
+  --drift-15:  #F3EBE2;
 
+  --f-display:  'Bebas Neue','Arial Black','Impact',sans-serif;
+  --f-body:     'DM Sans','Helvetica Neue',Arial,sans-serif;
+}
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { -webkit-text-size-adjust: 100%; }
 
 body {
@@ -505,7 +527,6 @@ body {
 .month-card.collapsed { display: none; }
 </style>
 
-    <link rel="stylesheet" href="../../theme.css">
 </head>
 <body>
 
