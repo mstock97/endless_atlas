@@ -1,118 +1,167 @@
-<h1 class="article-title">ARTICLE TITLE</h1>
+<!--
+  senso-ji_content.html
+  Injected into #mainCol on /destinations/japan/tokyo/senso-ji.html via fetch().
+  All styling uses tokens and classes from the site's CSS system.
+  No inline styles. No <html>, <head>, or <body> tags.
 
+  CLASS REFERENCE (all defined in components.css / layout.css):
+    .article-title          — Playfair Display, large editorial heading
+    .article-subtitle       — Graphite, 1.15rem intro line
+    .article-intro          — Left-accented opening paragraph block
+    .article-image-container — Constrained image wrapper with geo-pin support
+    .hero-image             — The photo itself (progressive load target)
+    .img-low-res / .img-loaded — Progressive loader states
+    .geo-pin                — Translucent map pin icon, bottom-left of image
+    .location-strip--pill   — Compact floating pill, reveals on pin hover/tap
+    .photo-caption          — Small italic caption below image
+    .prose                  — Rich text container: styles h2, h3, p, ul, li, blockquote
+    .fx-convert-jpy         — Inline currency span, populated by the FX script below
+-->
+
+<!-- ============================================
+     ARTICLE HEADER
+============================================ -->
+<h1 class="article-title">ARTICLE TITLE</h1>
 <p class="article-subtitle">ARTICLE SUBTITLE</p>
 
-<h2>INTRO PARAGRAPH</h2>
 
-<!-- Photo with Progressive Loader and Geo Pin -->
-<div class="hero-image-container slide" id="slide-0">
-    
-    <!-- Stage 1 HD Image Request -->
-    <img src="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/tokyo/senso-ji/1%20-%20arial%20photo-hd.jpg"
-         class="hero-image img-low-res"
-         id="mainHeroImage"
-         alt="Asakusa Culture Tourist Information Center"
-         referrerpolicy="no-referrer">
+<!-- ============================================
+     INTRO PARAGRAPH
+     Uses .article-intro for the left-moss-accent
+     treatment that distinguishes the opener from
+     body prose.
+============================================ -->
+<p class="article-intro">INTRO PARAGRAPH</p>
 
-    <!-- Geo Pin -->
-    <div class="geo-pin" id="geoPin0" aria-label="View photo location">
-        <div class="geo-pin-icon">
-            <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-            </svg>
-        </div>
+
+<!-- ============================================
+     HERO IMAGE
+     .article-image-container constrains width and
+     sets up the positioning context for the pin.
+     .location-strip--pill is the compact floating
+     pill variant used for inline article images
+     (distinct from the full-width strip on hero pages).
+============================================ -->
+<div class="article-image-container" id="slide-0">
+
+  <!-- Stage 1: HD placeholder loads instantly, displayed blurry -->
+  <img src="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/tokyo/senso-ji/1%20-%20arial%20photo-hd.jpg"
+       class="hero-image img-low-res"
+       id="mainHeroImage"
+       alt="Aerial view of Senso-ji Temple complex, Asakusa, Tokyo"
+       referrerpolicy="no-referrer">
+
+  <!-- Geo Pin -->
+  <div class="geo-pin" id="geoPin0" aria-label="View photo location">
+    <div class="geo-pin-icon">
+      <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+      </svg>
     </div>
+  </div>
 
-    <!-- Location Pill -->
-    <div class="location-strip" id="locationStrip0">
-        <div class="strip-inner">
-            <span class="strip-dot"></span>
-            <span class="strip-text">Asakusa Culture Tourist Information Center</span>
-            <!-- Text Search Fallback used since exact coords weren't supplied -->
-            <a class="strip-link"
-               href="https://www.google.com/maps/search/Asakusa+Culture+Tourist+Information+Center"
-               target="_blank"
-               rel="noopener noreferrer">Open in Maps ↗</a>
-        </div>
+  <!-- Location Pill — pill variant for inline article images -->
+  <div class="location-strip--pill" id="locationStrip0">
+    <div class="strip-inner">
+      <span class="strip-dot" aria-hidden="true"></span>
+      <span class="strip-text">Asakusa Culture Tourist Information Center</span>
+      <a class="strip-link"
+         href="https://www.google.com/maps/search/Asakusa+Culture+Tourist+Information+Center"
+         target="_blank"
+         rel="noopener noreferrer">Open in Maps ↗</a>
     </div>
+  </div>
+
 </div>
 
-<!-- Caption utilizing DM Sans font and Ash color scale -->
-<p class="card-excerpt" style="font-size: 0.85rem; color: var(--ash); text-align: center; margin-top: -1rem; margin-bottom: 2rem;">
-PHOTO CAPTION</p>
+<!-- Photo caption -->
+<p class="photo-caption">PHOTO CAPTION</p>
 
-<h3>SUBHEADER</h3>
 
-<p>PARAGRAPH OF NORMAL TEXT</p>
+<!-- ============================================
+     ARTICLE BODY
+     Wrapped in .prose — this single class applies
+     all rich-text styles: h2, h3, p, ul/li,
+     blockquote, info-box, and links.
+     No inline styles needed inside here.
+============================================ -->
+<div class="prose">
 
-<h3>SUBHEADER</h3>
-<p>PARAGRAPH OF NORMAL TEXT</p>
+  <h3>SUBHEADER</h3>
+  <p>PARAGRAPH OF NORMAL TEXT</p>
 
-<h3>SUBHEADER</h3>
-<p>PARAGRAPH OF NORMAL TEXT</p>
+  <h3>SUBHEADER</h3>
+  <p>PARAGRAPH OF NORMAL TEXT</p>
 
-<h3>SUBHEADER</h3>
-<p>NORMAL TEXT<ul style="padding-left: 60px;">
+  <h3>SUBHEADER</h3>
+  <p>PARAGRAPH OF NORMAL TEXT</p>
+
+  <h3>SUBHEADER</h3>
+  <p>NORMAL TEXT</p>
+  <ul>
     <li>Deposit <span class="fx-convert-jpy" data-jpy="100"></span> into the labeled slot</li>
     <li>Shake the long metal box until a numbered stick falls out</li>
     <li>Match the number on the stick to the corresponding drawer (then return the stick to the metal box)</li>
-    <li>Open the drawer and pull the top fortune paper out – this is your fortune!</li>
-</ul>
-</p>
-<p>NORMAL PARAGRAPH</p>
+    <li>Open the drawer and pull the top fortune paper out — this is your fortune!</li>
+  </ul>
+  <p>NORMAL PARAGRAPH</p>
 
-<h3>SUBHEADER</h3>
-<p>NORMAL PARAGRAPH OF TEXT</p>
+  <h3>SUBHEADER</h3>
+  <p>NORMAL PARAGRAPH OF TEXT</p>
+
+</div>
 
 
+<!-- ============================================
+     FX CONVERSION SCRIPT
+     Fetches live USD/JPY rate and populates all
+     .fx-convert-jpy[data-jpy="N"] spans on the
+     page with the converted value.
+     Runs on DOMContentLoaded which fires after
+     this fragment is injected into the DOM.
+============================================ -->
 <script>
-    // A globally accessible variable storing the value of 1 JPY in USD.
-    let globalJpyToUsdRate = 0;
+(function() {
+  function updateFX() {
+    fetch('https://api.frankfurter.dev/v2/rates?quotes=USD,JPY')
+      .then(res => res.json())
+      .then(data => {
+        // frankfurter v2 returns an array of { quote, rate } objects
+        let usd, jpy;
+        if (Array.isArray(data)) {
+          data.forEach(item => {
+            if (item.quote === 'USD') usd = item.rate;
+            if (item.quote === 'JPY') jpy = item.rate;
+          });
+        } else if (data.rates) {
+          // Fallback for any v1-style response
+          usd = data.rates.USD;
+          jpy = data.rates.JPY;
+        }
 
-    function updateHeaderFX() {
-        fetch('https://api.frankfurter.dev/v2/rates?quotes=USD,JPY')
-            .then(res => res.json())
-            .then(data => {
-                // Accessing the rates object from the API response
-                const usd = data.rates.USD;
-                const jpy = data.rates.JPY;
+        if (!usd || !jpy) return;
 
-                if (usd && jpy) {
-                    // 1. Calculate the standard 1 USD to JPY rate for your header
-                    const usdToJpy = (jpy / usd).toFixed(2);
-                    const headerEl = document.getElementById('live-fx-rate');
-                    if (headerEl) {
-                        headerEl.textContent = `· 1 USD = ${usdToJpy} JPY`;
-                    }
+        const oneJpyToUsd = usd / jpy;
 
-                    // 2. Get the single number for how much 1 JPY is in USD
-                    const oneJpyToUsd = usd / jpy;
-                    globalJpyToUsdRate = oneJpyToUsd;
-                    
-                    // 3. Find ALL elements on the page with the class 'fx-convert-jpy'
-                    const conversionElements = document.querySelectorAll('.fx-convert-jpy');
-                    
-                    // 4. Loop through each element, read its amount, and update it
-                    conversionElements.forEach(el => {
-                        // Extract the amount from the data-jpy attribute and turn it into a number
-                        const jpyAmount = parseFloat(el.getAttribute('data-jpy'));
-                        
-                        // Make sure it's a valid number before doing the math
-                        if (!isNaN(jpyAmount)) {
-                            // Multiply by our single rate
-                            const convertedUsd = (jpyAmount * oneJpyToUsd).toFixed(2);
-                            
-                            // Update the text in the HTML for this specific element
-                            el.textContent = `¥${jpyAmount} (${convertedUsd} USD)`;
-                        }
-                    });
+        // Update all currency spans in this article
+        document.querySelectorAll('.fx-convert-jpy').forEach(el => {
+          const jpyAmount = parseFloat(el.getAttribute('data-jpy'));
+          if (!isNaN(jpyAmount)) {
+            const convertedUsd = (jpyAmount * oneJpyToUsd).toFixed(2);
+            el.textContent = `¥${jpyAmount} (~$${convertedUsd} USD)`;
+          }
+        });
 
-                    if (typeof calculateLayout === "function") {
-                        setTimeout(calculateLayout, 50);
-                    }
-                }
-            })
-            .catch(err => console.error("FX update failed:", err));
-    }
-document.addEventListener("DOMContentLoaded", updateHeaderFX);
+        // Trigger layout recalc if the proportional scroll engine is running
+        if (typeof calculateLayout === 'function') {
+          setTimeout(calculateLayout, 50);
+        }
+      })
+      .catch(err => console.warn('FX update failed:', err));
+  }
+
+  // Run immediately — this script executes after the fragment is injected,
+  // so the DOM elements already exist at this point.
+  updateFX();
+})();
 </script>

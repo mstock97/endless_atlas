@@ -1231,6 +1231,44 @@ h2.dest-section-title:first-child,
 .dest-count { font-size: var(--text-sm); color: var(--white-60); }
 
 
+
+/* ============================================
+   ARTICLE CONTENT UTILITIES
+   Classes used inside injected article content
+   (senso-ji_content.html and similar pages).
+   ============================================ */
+
+/* Photo caption — sits below an .article-image-container */
+.photo-caption {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--ash);
+  text-align: center;
+  margin-top: -0.75rem;
+  margin-bottom: var(--space-8);
+  line-height: var(--leading-relaxed);
+  font-style: italic;
+}
+
+/* Intro paragraph — slightly larger, left-accented */
+.article-intro {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  line-height: var(--leading-relaxed);
+  color: var(--graphite);
+  margin-bottom: var(--space-8);
+  border-left: 3px solid var(--moss);
+  padding-left: var(--space-5);
+}
+
+/* Inline live FX conversion spans */
+.fx-convert-jpy {
+  font-weight: var(--weight-medium);
+  color: var(--forest);
+  white-space: nowrap;
+}
+
+
 /* ============================================
    ARTICLE PAGE SIDEBAR WIDGETS
    ============================================ */
