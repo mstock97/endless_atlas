@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Senso-Ji Guide | Endless Atlas</title>
+  <meta name="description" content="A complete guide to Senso-ji Temple in Asakusa, Tokyo — Japan's oldest and most visited temple.">
+  <link rel="canonical" href="https://endless-atlas.com/destinations/japan/tokyo/senso-ji">
+
+  <!--
+    CSS LOAD ORDER
+    1. theme.css      — design tokens
+    2. typography.css — heading scale, prose styles
+    3. layout.css     — reset, containers, section utilities
+    4. components.css — all UI components
+    5. navigation.css — header, nav, mobile menu
+    6. footer.css     — footer layout
+    7. animations.css — keyframes, scroll reveal
+  -->
+  <link rel="stylesheet" href="/theme.css">
+  <link rel="stylesheet" href="/typography.css">
+  <link rel="stylesheet" href="/layout.css">
+  <link rel="stylesheet" href="/components.css">
+  <link rel="stylesheet" href="/navigation.css">
+  <link rel="stylesheet" href="/footer.css">
+  <link rel="stylesheet" href="/animations.css">
+</head>
+<body>
+
+  <div id="site-header"></div>
+  <div id="japan-sub-header"></div>
+
+  <main class="dest-main">
+    <div class="content-grid content-grid--wide" id="contentGrid">
+
+      <!-- Main article content (90%) — injected via fetch -->
+      <article class="main-column" id="mainCol">
+        <!-- Content loaded dynamically -->
+      </article>
+
+      <!-- Sidebar (10%) -->
+      <aside class="support-column" id="supportCol">
+        <!-- Widgets populated as content grows -->
+      </aside>
+
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script>
+    // ===== FETCH ARTICLE CONTENT =====
+    fetch('/support/japan/tokyo/senso-ji_content.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('mainCol').innerHTML = data;
+        initInjectedScripts();
+        setTimeout(calculateLayout, 100);
+      })
+      .catch(error => console.error('Error loading article content:', error));
+
+    // ===== SCRIPTS THAT DEPEND ON FETCHED CONTENT =====
+    function initInjectedScripts() {
+      const heroImg = document.getElementById('mainHeroImage');
+      if (heroImg) {
+        const fullUrl = "https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/tokyo/senso-ji/1%20-%20arial%20photo.jpg";
+
+        function revealFull() {
+          heroImg.src = fullUrl;
+          setTimeout(() => {
+            heroImg.classList.remove('img-low-res');
+            heroImg.classList.add('img-loaded');
+          }, 50);
+        }
+
+        const fullLoader = new Image();
+        fullLoader.referrerPolicy = 'no-referrer';
+        fullLoader.src = fullUrl;
+        if (fullLoader.complete) { revealFull(); } else { fullLoader.onload = revealFull; }
+      }
+
+      // Geo pin for inline article image (pill variant)
+      const pin   = document.getElementById('geoPin0');
+      const strip = document.getElementById('locationStrip0');
+
+      if (pin && strip) {
+        let locked  = false;
+        const isMobile = () => window.matchMedia('(hover: none)').matches;
+
+        function showStrip() { strip.classList.add('visible'); pin.classList.add('active'); }
+        function hideStrip() { if (locked) return; strip.classList.remove('visible'); pin.classList.remove('active'); }
+
+        pin.addEventListener('mouseenter', () => { if (!isMobile()) showStrip(); });
+        pin.addEventListener('mouseleave', () => { if (!isMobile()) hideStrip(); });
+        pin.addEventListener('click',    (e) => { e.stopPropagation(); locked = true; showStrip(); });
+        pin.addEventListener('touchend', (e) => { e.preventDefault(); locked = true; showStrip(); }, { passive: false });
+      }
+    }
+
+    // ===== PROPORTIONAL SCROLL =====
+    const layoutState  = { gridTop: 0, maxScroll: 0, diff: 0, taller: null };
+    const mainState    = { currentY: 0, targetY: 0 };
+    const supportState = { currentY: 0, targetY: 0 };
+
+    const gridEl     = document.getElementById('contentGrid');
+    const mainCol    = document.getElementById('mainCol');
+    const supportCol = document.getElementById('supportCol');
+
+    function calculateLayout() {
+      if (window.innerWidth <= 900) {
+        mainCol.style.transform    = 'none';
+        supportCol.style.transform = 'none';
+        mainState.currentY = 0; mainState.targetY = 0;
+        supportState.currentY = 0; supportState.targetY = 0;
+        return;
+      }
+      const mainH    = mainCol.offsetHeight;
+      const supportH = supportCol.offsetHeight;
+      const rect     = gridEl.getBoundingClientRect();
+      layoutState.gridTop = window.scrollY + rect.top - 100;
+
+      if (Math.abs(mainH - supportH) < 50) {
+        layoutState.diff = 0; layoutState.taller = 'equal';
+      } else if (mainH > supportH) {
+        layoutState.taller    = 'main';
+        layoutState.diff      = mainH - supportH;
+        layoutState.maxScroll = Math.max(window.innerHeight / 1.5, mainH - window.innerHeight + 100);
+      } else {
+        layoutState.taller    = 'support';
+        layoutState.diff      = supportH - mainH;
+        layoutState.maxScroll = Math.max(window.innerHeight / 1.5, supportH - window.innerHeight + 100);
+      }
+      handleProportionalScroll();
+    }
+
+    function handleProportionalScroll() {
+      if (window.innerWidth <= 900) return;
+      if (layoutState.diff <= 0 || layoutState.maxScroll <= 0) {
+        mainState.targetY = 0; supportState.targetY = 0; return;
+      }
+      let progress = (window.scrollY - layoutState.gridTop) / layoutState.maxScroll;
+      progress = Math.max(0, Math.min(1, progress));
+      const yOffset = progress * layoutState.diff;
+
+      if (layoutState.taller === 'main') {
+        supportState.targetY = yOffset; mainState.targetY = 0;
+      } else if (layoutState.taller === 'support') {
+        mainState.targetY = yOffset; supportState.targetY = 0;
+      } else {
+        mainState.targetY = 0; supportState.targetY = 0;
+      }
+    }
+
+    function renderLoop() {
+      mainState.currentY    += (mainState.targetY    - mainState.currentY)    * 0.08;
+      supportState.currentY += (supportState.targetY - supportState.currentY) * 0.08;
+      if (window.innerWidth > 900) {
+        mainCol.style.transform    = `translate3d(0, ${mainState.currentY}px, 0)`;
+        supportCol.style.transform = `translate3d(0, ${supportState.currentY}px, 0)`;
+      }
+      requestAnimationFrame(renderLoop);
+    }
+
+    requestAnimationFrame(renderLoop);
+    window.addEventListener('scroll', handleProportionalScroll, { passive: true });
+    window.addEventListener('resize', calculateLayout);
+
+    let resizeTimeout;
+    const columnObserver = new ResizeObserver(() => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(calculateLayout, 50);
+    });
+    if (mainCol)    columnObserver.observe(mainCol);
+    if (supportCol) columnObserver.observe(supportCol);
+    window.addEventListener('load', () => setTimeout(calculateLayout, 100));
+  </script>
+
+  <script src="/components.js"></script>
+  <script src="/destinations/japan/japan-components.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/theme.css">
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>USD/JPY FX Converter</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+    function sendHeight() {
+        const wrapper = document.getElementById('fx_converter');
+        if (wrapper) {
+            const trueHeight = wrapper.offsetHeight + 32;
+            window.parent.postMessage({ height: trueHeight }, '*'); 
+        }
+    }
+
+    const observer = new ResizeObserver(() => {
+        sendHeight();
+    });
+
+    window.onload = () => {
+        const wrapper = document.getElementById('fx_converter');
+        if (wrapper) {
+            observer.observe(wrapper);
+        }
+        setTimeout(sendHeight, 100);
+    };
+
+    document.addEventListener('click', () => {
+        setTimeout(sendHeight, 50);
+        setTimeout(sendHeight, 350); 
+    });
+</script>
+</head>
+<body style="margin:0;padding:16px;background:#F7F5F0">
+<div id="fx_converter" style="font-family:'DM Sans',sans-serif;font-size:13px;color:#3D3D3D;line-height:1.4;max-width:900px">
+<style>
+#fx_converter *{box-sizing:border-box;margin:0;padding:0}
+#fx_converter .card{background:#fff;border:1px solid #EFEFEF;border-radius:4px 4px 0 0;border-bottom:none;padding:12px;}
+#fx_converter .inputs{display:grid;grid-template-columns:1fr 36px 1fr 1fr;gap:8px;align-items:end;}
+@media(max-width:540px){
+  #fx_converter .inputs{grid-template-columns:1fr 36px 1fr;grid-template-rows:auto auto;gap:8px;}
+  #fx_converter .rcell{grid-column:1/-1;display:flex;flex-direction:column;align-items:flex-start;padding:10px 12px;margin:0 -12px -12px;background:#1E4034;border-radius:0 0 4px 4px;gap:2px;}
+  #fx_converter .rcell-left{display:none} #fx_converter .rcell-right{width:100%}
+  #fx_converter .rval{color:#fff!important;font-size:2rem;font-family:'Bebas Neue',Georgia,serif;letter-spacing:.04em;line-height:1}
+  #fx_converter .rmeta{color:#C9D4C5!important;font-size:11px;white-space:normal;line-height:1.4;margin-top:2px}
+  #fx_converter .fxlbl-result{display:block!important;color:rgba(201,212,197,0.7);font-size:9px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:2px}
+}
+#fx_converter .fxg{display:flex;flex-direction:column;gap:4px;min-width:0}
+#fx_converter .fxlbl{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:#8C8C8C;font-weight:500}
+#fx_converter .fxlbl-result{display:none}
+#fx_converter .fxsel{background:#F7F5F0;border:1.5px solid #EFEFEF;border-radius:3px;padding:8px 28px 8px 10px;font-family:inherit;font-size:0.85rem;color:#0F0F0F;appearance:none;cursor:pointer;width:100%;transition:border-color .15s;min-height:38px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'%3E%3Cpath d='M1 1l3 3 3-3' stroke='%238C8C8C' stroke-width='1.2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;}
+#fx_converter .fxsel:focus{outline:none;border-color:#2D6A4F}
+#fx_converter .fxamt{background:#F7F5F0;border:1.5px solid #EFEFEF;border-radius:3px;padding:7px 10px;font-family:'Bebas Neue','DM Sans',sans-serif;font-size:1.3rem;letter-spacing:.03em;color:#0F0F0F;width:100%;transition:border-color .15s;min-height:38px;}
+#fx_converter .fxamt:focus{outline:none;border-color:#2D6A4F}
+#fx_converter .fxamt::placeholder{color:#ccc}
+#fx_converter input[type=number]::-webkit-inner-spin-button,#fx_converter input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
+#fx_converter .swapcol{display:flex;align-items:flex-end;justify-content:center;padding-bottom:1px}
+#fx_converter .swapbtn{background:#1E4034;color:#fff;border:none;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,transform .3s;min-width:36px;}
+#fx_converter .swapbtn:hover,#fx_converter .swapbtn:active{background:#2D6A4F;transform:rotate(180deg)}
+#fx_converter .swapbtn svg{width:14px;height:14px}
+#fx_converter .rcell{display:flex;flex-direction:column;justify-content:flex-end;gap:2px;min-width:0}
+#fx_converter .rval{font-family:'Bebas Neue','DM Sans',sans-serif;font-size:1.6rem;color:#1E4034;line-height:1;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#fx_converter .rmeta{font-size:10px;color:#8C8C8C;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#fx_converter .rcell-left{display:none}
+#fx_converter .row2{background:#fff;border:1px solid #EFEFEF;border-radius:0 0 4px 4px}
+#fx_converter .ctoggle{display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 12px;background:none;border:none;border-top:1px solid #EFEFEF;cursor:pointer;font-family:inherit;font-size:10px;color:#8C8C8C;letter-spacing:.1em;text-transform:uppercase;transition:background .15s;min-height:40px;}
+#fx_converter .ctoggle:hover,#fx_converter .ctoggle:active{background:#F7F5F0}
+#fx_converter .ctgl{display:flex;align-items:center;gap:6px}
+#fx_converter .chev{transition:transform .25s;display:flex;align-items:center}
+#fx_converter .cbody{display:none;padding:10px 12px 12px}
+#fx_converter .chead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+#fx_converter .ctitle{font-size:10px;font-weight:500;color:#3D3D3D;letter-spacing:.02em}
+#fx_converter .pbtns{display:flex;gap:4px;flex-wrap:wrap}
+#fx_converter .fx-pbtn{font-size:10px;letter-spacing:.04em;text-transform:uppercase;padding:5px 10px;min-height:30px;border:1px solid #EFEFEF;border-radius:3px;background:transparent;color:#8C8C8C;cursor:pointer;transition:all .15s;font-family:inherit;}
+#fx_converter .fx-pbtn:hover,#fx_converter .fx-pbtn:active,#fx_converter .fx-pbtn.on{border-color:#2D6A4F;color:#2D6A4F;background:#EEF3F1}
+#fx_converter .fx-pbtn:disabled{opacity:0.4;cursor:default;border-color:#EFEFEF;color:#8C8C8C;background:transparent;}
+#fx_converter .cnodata{padding:20px 0;text-align:center;font-size:12px;color:#8C8C8C;font-style:italic;line-height:1.6}
+#fx_converter .chart-wrap{position:relative;height:160px;width:100%}
+@media(max-width:540px){#fx_converter .chart-wrap{height:200px}}
+#fx_converter canvas{position:absolute;top:0;left:0;width:100%!important;height:100%!important;display:block}
+#fx_converter .gen-date{font-size:9px;color:#C9D4C5;text-align:right;padding:4px 12px 6px}
+#fx_converter .loading-pulse{animation:fxpulse 1.4s ease-in-out infinite}
+@keyframes fxpulse{0%,100%{opacity:1}50%{opacity:0.4}}
+</style>
+
+<div class="card">
+  <div class="inputs">
+    <div class="fxg">
+      <div class="fxlbl">From</div>
+      <select class="fxsel" id="fx_converter_from" onchange="fx_converter_go()">
+<option value="AED">AED — UAE Dirham</option>
+<option value="AFN">AFN — Afghan Afghani</option>
+<option value="ALL">ALL — Albanian Lek</option>
+<option value="AMD">AMD — Armenian Dram</option>
+<option value="ANG">ANG — Netherlands Antillean Guilder</option>
+<option value="AOA">AOA — Angolan Kwanza</option>
+<option value="ARS">ARS — Argentine Peso</option>
+<option value="AUD">AUD — Australian Dollar</option>
+<option value="AWG">AWG — Aruban Florin</option>
+<option value="AZN">AZN — Azerbaijani Manat</option>
+<option value="BAM">BAM — Bosnia-Herzegovina Mark</option>
+<option value="BBD">BBD — Barbadian Dollar</option>
+<option value="BDT">BDT — Bangladeshi Taka</option>
+<option value="BGN">BGN — Bulgarian Lev</option>
+<option value="BHD">BHD — Bahraini Dinar</option>
+<option value="BIF">BIF — Burundian Franc</option>
+<option value="BMD">BMD — Bermudian Dollar</option>
+<option value="BND">BND — Brunei Dollar</option>
+<option value="BOB">BOB — Bolivian Boliviano</option>
+<option value="BRL">BRL — Brazilian Real</option>
+<option value="BSD">BSD — Bahamian Dollar</option>
+<option value="BTN">BTN — Bhutanese Ngultrum</option>
+<option value="BWP">BWP — Botswanan Pula</option>
+<option value="BYN">BYN — Belarusian Ruble</option>
+<option value="BZD">BZD — Belize Dollar</option>
+<option value="CAD">CAD — Canadian Dollar</option>
+<option value="CDF">CDF — Congolese Franc</option>
+<option value="CHF">CHF — Swiss Franc</option>
+<option value="CLP">CLP — Chilean Peso</option>
+<option value="CNY">CNY — Chinese Yuan</option>
+<option value="COP">COP — Colombian Peso</option>
+<option value="CRC">CRC — Costa Rican Colon</option>
+<option value="CUP">CUP — Cuban Peso</option>
+<option value="CVE">CVE — Cape Verdean Escudo</option>
+<option value="CZK">CZK — Czech Koruna</option>
+<option value="DJF">DJF — Djiboutian Franc</option>
+<option value="DKK">DKK — Danish Krone</option>
+<option value="DOP">DOP — Dominican Peso</option>
+<option value="DZD">DZD — Algerian Dinar</option>
+<option value="EGP">EGP — Egyptian Pound</option>
+<option value="ERN">ERN — Eritrean Nakfa</option>
+<option value="ETB">ETB — Ethiopian Birr</option>
+<option value="EUR">EUR — Euro</option>
+<option value="FJD">FJD — Fijian Dollar</option>
+<option value="FKP">FKP — Falkland Islands Pound</option>
+<option value="GBP">GBP — British Pound</option>
+<option value="GEL">GEL — Georgian Lari</option>
+<option value="GHS">GHS — Ghanaian Cedi</option>
+<option value="GIP">GIP — Gibraltar Pound</option>
+<option value="GMD">GMD — Gambian Dalasi</option>
+<option value="GNF">GNF — Guinean Franc</option>
+<option value="GTQ">GTQ — Guatemalan Quetzal</option>
+<option value="GYD">GYD — Guyanaese Dollar</option>
+<option value="HKD">HKD — Hong Kong Dollar</option>
+<option value="HNL">HNL — Honduran Lempira</option>
+<option value="HTG">HTG — Haitian Gourde</option>
+<option value="HUF">HUF — Hungarian Forint</option>
+<option value="IDR">IDR — Indonesian Rupiah</option>
+<option value="ILS">ILS — Israeli Shekel</option>
+<option value="INR">INR — Indian Rupee</option>
+<option value="IQD">IQD — Iraqi Dinar</option>
+<option value="IRR">IRR — Iranian Rial</option>
+<option value="ISK">ISK — Icelandic Krona</option>
+<option value="JMD">JMD — Jamaican Dollar</option>
+<option value="JOD">JOD — Jordanian Dinar</option>
+<option value="JPY">JPY — Japanese Yen</option>
+<option value="KES">KES — Kenyan Shilling</option>
+<option value="KGS">KGS — Kyrgystani Som</option>
+<option value="KHR">KHR — Cambodian Riel</option>
+<option value="KMF">KMF — Comorian Franc</option>
+<option value="KPW">KPW — North Korean Won</option>
+<option value="KRW">KRW — South Korean Won</option>
+<option value="KWD">KWD — Kuwaiti Dinar</option>
+<option value="KYD">KYD — Cayman Islands Dollar</option>
+<option value="KZT">KZT — Kazakhstani Tenge</option>
+<option value="LAK">LAK — Laotian Kip</option>
+<option value="LBP">LBP — Lebanese Pound</option>
+<option value="LKR">LKR — Sri Lankan Rupee</option>
+<option value="LRD">LRD — Liberian Dollar</option>
+<option value="LSL">LSL — Lesotho Loti</option>
+<option value="LYD">LYD — Libyan Dinar</option>
+<option value="MAD">MAD — Moroccan Dirham</option>
+<option value="MDL">MDL — Moldovan Leu</option>
+<option value="MGA">MGA — Malagasy Ariary</option>
+<option value="MKD">MKD — Macedonian Denar</option>
+<option value="MMK">MMK — Myanma Kyat</option>
+<option value="MNT">MNT — Mongolian Tugrik</option>
+<option value="MOP">MOP — Macanese Pataca</option>
+<option value="MRU">MRU — Mauritanian Ouguiya</option>
+<option value="MUR">MUR — Mauritian Rupee</option>
+<option value="MVR">MVR — Maldivian Rufiyaa</option>
+<option value="MWK">MWK — Malawian Kwacha</option>
+<option value="MXN">MXN — Mexican Peso</option>
+<option value="MYR">MYR — Malaysian Ringgit</option>
+<option value="MZN">MZN — Mozambican Metical</option>
+<option value="NAD">NAD — Namibian Dollar</option>
+<option value="NGN">NGN — Nigerian Naira</option>
+<option value="NIO">NIO — Nicaraguan Cordoba</option>
+<option value="NOK">NOK — Norwegian Krone</option>
+<option value="NPR">NPR — Nepalese Rupee</option>
+<option value="NZD">NZD — New Zealand Dollar</option>
+<option value="OMR">OMR — Omani Rial</option>
+<option value="PAB">PAB — Panamanian Balboa</option>
+<option value="PEN">PEN — Peruvian Sol</option>
+<option value="PGK">PGK — Papua New Guinean Kina</option>
+<option value="PHP">PHP — Philippine Peso</option>
+<option value="PKR">PKR — Pakistani Rupee</option>
+<option value="PLN">PLN — Polish Zloty</option>
+<option value="PYG">PYG — Paraguayan Guarani</option>
+<option value="QAR">QAR — Qatari Rial</option>
+<option value="RON">RON — Romanian Leu</option>
+<option value="RSD">RSD — Serbian Dinar</option>
+<option value="RUB">RUB — Russian Ruble</option>
+<option value="RWF">RWF — Rwandan Franc</option>
+<option value="SAR">SAR — Saudi Riyal</option>
+<option value="SBD">SBD — Solomon Islands Dollar</option>
+<option value="SCR">SCR — Seychellois Rupee</option>
+<option value="SDG">SDG — Sudanese Pound</option>
+<option value="SEK">SEK — Swedish Krone</option>
+<option value="SGD">SGD — Singapore Dollar</option>
+<option value="SHP">SHP — Saint Helena Pound</option>
+<option value="SLL">SLL — Sierra Leonean Leone</option>
+<option value="SOS">SOS — Somali Shilling</option>
+<option value="SRD">SRD — Surinamese Dollar</option>
+<option value="STN">STN — Sao Tome Dobra</option>
+<option value="SVC">SVC — Salvadoran Colon</option>
+<option value="SYP">SYP — Syrian Pound</option>
+<option value="SZL">SZL — Swazi Lilangeni</option>
+<option value="THB">THB — Thai Baht</option>
+<option value="TJS">TJS — Tajikistani Somoni</option>
+<option value="TMT">TMT — Turkmenistani Manat</option>
+<option value="TND">TND — Tunisian Dinar</option>
+<option value="TOP">TOP — Tongan Paanga</option>
+<option value="TRY">TRY — Turkish Lira</option>
+<option value="TTD">TTD — Trinidad Dollar</option>
+<option value="TWD">TWD — New Taiwan Dollar</option>
+<option value="TZS">TZS — Tanzanian Shilling</option>
+<option value="UAH">UAH — Ukrainian Hryvnia</option>
+<option value="UGX">UGX — Ugandan Shilling</option>
+<option value="USD">USD — US Dollar</option>
+<option value="UYU">UYU — Uruguayan Peso</option>
+<option value="UZS">UZS — Uzbekistan Som</option>
+<option value="VES">VES — Venezuelan Bolivar</option>
+<option value="VND">VND — Vietnamese Dong</option>
+<option value="VUV">VUV — Vanuatu Vatu</option>
+<option value="WST">WST — Samoan Tala</option>
+<option value="XAF">XAF — CFA Franc BEAC</option>
+<option value="XCD">XCD — East Caribbean Dollar</option>
+<option value="XOF">XOF — CFA Franc BCEAO</option>
+<option value="XPF">XPF — CFP Franc</option>
+<option value="YER">YER — Yemeni Rial</option>
+<option value="ZAR">ZAR — South African Rand</option>
+<option value="ZMW">ZMW — Zambian Kwacha</option>
+<option value="ZWL">ZWL — Zimbabwean Dollar</option></select>
+      <input class="fxamt" type="number" id="fx_converter_fromv" value="1" min="0" step="any" placeholder="0" oninput="fx_converter_fwd()"/>
+    </div>
+    <div class="swapcol">
+      <button class="swapbtn" onclick="fx_converter_swap()" title="Swap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/>
+        </svg>
+      </button>
+    </div>
+    <div class="fxg">
+      <div class="fxlbl">To</div>
+      <select class="fxsel" id="fx_converter_to" onchange="fx_converter_go()">
+<option value="AED">AED — UAE Dirham</option>
+<option value="AFN">AFN — Afghan Afghani</option>
+<option value="ALL">ALL — Albanian Lek</option>
+<option value="AMD">AMD — Armenian Dram</option>
+<option value="ANG">ANG — Netherlands Antillean Guilder</option>
+<option value="AOA">AOA — Angolan Kwanza</option>
+<option value="ARS">ARS — Argentine Peso</option>
+<option value="AUD">AUD — Australian Dollar</option>
+<option value="AWG">AWG — Aruban Florin</option>
+<option value="AZN">AZN — Azerbaijani Manat</option>
+<option value="BAM">BAM — Bosnia-Herzegovina Mark</option>
+<option value="BBD">BBD — Barbadian Dollar</option>
+<option value="BDT">BDT — Bangladeshi Taka</option>
+<option value="BGN">BGN — Bulgarian Lev</option>
+<option value="BHD">BHD — Bahraini Dinar</option>
+<option value="BIF">BIF — Burundian Franc</option>
+<option value="BMD">BMD — Bermudian Dollar</option>
+<option value="BND">BND — Brunei Dollar</option>
+<option value="BOB">BOB — Bolivian Boliviano</option>
+<option value="BRL">BRL — Brazilian Real</option>
+<option value="BSD">BSD — Bahamian Dollar</option>
+<option value="BTN">BTN — Bhutanese Ngultrum</option>
+<option value="BWP">BWP — Botswanan Pula</option>
+<option value="BYN">BYN — Belarusian Ruble</option>
+<option value="BZD">BZD — Belize Dollar</option>
+<option value="CAD">CAD — Canadian Dollar</option>
+<option value="CDF">CDF — Congolese Franc</option>
+<option value="CHF">CHF — Swiss Franc</option>
+<option value="CLP">CLP — Chilean Peso</option>
+<option value="CNY">CNY — Chinese Yuan</option>
+<option value="COP">COP — Colombian Peso</option>
+<option value="CRC">CRC — Costa Rican Colon</option>
+<option value="CUP">CUP — Cuban Peso</option>
+<option value="CVE">CVE — Cape Verdean Escudo</option>
+<option value="CZK">CZK — Czech Koruna</option>
+<option value="DJF">DJF — Djiboutian Franc</option>
+<option value="DKK">DKK — Danish Krone</option>
+<option value="DOP">DOP — Dominican Peso</option>
+<option value="DZD">DZD — Algerian Dinar</option>
+<option value="EGP">EGP — Egyptian Pound</option>
+<option value="ERN">ERN — Eritrean Nakfa</option>
+<option value="ETB">ETB — Ethiopian Birr</option>
+<option value="EUR">EUR — Euro</option>
+<option value="FJD">FJD — Fijian Dollar</option>
+<option value="FKP">FKP — Falkland Islands Pound</option>
+<option value="GBP">GBP — British Pound</option>
+<option value="GEL">GEL — Georgian Lari</option>
+<option value="GHS">GHS — Ghanaian Cedi</option>
+<option value="GIP">GIP — Gibraltar Pound</option>
+<option value="GMD">GMD — Gambian Dalasi</option>
+<option value="GNF">GNF — Guinean Franc</option>
+<option value="GTQ">GTQ — Guatemalan Quetzal</option>
+<option value="GYD">GYD — Guyanaese Dollar</option>
+<option value="HKD">HKD — Hong Kong Dollar</option>
+<option value="HNL">HNL — Honduran Lempira</option>
+<option value="HTG">HTG — Haitian Gourde</option>
+<option value="HUF">HUF — Hungarian Forint</option>
+<option value="IDR">IDR — Indonesian Rupiah</option>
+<option value="ILS">ILS — Israeli Shekel</option>
+<option value="INR">INR — Indian Rupee</option>
+<option value="IQD">IQD — Iraqi Dinar</option>
+<option value="IRR">IRR — Iranian Rial</option>
+<option value="ISK">ISK — Icelandic Krona</option>
+<option value="JMD">JMD — Jamaican Dollar</option>
+<option value="JOD">JOD — Jordanian Dinar</option>
+<option value="JPY">JPY — Japanese Yen</option>
+<option value="KES">KES — Kenyan Shilling</option>
+<option value="KGS">KGS — Kyrgystani Som</option>
+<option value="KHR">KHR — Cambodian Riel</option>
+<option value="KMF">KMF — Comorian Franc</option>
+<option value="KPW">KPW — North Korean Won</option>
+<option value="KRW">KRW — South Korean Won</option>
+<option value="KWD">KWD — Kuwaiti Dinar</option>
+<option value="KYD">KYD — Cayman Islands Dollar</option>
+<option value="KZT">KZT — Kazakhstani Tenge</option>
+<option value="LAK">LAK — Laotian Kip</option>
+<option value="LBP">LBP — Lebanese Pound</option>
+<option value="LKR">LKR — Sri Lankan Rupee</option>
+<option value="LRD">LRD — Liberian Dollar</option>
+<option value="LSL">LSL — Lesotho Loti</option>
+<option value="LYD">LYD — Libyan Dinar</option>
+<option value="MAD">MAD — Moroccan Dirham</option>
+<option value="MDL">MDL — Moldovan Leu</option>
+<option value="MGA">MGA — Malagasy Ariary</option>
+<option value="MKD">MKD — Macedonian Denar</option>
+<option value="MMK">MMK — Myanma Kyat</option>
+<option value="MNT">MNT — Mongolian Tugrik</option>
+<option value="MOP">MOP — Macanese Pataca</option>
+<option value="MRU">MRU — Mauritanian Ouguiya</option>
+<option value="MUR">MUR — Mauritian Rupee</option>
+<option value="MVR">MVR — Maldivian Rufiyaa</option>
+<option value="MWK">MWK — Malawian Kwacha</option>
+<option value="MXN">MXN — Mexican Peso</option>
+<option value="MYR">MYR — Malaysian Ringgit</option>
+<option value="MZN">MZN — Mozambican Metical</option>
+<option value="NAD">NAD — Namibian Dollar</option>
+<option value="NGN">NGN — Nigerian Naira</option>
+<option value="NIO">NIO — Nicaraguan Cordoba</option>
+<option value="NOK">NOK — Norwegian Krone</option>
+<option value="NPR">NPR — Nepalese Rupee</option>
+<option value="NZD">NZD — New Zealand Dollar</option>
+<option value="OMR">OMR — Omani Rial</option>
+<option value="PAB">PAB — Panamanian Balboa</option>
+<option value="PEN">PEN — Peruvian Sol</option>
+<option value="PGK">PGK — Papua New Guinean Kina</option>
+<option value="PHP">PHP — Philippine Peso</option>
+<option value="PKR">PKR — Pakistani Rupee</option>
+<option value="PLN">PLN — Polish Zloty</option>
+<option value="PYG">PYG — Paraguayan Guarani</option>
+<option value="QAR">QAR — Qatari Rial</option>
+<option value="RON">RON — Romanian Leu</option>
+<option value="RSD">RSD — Serbian Dinar</option>
+<option value="RUB">RUB — Russian Ruble</option>
+<option value="RWF">RWF — Rwandan Franc</option>
+<option value="SAR">SAR — Saudi Riyal</option>
+<option value="SBD">SBD — Solomon Islands Dollar</option>
+<option value="SCR">SCR — Seychellois Rupee</option>
+<option value="SDG">SDG — Sudanese Pound</option>
+<option value="SEK">SEK — Swedish Krone</option>
+<option value="SGD">SGD — Singapore Dollar</option>
+<option value="SHP">SHP — Saint Helena Pound</option>
+<option value="SLL">SLL — Sierra Leonean Leone</option>
+<option value="SOS">SOS — Somali Shilling</option>
+<option value="SRD">SRD — Surinamese Dollar</option>
+<option value="STN">STN — Sao Tome Dobra</option>
+<option value="SVC">SVC — Salvadoran Colon</option>
+<option value="SYP">SYP — Syrian Pound</option>
+<option value="SZL">SZL — Swazi Lilangeni</option>
+<option value="THB">THB — Thai Baht</option>
+<option value="TJS">TJS — Tajikistani Somoni</option>
+<option value="TMT">TMT — Turkmenistani Manat</option>
+<option value="TND">TND — Tunisian Dinar</option>
+<option value="TOP">TOP — Tongan Paanga</option>
+<option value="TRY">TRY — Turkish Lira</option>
+<option value="TTD">TTD — Trinidad Dollar</option>
+<option value="TWD">TWD — New Taiwan Dollar</option>
+<option value="TZS">TZS — Tanzanian Shilling</option>
+<option value="UAH">UAH — Ukrainian Hryvnia</option>
+<option value="UGX">UGX — Ugandan Shilling</option>
+<option value="USD">USD — US Dollar</option>
+<option value="UYU">UYU — Uruguayan Peso</option>
+<option value="UZS">UZS — Uzbekistan Som</option>
+<option value="VES">VES — Venezuelan Bolivar</option>
+<option value="VND">VND — Vietnamese Dong</option>
+<option value="VUV">VUV — Vanuatu Vatu</option>
+<option value="WST">WST — Samoan Tala</option>
+<option value="XAF">XAF — CFA Franc BEAC</option>
+<option value="XCD">XCD — East Caribbean Dollar</option>
+<option value="XOF">XOF — CFA Franc BCEAO</option>
+<option value="XPF">XPF — CFP Franc</option>
+<option value="YER">YER — Yemeni Rial</option>
+<option value="ZAR">ZAR — South African Rand</option>
+<option value="ZMW">ZMW — Zambian Kwacha</option>
+<option value="ZWL">ZWL — Zimbabwean Dollar</option></select>
+      <input class="fxamt" type="number" id="fx_converter_tov" value="" min="0" step="any" placeholder="0" oninput="fx_converter_rev()"/>
+    </div>
+    <div class="rcell">
+      <div class="fxlbl fxlbl-result" id="fx_converter_rlbl">1 USD =</div>
+      <div class="rcell-left" id="fx_converter_rlbl_mob">1 USD =</div>
+      <div class="rcell-right">
+        <div class="rval loading-pulse" id="fx_converter_rval">&mdash;</div>
+        <div class="rmeta" id="fx_converter_rmeta">Loading&hellip;</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row2">
+  <button class="ctoggle" onclick="fx_converter_toggleChart()">
+    <span class="ctgl">
+      <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+        <path d="M1 1.5h9M1 4.5h6M1 7.5h3" stroke="#8C8C8C" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      Rate history
+    </span>
+    <span class="chev" id="fx_converter_chev">
+      <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+        <path d="M1 1l4 4 4-4" stroke="#8C8C8C" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+  </button>
+  <div class="cbody" id="fx_converter_cbody">
+    <div class="chead">
+      <span class="ctitle" id="fx_converter_ctitle">USD/JPY</span>
+      <div class="pbtns">
+        <button class="fx-pbtn"    onclick="fx_converter_per(30,this)">30D</button>
+        <button class="fx-pbtn"    onclick="fx_converter_per(90,this)">90D</button>
+        <button class="fx-pbtn"    onclick="fx_converter_per(180,this)">180D</button>
+        <button class="fx-pbtn"    onclick="fx_converter_per(365,this)">1Y</button>
+        <button class="fx-pbtn on" onclick="fx_converter_per(1825,this)">5Y</button>
+      </div>
+    </div>
+    <div id="fx_converter_chartArea">
+      <div class="chart-wrap"><canvas id="fx_converter_c"></canvas></div>
+    </div>
+    <div id="fx_converter_chartNoData" class="cnodata" style="display:none">
+      <span id="fx_converter_noDataMsg"></span>
+    </div>
+  </div>
+  <div class="gen-date">Rates updated live</div>
+</div>
+</div>
+
+<script>
+// ── CONFIGURE: change these two lines to set default currencies ──────────
+var FX_FROM = "USD";   // "From" currency code
+var FX_TO   = "JPY";   // "To"   currency code
+// ─────────────────────────────────────────────────────────────────────────
+(function() {
+var DEFAULT_FROM = FX_FROM;
+var DEFAULT_TO   = FX_TO;
+var W            = "fx_converter";
+var API          = "https://api.frankfurter.dev/v2";
+
+var DATE_5Y = (function() {
+  var d = new Date(); d.setFullYear(d.getFullYear() - 5);
+  return d.toISOString().slice(0, 10);
+})();
+
+// ---- State ----
+var RATES    = {};   // code -> rate vs EUR (EUR=1.0)
+var HIST     = {};   // code -> { dates:[], values:[], from5y:bool }
+var fetching = {};   // dedup in-flight fetches keyed by code
+var chartBuilt = false;
+var fxChart    = null;
+var per        = 1825;  // active period in days (default 5Y)
+var _rawDates  = [];
+
+// ---- Helpers ----
+function $el(id)  { return document.getElementById(W + "_" + id); }
+function chartOpen() { return $el("cbody").style.display === "block"; }
+
+function fmt(n) {
+  if (n == null || isNaN(n)) return "—";
+  if (n >= 10000) return n.toLocaleString("en-US", {maximumFractionDigits: 2});
+  if (n >= 100)   return n.toFixed(2);
+  if (n >= 1)     return n.toFixed(4);
+  return n.toFixed(6);
+}
+
+function show(id, on) { var e = $el(id); if (e) e.style.display = on ? "block" : "none"; }
+
+function xRate(a, b) {
+  if (RATES[a] == null || RATES[b] == null) return null;
+  return RATES[b] / RATES[a];
+}
+
+// ---- v2 parsers ----
+function parseLatestInto(arr) {
+  RATES["EUR"] = 1.0;
+  for (var i = 0; i < arr.length; i++) RATES[arr[i].quote] = arr[i].rate;
+}
+
+function parseHistoryInto(code, arr) {
+  var dateMap = {};
+  for (var i = 0; i < arr.length; i++) dateMap[arr[i].date] = arr[i].rate;
+  var dates  = Object.keys(dateMap).sort();
+  var values = dates.map(function(d) { return dateMap[d]; });
+  HIST[code] = { dates: dates, values: values, from5y: true };
+}
+
+// ---- Get aligned date+value series for a pair ----
+function getHistPair(f, t) {
+  var fE = HIST[f], tE = HIST[t];
+  if (f === "EUR" && tE) return { dates: tE.dates, fromVals: tE.dates.map(function() { return 1.0; }), toVals: tE.values };
+  if (t === "EUR" && fE) return { dates: fE.dates, fromVals: fE.values, toVals: fE.dates.map(function() { return 1.0; }) };
+  if (!fE || !tE) return null;
+  var tSet = {};
+  for (var i = 0; i < tE.dates.length; i++) tSet[tE.dates[i]] = tE.values[i];
+  var dates = [], fVals = [], tVals = [];
+  for (var j = 0; j < fE.dates.length; j++) {
+    var d = fE.dates[j];
+    if (tSet[d] !== undefined) { dates.push(d); fVals.push(fE.values[j]); tVals.push(tSet[d]); }
+  }
+  return { dates: dates, fromVals: fVals, toVals: tVals };
+}
+
+// ---- History fetching — lazy, deduplicated, 5Y only ----
+function fetchHist(code) {
+  if (code === "EUR") return Promise.resolve();
+  if (HIST[code] && HIST[code].from5y) return Promise.resolve();
+  if (fetching[code]) return fetching[code];
+
+  var p = fetch(API + "/rates?from=" + DATE_5Y + "&quotes=" + code)
+    .then(function(r) { return r.json(); })
+    .then(function(arr) {
+      parseHistoryInto(code, arr);
+      if (RATES[code] == null && arr.length) RATES[code] = arr[arr.length - 1].rate;
+      delete fetching[code];
+    })
+    .catch(function(e) {
+      console.error("[FX] hist error " + code + ":", e);
+      if (!HIST[code]) HIST[code] = { dates: [], values: [], from5y: true };
+      delete fetching[code];
+    });
+
+  fetching[code] = p;
+  return p;
+}
+
+function fetchPairHist(f, t) {
+  return Promise.all([fetchHist(f), fetchHist(t)]);
+}
+
+// ---- Stage 1: latest rate for default pair ----
+function fetchDefaultRates() {
+  var needed = [DEFAULT_FROM, DEFAULT_TO].filter(function(c) { return c !== "EUR"; });
+  var qs = needed.length ? "?quotes=" + needed.join(",") : "";
+  fetch(API + "/rates" + qs)
+    .then(function(r) { return r.json(); })
+    .then(function(arr) {
+      parseLatestInto(arr);
+      updateDisplay();
+      fetchPairHist(DEFAULT_FROM, DEFAULT_TO).then(function() {
+        if (chartOpen()) tryRenderChart();
+      });
+      fetch(API + "/rates")
+        .then(function(r) { return r.json(); })
+        .then(function(arr) { parseLatestInto(arr); })
+        .catch(function(e) { console.error("[FX] all-rates error:", e); });
+    })
+    .catch(function(e) {
+      $el("rval").classList.remove("loading-pulse");
+      $el("rval").textContent  = "Error";
+      $el("rmeta").textContent = "Could not load rates";
+      console.error("[FX] Stage 1 error:", e);
+    });
+}
+
+// ---- Display ----
+function updateDisplay() {
+  var f = $el("from").value, t = $el("to").value;
+  var amt = parseFloat($el("fromv").value) || 1;
+  var rate = xRate(f, t);
+  var rv = $el("rval");
+  if (rate == null) {
+    rv.textContent = "—";
+    $el("rmeta").textContent = (RATES[f] == null || RATES[t] == null) ? "Loading…" : "Rate unavailable";
+    return;
+  }
+  rv.classList.remove("loading-pulse");
+  var result = amt * rate;
+  var lbl = fmt(amt) + " " + f + " =";
+  if ($el("rlbl"))     $el("rlbl").textContent     = lbl;
+  if ($el("rlbl_mob")) $el("rlbl_mob").textContent = lbl;
+  rv.textContent           = fmt(result);
+  
+  // NEW DUAL-RATE LOGIC
+  var invRate = 1 / rate;
+  $el("rmeta").textContent = "1 " + f + " = " + fmt(rate) + " " + t + "  |  1 " + t + " = " + fmt(invRate) + " " + f;
+  
+  $el("tov").value         = result.toFixed(6);
+}
+
+// ---- Chart ----
+function tickLimit() {
+  if (per >= 1825) return 6;
+  if (per >= 365)  return 7;
+  if (per >= 180)  return 6;
+  if (per >= 90)   return 4;
+  return 5;
+}
+
+function fmtTick(dateStr) {
+  var p = dateStr.split("-");
+  var yr = p[0], mo = parseInt(p[1], 10) - 1, dom = parseInt(p[2], 10);
+  var M = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  if (per >= 1825) return yr;
+  if (per >= 90)   return M[mo] + " " + yr;
+  return M[mo] + " " + dom;
+}
+
+function tryRenderChart() {
+  var f = $el("from").value, t = $el("to").value;
+  $el("ctitle").textContent = f + "/" + t;
+
+  var pair = getHistPair(f, t);
+  if (!pair || !pair.dates.length) {
+    show("chartNoData", true); show("chartArea", false);
+    $el("noDataMsg").textContent = "Loading history…";
+    return;
+  }
+
+  show("chartNoData", false); show("chartArea", true);
+
+  var startIdx = 0;
+  if (per < 1825) {
+    var lastMs = new Date(pair.dates[pair.dates.length - 1]).getTime();
+    var cutMs  = lastMs - per * 86400000;
+    var lo = 0, hi = pair.dates.length - 1;
+    while (lo < hi) {
+      var mid = (lo + hi) >> 1;
+      if (new Date(pair.dates[mid]).getTime() < cutMs) lo = mid + 1; else hi = mid;
+    }
+    startIdx = lo;
+  }
+
+  var ds    = pair.dates.slice(startIdx);
+  var fVals = pair.fromVals.slice(startIdx);
+  var tVals = pair.toVals.slice(startIdx);
+  var data  = fVals.map(function(v, i) {
+    return (v != null && tVals[i] != null) ? +((tVals[i] / v).toFixed(5)) : null;
+  });
+  _rawDates = ds;
+
+  if (!chartBuilt) {
+    buildChart(ds.slice(), data);
+    chartBuilt = true;
+  } else {
+    fxChart.data.labels = ds.slice();
+    fxChart.data.datasets[0].data = data;
+    fxChart.options.scales.x.ticks.maxTicksLimit = tickLimit();
+    fxChart.update();
+  }
+}
+
+function buildChart(labels, data) {
+  var ctx = document.getElementById(W + "_c").getContext("2d");
+  fxChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: labels,
+      datasets: [{
+        data: data,
+        borderColor: "#52B788",
+        borderWidth: 1.5,
+        fill: true,
+        backgroundColor: function(c) {
+          var g = c.chart.ctx.createLinearGradient(0, 0, 0, 150);
+          g.addColorStop(0, "rgba(82,183,136,0.15)");
+          g.addColorStop(1, "rgba(82,183,136,0)");
+          return g;
+        },
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        pointHoverBackgroundColor: "#52B788",
+        tension: 0.3,
+        spanGaps: true
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: "index", intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: "#1E4034",
+          titleColor: "rgba(201,212,197,0.9)",
+          bodyColor: "#fff",
+          titleFont: { size: 10 },
+          bodyFont: { size: 12, weight: "500" },
+          padding: 9,
+          displayColors: false,
+          callbacks: {
+            title: function(items) { return _rawDates[items[0].dataIndex] || ""; },
+            label: function(item) {
+              var f = $el("from").value, t = $el("to").value;
+              return item.raw == null ? "—" : " 1 " + f + " = " + item.raw + " " + t;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          type: "category",
+          grid: { display: false },
+          border: { display: false },
+          ticks: {
+            color: "#8C8C8C",
+            font: { size: 9 },
+            maxRotation: 0,
+            autoSkip: true,
+            autoSkipPadding: 12,
+            maxTicksLimit: tickLimit(),
+            callback: function(val) {
+              var dateStr = this.getLabelForValue(val);
+              return dateStr ? fmtTick(dateStr) : "";
+            }
+          }
+        },
+        y: {
+          position: "right",
+          grid: { color: "#F2F2F2" },
+          border: { display: false },
+          ticks: { color: "#8C8C8C", font: { size: 9 }, maxTicksLimit: 5 }
+        }
+      }
+    }
+  });
+}
+
+// ---- Interactions ----
+window[W + "_fwd"] = function() {
+  var amt = parseFloat($el("fromv").value), rate = xRate($el("from").value, $el("to").value);
+  if (!rate || isNaN(amt)) return;
+  $el("tov").value = (amt * rate).toFixed(6); updateDisplay();
+};
+
+window[W + "_rev"] = function() {
+  var amt = parseFloat($el("tov").value), rate = xRate($el("to").value, $el("from").value);
+  if (!rate || isNaN(amt)) return;
+  $el("fromv").value = (amt * rate).toFixed(6); updateDisplay();
+};
+
+window[W + "_go"] = function() {
+  var f = $el("from").value, t = $el("to").value;
+  updateDisplay();
+  if (!chartOpen()) return;
+  var fReady = f === "EUR" || (HIST[f] && HIST[f].from5y);
+  var tReady = t === "EUR" || (HIST[t] && HIST[t].from5y);
+  if (fReady && tReady) {
+    tryRenderChart();
+  } else {
+    show("chartNoData", true); show("chartArea", false);
+    $el("noDataMsg").textContent = "Loading history…";
+    fetchPairHist(f, t).then(function() {
+      if ($el("from").value === f && $el("to").value === t) tryRenderChart();
+    });
+  }
+};
+
+window[W + "_swap"] = function() {
+  var f = $el("from").value, t = $el("to").value;
+  var fs = $el("from"), ts = $el("to");
+  for (var i = 0; i < fs.options.length; i++) if (fs.options[i].value === t) { fs.selectedIndex = i; break; }
+  for (var i = 0; i < ts.options.length; i++) if (ts.options[i].value === f) { ts.selectedIndex = i; break; }
+  window[W + "_go"]();
+};
+
+window[W + "_toggleChart"] = function() {
+  var body = $el("cbody"), chev = $el("chev");
+  var isOpen = body.style.display === "block";
+  body.style.display   = isOpen ? "none" : "block";
+  chev.style.transform = isOpen ? "" : "rotate(180deg)";
+  if (!isOpen) window[W + "_go"]();
+};
+
+window[W + "_per"] = function(days, btn) {
+  per = days;
+  var btns = document.querySelectorAll("#fx_converter .fx-pbtn");
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove("on");
+  btn.classList.add("on");
+  tryRenderChart();
+};
+
+// ---- Boot ----
+(function() {
+  var fs = $el("from"), ts = $el("to");
+  for (var i = 0; i < fs.options.length; i++) if (fs.options[i].value === DEFAULT_FROM) { fs.selectedIndex = i; break; }
+  for (var i = 0; i < ts.options.length; i++) if (ts.options[i].value === DEFAULT_TO)   { ts.selectedIndex = i; break; }
+})();
+fetchDefaultRates();
+
+})();
+</script>
+</body>
+</html>

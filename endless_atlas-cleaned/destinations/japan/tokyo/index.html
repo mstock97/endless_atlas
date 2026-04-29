@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Travel Guide to Tokyo | Endless Atlas</title>
+  <meta name="description" content="Explore Tokyo with Endless Atlas. Discover the city's neighborhoods, food, culture, and everything you need to plan your trip to Japan's electric capital.">
+  <meta name="keywords" content="Tokyo travel, Tokyo neighborhoods, Tokyo food, Japan travel, Endless Atlas">
+  <link rel="canonical" href="https://endless-atlas.com/destinations/japan/tokyo">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Tokyo | Endless Atlas">
+  <meta property="og:description" content="Your guide to Tokyo — the city that never stops surprising.">
+  <meta property="og:image" content="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/tokyo/shinjuku_night_3635.jpg">
+
+  <!--
+    CSS LOAD ORDER
+    1. theme.css      — design tokens
+    2. typography.css — heading scale, prose styles
+    3. layout.css     — reset, containers, section utilities
+    4. components.css — all UI components
+    5. navigation.css — header, nav, mobile menu
+    6. footer.css     — footer layout
+    7. animations.css — keyframes, scroll reveal
+  -->
+  <link rel="stylesheet" href="/theme.css">
+  <link rel="stylesheet" href="/typography.css">
+  <link rel="stylesheet" href="/layout.css">
+  <link rel="stylesheet" href="/components.css">
+  <link rel="stylesheet" href="/navigation.css">
+  <link rel="stylesheet" href="/footer.css">
+  <link rel="stylesheet" href="/animations.css">
+</head>
+<body>
+
+  <div id="site-header"></div>
+  <div id="japan-sub-header"></div>
+
+  <!-- ============================================
+       DESTINATION HERO — SLIDESHOW VARIANT
+  ============================================ -->
+  <section class="dest-hero dest-hero--tall" id="heroContainer" aria-label="Tokyo hero slideshow">
+
+    <img src="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/tokyo/shinjuku_night_3635-mobile.jpg"
+         class="dest-hero__image is-slide img-low-res active"
+         id="heroSlide0"
+         data-index="0"
+         alt="Shinjuku at night, Tokyo"
+         referrerpolicy="no-referrer">
+
+    <img src="" class="dest-hero__image is-slide img-low-res" id="heroSlide1" data-index="1" alt="Tokyo hero image 2" referrerpolicy="no-referrer" style="display:none">
+    <img src="" class="dest-hero__image is-slide img-low-res" id="heroSlide2" data-index="2" alt="Tokyo hero image 3" referrerpolicy="no-referrer" style="display:none">
+
+    <nav class="dest-hero__breadcrumb" aria-label="Breadcrumb">
+      <a href="/destinations">Destinations</a>
+      <span aria-hidden="true">/</span>
+      <a href="/destinations/japan">Japan</a>
+      <span aria-hidden="true">/</span>
+      Tokyo
+    </nav>
+
+    <div class="slide-counter" aria-live="polite" id="slideCounter">1 / 1</div>
+
+    <h1 class="dest-hero__title" id="heroText">TOKYO</h1>
+    <p class="dest-hero__subtitle">Where ancient ritual meets neon overload.</p>
+
+    <div class="slideshow-dots" id="slideshowDots" role="tablist" aria-label="Slideshow navigation">
+      <button class="slideshow-dot active" data-index="0" aria-label="Slide 1" role="tab" aria-selected="true"></button>
+    </div>
+
+    <div class="geo-pin" id="geoPin" aria-label="View photo location">
+      <div class="geo-pin-icon">
+        <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="location-strip" id="locationStrip">
+      <div class="strip-inner">
+        <span class="strip-dot" aria-hidden="true"></span>
+        <span class="strip-text" id="stripText">Shinjuku, Tokyo</span>
+        <a class="strip-link" id="stripLink"
+           href="https://www.google.com/maps/search/35.694,139.700"
+           target="_blank" rel="noopener noreferrer">Open in Maps ↗</a>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ============================================
+       MAIN CONTENT
+  ============================================ -->
+  <main class="dest-main">
+    <div class="content-grid" id="contentGrid">
+
+      <!-- Main column -->
+      <article class="main-column" id="mainCol">
+
+        <div class="city-intro">
+          <p class="city-kicker">Japan · Kantō Region</p>
+          <h2 class="city-headline">Where <em>ancient ritual</em> meets neon overload.</h2>
+          <div class="city-body">
+            <p>Tokyo doesn't ease you in. It swallows you whole — 14 million people, 23 wards, and a rail network so precise they apologize when a train arrives 30 seconds late. But beneath the density is something surprisingly intimate: a city organized into distinct neighborhoods, each with its own rhythm, its own regulars, its own unspoken rules.</p>
+            <p>Spend a morning at Tsukiji's outer market before the city wakes. Get lost in Shimokitazawa's record shops and jazz bars. Watch the Shibuya crossing from above at midnight and understand, finally, why people call this place electric. Tokyo rewards the slow traveler and the obsessive alike — there's always one more ramen shop to find, one more alley that doesn't show up on any map.</p>
+          </div>
+        </div>
+
+        <div class="quick-facts">
+          <div class="fact-cell">
+            <span class="fact-label">Population</span>
+            <div class="fact-value">13.96M <span>city proper</span></div>
+          </div>
+          <div class="fact-cell">
+            <span class="fact-label">Time Zone</span>
+            <div class="fact-value">JST <span>(UTC +9)</span></div>
+          </div>
+          <div class="fact-cell">
+            <span class="fact-label">Local Time</span>
+            <div class="fact-value" id="tokyo-time">—</div>
+          </div>
+          <div class="fact-cell">
+            <span class="fact-label">Language</span>
+            <div class="fact-value">Japanese</div>
+          </div>
+          <div class="fact-cell">
+            <span class="fact-label">Currency</span>
+            <div class="fact-value">¥ JPY</div>
+          </div>
+        </div>
+
+        <h2 class="dest-section-title">Stories from Tokyo</h2>
+
+        <div class="posts-grid">
+
+          <a href="#" class="post-card">
+            <div class="post-card-image-placeholder" style="background: linear-gradient(135deg, #1E4034 0%, #2D6A4F 60%, #52B788 100%);">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.2" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+              </svg>
+            </div>
+            <div class="post-card-body">
+              <span class="post-card-category">Neighborhoods</span>
+              <h3 class="post-card-title">48 Hours in Shinjuku: Where the Night Has No Closing Time</h3>
+              <p class="post-card-desc">From the izakayas of Golden Gai to the department stores of the east exit — a ground-level guide to Tokyo's most relentless ward.</p>
+              <span class="post-card-meta">12 min read · Shinjuku</span>
+            </div>
+          </a>
+
+          <a href="#" class="post-card">
+            <div class="post-card-image-placeholder" style="background: linear-gradient(135deg, #3D3D3D 0%, #5C5346 60%, #A8896A 100%);">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.2" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+              </svg>
+            </div>
+            <div class="post-card-body">
+              <span class="post-card-category">Food</span>
+              <h3 class="post-card-title">Tsukiji Outer Market at 5am: The Guide for People Who Actually Eat</h3>
+              <p class="post-card-desc">The tuna auction is gone, but the outer market still rewards the early riser. What to order, where to stand, and why to skip the tourist lines.</p>
+              <span class="post-card-meta">8 min read · Tsukiji</span>
+            </div>
+          </a>
+
+          <a href="#" class="post-card">
+            <div class="post-card-image-placeholder" style="background: linear-gradient(135deg, #1E4034 0%, #5C5346 100%);">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.2" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+              </svg>
+            </div>
+            <div class="post-card-body">
+              <span class="post-card-category">Culture</span>
+              <h3 class="post-card-title">Shimokitazawa and the Art of Getting Wonderfully Lost</h3>
+              <p class="post-card-desc">No grid, no grand plan — just record shops, vintage storefronts, and the unmistakable feeling that this neighborhood doesn't need your approval.</p>
+              <span class="post-card-meta">10 min read · Shimokitazawa</span>
+            </div>
+          </a>
+
+          <a href="#" class="post-card">
+            <div class="post-card-image-placeholder" style="background: linear-gradient(135deg, #2D6A4F 0%, #1E4034 100%);">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.2" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+              </svg>
+            </div>
+            <div class="post-card-body">
+              <span class="post-card-category">Planning</span>
+              <h3 class="post-card-title">The IC Card, the JR Pass, and Other Lies Tokyo Told You</h3>
+              <p class="post-card-desc">An honest breakdown of what transit passes are actually worth buying — and the one card you need before you land.</p>
+              <span class="post-card-meta">6 min read · Transit</span>
+            </div>
+          </a>
+
+        </div>
+      </article>
+
+      <!-- Support column -->
+      <aside class="support-column" id="supportCol">
+
+        <div class="map-card">
+          <div class="map-card-header">
+            <h3 class="support-title">Tokyo Attractions</h3>
+          </div>
+
+          <iframe class="map-embed"
+                  src="https://www.openstreetmap.org/export/embed.html?bbox=139.6200%2C35.6500%2C139.8000%2C35.7400&layer=mapnik&marker=35.6762%2C139.6503"
+                  title="Map of Tokyo"
+                  allowfullscreen
+                  loading="lazy"></iframe>
+
+          <div class="attraction-list">
+            <a href="https://www.google.com/maps/search/Senso-ji+Temple+Asakusa+Tokyo" target="_blank" rel="noopener" class="attraction-item">
+              <span class="attraction-dot" aria-hidden="true"></span>
+              <span class="attraction-name">Senso-ji Temple</span>
+              <span class="attraction-type">Temple · Asakusa</span>
+              <span class="attraction-arrow" aria-hidden="true">→</span>
+            </a>
+            <a href="https://www.google.com/maps/search/Shibuya+Crossing+Tokyo" target="_blank" rel="noopener" class="attraction-item">
+              <span class="attraction-dot" aria-hidden="true"></span>
+              <span class="attraction-name">Shibuya Crossing</span>
+              <span class="attraction-type">Landmark · Shibuya</span>
+              <span class="attraction-arrow" aria-hidden="true">→</span>
+            </a>
+            <a href="https://www.google.com/maps/search/Meiji+Shrine+Harajuku+Tokyo" target="_blank" rel="noopener" class="attraction-item">
+              <span class="attraction-dot" aria-hidden="true"></span>
+              <span class="attraction-name">Meiji Jingu Shrine</span>
+              <span class="attraction-type">Shrine · Harajuku</span>
+              <span class="attraction-arrow" aria-hidden="true">→</span>
+            </a>
+            <a href="https://www.google.com/maps/search/Shinjuku+Gyoen+National+Garden+Tokyo" target="_blank" rel="noopener" class="attraction-item">
+              <span class="attraction-dot" aria-hidden="true"></span>
+              <span class="attraction-name">Shinjuku Gyoen</span>
+              <span class="attraction-type">Garden · Shinjuku</span>
+              <span class="attraction-arrow" aria-hidden="true">→</span>
+            </a>
+            <a href="https://www.google.com/maps/search/teamLab+Planets+Tokyo+Toyosu" target="_blank" rel="noopener" class="attraction-item">
+              <span class="attraction-dot" aria-hidden="true"></span>
+              <span class="attraction-name">teamLab Planets</span>
+              <span class="attraction-type">Art · Toyosu</span>
+              <span class="attraction-arrow" aria-hidden="true">→</span>
+            </a>
+            <a href="https://www.google.com/maps/search/Tsukiji+Outer+Market+Tokyo" target="_blank" rel="noopener" class="attraction-item">
+              <span class="attraction-dot" aria-hidden="true"></span>
+              <span class="attraction-name">Tsukiji Outer Market</span>
+              <span class="attraction-type">Food · Tsukiji</span>
+              <span class="attraction-arrow" aria-hidden="true">→</span>
+            </a>
+            <a href="https://www.google.com/maps/search/Golden+Gai+Shinjuku+Tokyo" target="_blank" rel="noopener" class="attraction-item">
+              <span class="attraction-dot" aria-hidden="true"></span>
+              <span class="attraction-name">Golden Gai</span>
+              <span class="attraction-type">Bars · Shinjuku</span>
+              <span class="attraction-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <h3 class="support-title">Getting Around</h3>
+          <div class="info-card-body">
+            <p>Tokyo's rail network is the most reliable in the world. Get a Suica card at any JR station — it works on every train, subway, bus, and most convenience stores.</p>
+            <ul>
+              <li>JR Yamanote Line loops all major neighborhoods</li>
+              <li>Tokyo Metro covers inner-city gaps efficiently</li>
+              <li>Taxis are clean but expensive — reserve for late nights</li>
+              <li>Walking between stations is often faster than it looks on a map</li>
+            </ul>
+          </div>
+        </div>
+
+        <iframe src="/support/html/japan_essentials.html"
+                id="essentialsWidget"
+                title="Tokyo Travel Essentials"
+                scrolling="no"
+                style="width:100%;border:none;display:block;border-radius:6px;overflow:hidden;"></iframe>
+
+      </aside>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script>
+    // ===== ESSENTIALS IFRAME AUTO-HEIGHT =====
+    window.addEventListener('message', function(e) {
+      if (e.data && e.data.height) {
+        const widget = document.getElementById('essentialsWidget');
+        if (widget) widget.style.height = e.data.height + 'px';
+      }
+    });
+
+    // ===== PROGRESSIVE IMAGE LOADER — SLIDESHOW VARIANT =====
+    const imageData = [
+      {
+        imgId:   'heroSlide0',
+        hdUrl:   'https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/tokyo/shinjuku_night_3635-hd.jpg',
+        fullUrl: 'https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/tokyo/shinjuku_night_3635.jpg'
+      }
+    ];
+
+    imageData.forEach(({ hdUrl }) => {
+      const pre = new Image();
+      pre.referrerPolicy = 'no-referrer';
+      pre.src = hdUrl;
+    });
+
+    function loadFullRes(index) {
+      if (!imageData[index]) return;
+      const { imgId, fullUrl } = imageData[index];
+      const heroImg = document.getElementById(imgId);
+      if (!heroImg || heroImg.dataset.fullLoaded) return;
+      heroImg.dataset.fullLoaded = 'true';
+
+      function revealFull() {
+        heroImg.src = fullUrl;
+        setTimeout(() => {
+          heroImg.classList.remove('img-low-res');
+          heroImg.classList.add('img-loaded');
+        }, 50);
+      }
+
+      const fullLoader = new Image();
+      fullLoader.referrerPolicy = 'no-referrer';
+      fullLoader.src = fullUrl;
+      if (fullLoader.complete) { revealFull(); } else { fullLoader.onload = revealFull; }
+    }
+
+    loadFullRes(0);
+
+    // ===== SLIDESHOW ENGINE =====
+    const SLIDES = [
+      {
+        id: 'heroSlide0',
+        location: 'Shinjuku, Tokyo, Japan',
+        mapsUrl: 'https://www.google.com/maps/search/35.6938,139.7034',
+      },
+    ];
+
+    let currentSlide  = 0;
+    let slideshowTimer = null;
+    const SLIDE_DURATION = 6000;
+
+    const dotsContainer = document.getElementById('slideshowDots');
+    const slideCounter  = document.getElementById('slideCounter');
+    const stripText     = document.getElementById('stripText');
+    const stripLink     = document.getElementById('stripLink');
+
+    function buildDots() {
+      dotsContainer.innerHTML = '';
+      if (SLIDES.length <= 1) {
+        dotsContainer.style.display = 'none';
+        slideCounter.style.display  = 'none';
+        return;
+      }
+      SLIDES.forEach((_, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'slideshow-dot' + (i === 0 ? ' active' : '');
+        btn.setAttribute('data-index', i);
+        btn.setAttribute('aria-label', `Slide ${i + 1}`);
+        btn.addEventListener('click', () => goToSlide(i));
+        dotsContainer.appendChild(btn);
+      });
+      updateCounter();
+    }
+
+    function updateCounter() { slideCounter.textContent = `${currentSlide + 1} / ${SLIDES.length}`; }
+
+    function updateDots() {
+      dotsContainer.querySelectorAll('.slideshow-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === currentSlide);
+      });
+    }
+
+    function updateStrip() {
+      const s = SLIDES[currentSlide];
+      if (s) { stripText.textContent = s.location; stripLink.href = s.mapsUrl; }
+    }
+
+    function goToSlide(index) {
+      const prev = document.getElementById(SLIDES[currentSlide].id);
+      currentSlide = (index + SLIDES.length) % SLIDES.length;
+      const next = document.getElementById(SLIDES[currentSlide].id);
+
+      if (prev && prev !== next) prev.classList.remove('active');
+
+      if (next) {
+        next.style.display = '';
+        loadFullRes(currentSlide);
+        next.classList.add('active');
+      }
+      updateDots(); updateCounter(); updateStrip();
+      clearInterval(slideshowTimer);
+      if (SLIDES.length > 1) startTimer();
+    }
+
+    function startTimer() {
+      slideshowTimer = setInterval(() => goToSlide(currentSlide + 1), SLIDE_DURATION);
+    }
+
+    buildDots();
+    updateStrip();
+    if (SLIDES.length > 1) startTimer();
+
+    // ===== HERO SCROLL PARALLAX =====
+    window.addEventListener('scroll', function() {
+      const heroText = document.getElementById('heroText');
+      if (!heroText) return;
+      const scrollValue = window.scrollY;
+      heroText.style.transform = `scale(${1 + scrollValue / 700})`;
+      heroText.style.opacity   = Math.max(0, 1 - scrollValue / 380);
+    }, { passive: true });
+
+    // ===== JST CLOCK =====
+    function updateTokyoTime() {
+      const el = document.getElementById('tokyo-time');
+      if (!el) return;
+      el.textContent = new Date().toLocaleTimeString('en-US', {
+        timeZone: 'Asia/Tokyo', hour: 'numeric', minute: '2-digit', hour12: true
+      });
+    }
+    updateTokyoTime();
+    setInterval(updateTokyoTime, 30000);
+
+    // ===== GEO PIN =====
+    (function() {
+      const hero  = document.getElementById('heroContainer');
+      const pin   = document.getElementById('geoPin');
+      const strip = document.getElementById('locationStrip');
+      let locked  = false;
+      const isMobile = () => window.matchMedia('(hover: none)').matches;
+
+      function showStrip()      { strip.classList.add('visible'); pin.classList.add('active'); }
+      function hideStrip()      { if (locked) return; strip.classList.remove('visible'); pin.classList.remove('active'); }
+      function clearOverlay()   { hero.classList.add('pin-revealed'); }
+      function restoreOverlay() { hero.classList.remove('pin-revealed'); }
+
+      pin.addEventListener('mouseenter', () => { if (!isMobile()) { showStrip(); clearOverlay(); } });
+      pin.addEventListener('mouseleave', () => { if (!isMobile()) { hideStrip(); restoreOverlay(); } });
+      strip.addEventListener('mouseenter', () => { if (!isMobile()) clearOverlay(); });
+      strip.addEventListener('mouseleave', () => { if (!isMobile()) restoreOverlay(); });
+      pin.addEventListener('click', (e) => { e.stopPropagation(); locked = true; showStrip(); });
+      pin.addEventListener('touchend', (e) => { e.preventDefault(); locked = true; showStrip(); }, { passive: false });
+    })();
+
+    // ===== PROPORTIONAL SCROLL =====
+    const layoutState  = { gridTop: 0, maxScroll: 0, diff: 0, taller: null };
+    const mainState    = { currentY: 0, targetY: 0 };
+    const supportState = { currentY: 0, targetY: 0 };
+
+    const gridEl     = document.getElementById('contentGrid');
+    const mainCol    = document.getElementById('mainCol');
+    const supportCol = document.getElementById('supportCol');
+
+    function calculateLayout() {
+      if (window.innerWidth <= 900) {
+        mainCol.style.transform    = 'none';
+        supportCol.style.transform = 'none';
+        mainState.currentY = 0; mainState.targetY = 0;
+        supportState.currentY = 0; supportState.targetY = 0;
+        return;
+      }
+      const mainH    = mainCol.offsetHeight;
+      const supportH = supportCol.offsetHeight;
+      const rect     = gridEl.getBoundingClientRect();
+      layoutState.gridTop = window.scrollY + rect.top - 100;
+
+      if (Math.abs(mainH - supportH) < 50) {
+        layoutState.diff = 0; layoutState.taller = 'equal';
+      } else if (mainH > supportH) {
+        layoutState.taller   = 'main';
+        layoutState.diff     = mainH - supportH;
+        layoutState.maxScroll = Math.max(window.innerHeight / 1.5, mainH - window.innerHeight + 100);
+      } else {
+        layoutState.taller   = 'support';
+        layoutState.diff     = supportH - mainH;
+        layoutState.maxScroll = Math.max(window.innerHeight / 1.5, supportH - window.innerHeight + 100);
+      }
+      handleProportionalScroll();
+    }
+
+    function handleProportionalScroll() {
+      if (window.innerWidth <= 900) return;
+      if (layoutState.diff <= 0 || layoutState.maxScroll <= 0) {
+        mainState.targetY = 0; supportState.targetY = 0; return;
+      }
+      let progress = (window.scrollY - layoutState.gridTop) / layoutState.maxScroll;
+      progress = Math.max(0, Math.min(1, progress));
+      const yOffset = progress * layoutState.diff;
+
+      if (layoutState.taller === 'main') {
+        supportState.targetY = yOffset; mainState.targetY = 0;
+      } else if (layoutState.taller === 'support') {
+        mainState.targetY = yOffset; supportState.targetY = 0;
+      } else {
+        mainState.targetY = 0; supportState.targetY = 0;
+      }
+    }
+
+    function renderLoop() {
+      mainState.currentY    += (mainState.targetY    - mainState.currentY)    * 0.08;
+      supportState.currentY += (supportState.targetY - supportState.currentY) * 0.08;
+      if (window.innerWidth > 900) {
+        mainCol.style.transform    = `translate3d(0, ${mainState.currentY}px, 0)`;
+        supportCol.style.transform = `translate3d(0, ${supportState.currentY}px, 0)`;
+      }
+      requestAnimationFrame(renderLoop);
+    }
+
+    requestAnimationFrame(renderLoop);
+    window.addEventListener('scroll', handleProportionalScroll, { passive: true });
+    window.addEventListener('resize', calculateLayout);
+
+    let resizeTimeout;
+    const columnObserver = new ResizeObserver(() => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(calculateLayout, 50);
+    });
+    if (mainCol)    columnObserver.observe(mainCol);
+    if (supportCol) columnObserver.observe(supportCol);
+
+    window.addEventListener('load', () => setTimeout(calculateLayout, 100));
+    requestAnimationFrame(calculateLayout);
+  </script>
+
+  <script src="/components.js"></script>
+  <script src="/destinations/japan/japan-components.js"></script>
+
+</body>
+</html>

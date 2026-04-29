@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+    <base target="_top">
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/theme.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Endless Atlas - Static Navigation Map</title>
+    
+        
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <style>
+        /* --- Brand Variables --- */
+        :root {
+            --forest: #1E4034;
+            --canopy: #2D6A4F;
+            --moss: #52B788;
+            --paper: #F7F5F0;
+            --ink: #0F0F0F;
+        }
+
+        /* --- Base Structure --- */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--paper);
+        }
+        
+        #map {
+            height: 100vh;
+            width: 100vw;
+            background-color: var(--paper);
+            cursor: default; 
+        }
+
+        /* --- Custom Marker & Label Styling --- */
+        .custom-leaflet-icon {
+            background: none;
+            border: none;
+        }
+
+        .marker-link {
+            display: block;
+            width: 16px;
+            height: 16px;
+            text-decoration: none;
+            outline: none;
+            position: relative; /* Establishes anchor for the absolute labels */
+        }
+
+        .brand-marker {
+            width: 100%;
+            height: 100%;
+            background-color: var(--moss);
+            border: 1.5px solid var(--paper);
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(15, 15, 15, 0.4);
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .city-label {
+            position: absolute; /* Allows independent placement from the dot */
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 20px;
+            letter-spacing: 1.5px;
+            color: var(--forest);
+            background-color: rgba(247, 245, 240, 0.85); /* Slightly transparent paper color */
+            padding: 2px 10px;
+            border-radius: 4px;
+            border: 1.5px solid var(--forest);
+            box-shadow: 0 2px 6px rgba(30, 64, 52, 0.15);
+            transition: all 0.3s ease;
+            white-space: nowrap; /* Prevents city names from wrapping */
+        }
+
+        /* --- Smart Positioning Classes --- */
+        .pos-right { left: 100%; top: 50%; transform: translateY(-50%); margin-left: 8px; }
+        .pos-left { right: 100%; top: 50%; transform: translateY(-50%); margin-right: 8px; }
+        .pos-top { bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 8px; }
+        .pos-bottom { top: 100%; left: 50%; transform: translateX(-50%); margin-top: 8px; }
+
+        /* Hover States for Desktop */
+        .marker-link:hover .brand-marker {
+            background-color: var(--canopy);
+            transform: scale(1.3);
+            box-shadow: 0 4px 8px rgba(15, 15, 15, 0.5);
+        }
+
+        /* Nudge animations based on label position */
+        .marker-link:hover .pos-right { margin-left: 12px; background-color: var(--paper); box-shadow: 0 4px 10px rgba(30, 64, 52, 0.3); }
+        .marker-link:hover .pos-left { margin-right: 12px; background-color: var(--paper); box-shadow: 0 4px 10px rgba(30, 64, 52, 0.3); }
+        .marker-link:hover .pos-top { margin-bottom: 12px; background-color: var(--paper); box-shadow: 0 4px 10px rgba(30, 64, 52, 0.3); }
+        .marker-link:hover .pos-bottom { margin-top: 12px; background-color: var(--paper); box-shadow: 0 4px 10px rgba(30, 64, 52, 0.3); }
+    </style>
+</head>
+<body>
+
+    <div id="map"></div>
+
+    <script>
+        // 1. Initialize the map with all interactive features strictly disabled
+        var map = L.map('map', {
+            zoomControl: false,
+            dragging: false,
+            scrollWheelZoom: false,
+            doubleClickZoom: false,
+            boxZoom: false,
+            keyboard: false,
+            touchZoom: false
+        });
+
+        // 2. Define the geographic bounding box of the 4 Main Islands of Japan
+        var japanBounds = [
+            [30.000000, 129.000000], // Southwest (Kyushu area)
+            [45.550000, 146.000000]  // Northeast (Hokkaido area)
+        ];
+
+        // Frame the map to perfectly fit these coordinates on any screen size
+        map.fitBounds(japanBounds, { padding: [20, 20] });
+
+        // 3. Add the clean CartoDB base map
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+        }).addTo(map);
+
+        // 4. Reusable function to create fully linked, labeled markers WITH positioning
+        function createCityPin(lat, lng, cityName, slug, labelPosition = 'right') {
+            var iconHtml = `<a href="https://endless-atlas.com/destinations/japan/${slug}" class="marker-link" aria-label="Explore ${cityName}">
+                                <div class="brand-marker"></div>
+                                <div class="city-label pos-${labelPosition}">${cityName}</div>
+                            </a>`;
+
+            var customIcon = L.divIcon({
+                className: 'custom-leaflet-icon', 
+                html: iconHtml,
+                iconSize: [16, 16], // Restricting size exactly to the dot
+                iconAnchor: [8, 8]  // Centers the anchor point exactly on the 16x16 dot
+            });
+
+            L.marker([lat, lng], {icon: customIcon}).addTo(map);
+        }
+
+        // 5. Deploy the cities directly with strategic positioning
+        createCityPin(35.6762, 139.6503, "TOKYO", "tokyo", "right");
+        createCityPin(35.0116, 135.7681, "KYOTO", "kyoto", "top");
+        createCityPin(34.6937, 135.5023, "OSAKA", "osaka", "bottom");
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,130 @@
+/* ============================================================
+   ENDLESS ATLAS — theme.css
+   Single source of truth for all design tokens.
+   All other CSS files depend on this file.
+   Do not define layout or component styles here.
+   ============================================================ */
+
+/* ============================================
+   FONTS
+   Playfair Display — editorial headings
+   DM Sans         — body text
+   Bebas Neue      — destination hero / impact display
+   ============================================ */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap');
+
+/* ============================================
+   ROOT TOKENS
+   ============================================ */
+:root {
+
+  /* ── Typography ──────────────────────────── */
+  --font-editorial: 'Playfair Display', Georgia, serif;
+  --font-body:      'DM Sans', 'Noto Sans', Arial, sans-serif;
+  --font-display:   'Bebas Neue', 'Arial Black', Impact, sans-serif;
+
+  /* ── Core Green Palette ──────────────────── */
+  --forest:    #1E4034;
+  --canopy:    #2D6A4F;
+  --moss:      #52B788;
+  --sage:      #95D5B2;
+
+  /* ── Neutral Palette ─────────────────────── */
+  --ink:       #0F0F0F;
+  --graphite:  #3D3D3D;
+  --stone:     #5C5346;
+  --ash:       #8C8C8C;
+  --cloud:     #EFEFEF;
+  --warm-rule: #EAE6DB;
+  --fog:       #C9D4C5;
+  --paper:     #F7F5F0;
+  --white:     #FFFFFF;
+
+  /* ── Accent Palette ──────────────────────── */
+  --driftwood:  #A8896A;
+  --sand:       #E9D8C4;
+  --terracotta: #C4654A;
+
+  /* ── Tinted Surfaces ─────────────────────── */
+  --forest-06:  rgba(30, 64, 52, 0.06);
+  --forest-08:  rgba(30, 64, 52, 0.08);
+  --forest-10:  rgba(30, 64, 52, 0.10);
+  --forest-15:  rgba(30, 64, 52, 0.15);
+  --forest-20:  rgba(30, 64, 52, 0.20);
+  --moss-08:    rgba(82, 183, 136, 0.08);
+  --moss-12:    rgba(82, 183, 136, 0.12);
+  --moss-20:    rgba(82, 183, 136, 0.20);
+  --ink-60:     rgba(15, 15, 15, 0.60);
+  --white-10:   rgba(255, 255, 255, 0.10);
+  --white-15:   rgba(255, 255, 255, 0.15);
+  --white-60:   rgba(255, 255, 255, 0.60);
+  --white-70:   rgba(255, 255, 255, 0.70);
+
+  /* ── Spacing Scale ───────────────────────── */
+  --space-1:   0.25rem;
+  --space-2:   0.5rem;
+  --space-3:   0.75rem;
+  --space-4:   1rem;
+  --space-5:   1.25rem;
+  --space-6:   1.5rem;
+  --space-8:   2rem;
+  --space-10:  2.5rem;
+  --space-12:  3rem;
+  --space-16:  4rem;
+  --space-20:  5rem;
+  --space-24:  6rem;
+
+  /* ── Border Radius ───────────────────────── */
+  --radius-xs:   4px;
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   16px;
+  --radius-xl:   28px;
+  --radius-full: 9999px;
+
+  /* ── Shadows ─────────────────────────────── */
+  --shadow-soft:  0 2px 12px rgba(15, 15, 15, 0.06);
+  --shadow-card:  0 4px 12px rgba(15, 15, 15, 0.05);
+  --shadow-hover: 0 8px 24px rgba(30, 64, 52, 0.10);
+  --shadow-modal: 0 20px 60px rgba(15, 15, 15, 0.20);
+
+  /* ── Transitions ─────────────────────────── */
+  --transition:        0.22s ease;
+  --transition-slow:   0.4s ease;
+  --transition-spring: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Z-index Scale ───────────────────────── */
+  --z-base:      1;
+  --z-raised:    10;
+  --z-japan-bar: 200;
+  --z-nav:       300;
+  --z-dropdown:  400;
+  --z-modal:     500;
+  --z-toast:     600;
+
+  /* ── Type Scale ──────────────────────────── */
+  --text-xs:   0.70rem;
+  --text-sm:   0.80rem;
+  --text-base: 0.875rem;
+  --text-md:   1rem;
+  --text-lg:   1.1rem;
+  --text-xl:   1.2rem;
+  --text-2xl:  1.6rem;
+  --text-3xl:  2rem;
+  --text-4xl:  2.5rem;
+  --text-5xl:  3rem;
+
+  /* ── Line Heights ────────────────────────── */
+  --leading-tight:   1.15;
+  --leading-snug:    1.30;
+  --leading-normal:  1.60;
+  --leading-relaxed: 1.75;
+  --leading-prose:   1.85;
+
+  /* ── Font Weights ────────────────────────── */
+  --weight-light:   300;
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semi:    600;
+  --weight-bold:    700;
+}
