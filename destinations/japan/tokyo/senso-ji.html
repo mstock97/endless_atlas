@@ -300,12 +300,40 @@
 </head>
 <body>
 
-    <!-- Standard Header Setup -->
+<!-- ===== MAIN SITE HEADER ===== -->
     <header class="site-header">
         <div class="nav-inner">
-            <div class="nav-logo">Endless<span>Atlas</span></div>
+            <a href="/" class="nav-logo">Endless<span>Atlas</span></a>
+            
+            <ul class="nav-links">
+                <li><a href="/destinations">Destinations</a></li>
+                <li><a href="/stories">Stories</a></li>
+                <li><a href="/guides">Guides</a></li>
+                <li><a href="/about">About</a></li>
+            </ul>
         </div>
     </header>
+
+    <!-- ===== JAPAN SUB-HEADER ===== -->
+    <nav class="sub-header">
+        <div class="sub-nav-inner">
+            <div class="sub-nav-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                JAPAN
+            </div>
+            <ul class="sub-nav-links">
+                <li><a href="/destinations/japan/tokyo" class="active">Tokyo</a></li>
+                <li><a href="/destinations/japan/kyoto">Kyoto</a></li>
+                <li><a href="/destinations/japan/osaka">Osaka</a></li>
+                <li><a href="/destinations/japan/hokkaido">Hokkaido</a></li>
+                <li><a href="/destinations/japan/itineraries">Itineraries</a></li>
+                <li><a href="/destinations/japan/rail-pass">Rail Pass Guide</a></li>
+            </ul>
+        </div>
+    </nav>
 
     <main class="article-layout">
         <!-- Left Sidebar (Empty for spacing per main.css grid layout) -->
