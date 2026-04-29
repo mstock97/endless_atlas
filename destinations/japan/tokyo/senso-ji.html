@@ -1,534 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Senso-Ji Guide - Endless Atlas</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Senso-Ji Guide | Endless Atlas</title>
+  <meta name="description" content="A complete guide to Senso-ji Temple in Asakusa, Tokyo — Japan's oldest and most visited temple.">
+  <link rel="canonical" href="https://endless-atlas.com/destinations/japan/tokyo/senso-ji">
 
-    <!-- Canonical Font Import -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
-
-    <!-- CSS Links (Ensure these paths resolve correctly on your server) -->
-    <link rel="stylesheet" href="/theme.css">
-    <link rel="stylesheet" href="/main.css">
-
-    <!-- Page Specific Styles for Image Loader, Geo Pin, and Grid -->
-    <style>
-        /* Progressive Image Loader CSS */
-        .hero-image-container {
-            position: relative;
-            width: 85%; /* Reduced from 100% */
-            max-width: 800px; /* Caps the size on extra wide screens */
-            aspect-ratio: 16/9;
-            overflow: hidden;
-            border-radius: var(--radius-md); 
-            margin: 2rem auto; /* auto centers the container horizontally */
-        }
-
-        .hero-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center center;
-            z-index: 0;
-            transition: filter 0.8s ease-in-out, transform 0.8s ease-in-out;
-            will-change: filter;
-        }
-
-        .img-low-res {
-            filter: blur(15px);
-            transform: scale(1.05);
-        }
-
-        .img-loaded {
-            filter: blur(0) !important;
-            transform: scale(1) !important;
-        }
-
-        /* Geo Pin - Floating Pill Style for inline/compact containers */
-        .geo-pin {
-            position: absolute;
-            bottom: 40px;
-            left: 16px;
-            z-index: 5;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .geo-pin-icon {
-            width: 32px;
-            height: 32px;
-            opacity: 0.28;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .geo-pin-icon svg { width: 26px; height: 26px; }
-
-        .geo-pin:hover .geo-pin-icon,
-        .geo-pin.active .geo-pin-icon {
-            opacity: 1;
-            transform: scale(1.15);
-        }
-
-        .location-strip {
-            position: absolute;
-            bottom: 44px;
-            left: 52px;
-            z-index: 4;
-            background: rgba(10, 10, 10, 0.72);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 0 12px 0 10px;
-            height: 0;
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(4px);
-            transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                        opacity 0.3s ease,
-                        transform 0.3s ease;
-            display: flex;
-            align-items: center;
-            white-space: nowrap;
-        }
-
-        .location-strip.visible {
-            height: 30px;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .strip-inner {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            width: 100%;
-        }
-
-        .strip-dot {
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: var(--moss); 
-            flex-shrink: 0;
-        }
-
-        .strip-text {
-            font-family: var(--font-body);
-            font-size: 0.65rem;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.85);
-            flex: 1;
-        }
-
-        .strip-link {
-            font-family: var(--font-body);
-            font-size: 0.6rem;
-            color: rgba(255,255,255,0.4);
-            text-decoration: none;
-            border: 1px solid rgba(255,255,255,0.15);
-            padding: 0.14rem 0.5rem;
-            border-radius: 20px;
-            transition: color 0.2s, border-color 0.2s;
-            white-space: nowrap;
-            flex-shrink: 0;
-            margin-left: 8px;
-        }
-
-        .strip-link:hover {
-            color: rgba(255,255,255,0.9);
-            border-color: rgba(255,255,255,0.45);
-        }
-
-        /* ===== MAIN NAVBAR OVERRIDES (If needed) ===== */
-        .site-header {
-            position: sticky;
-            top: 0;
-            z-index: 300;
-            background: rgba(247, 245, 240, 0.94); /* var(--paper) */
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--warm-rule, #EAE6DB);
-        }
-        
-        .nav-inner {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 5%;
-            height: 70px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .nav-logo {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.8rem;
-            color: var(--forest, #1E4034);
-            text-decoration: none;
-            letter-spacing: 0.05em;
-        }
-
-        .nav-logo span { color: var(--moss, #52B788); }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-            align-items: center;
-            margin: 0;
-            padding: 0;
-        }
-
-        .nav-links a {
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--ink, #0F0F0F);
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            transition: color 0.2s;
-        }
-
-        .nav-links a:hover { color: var(--moss, #52B788); }
-
-        /* ===== JAPAN SUB-HEADER ===== */
-        .sub-header {
-            position: relative;
-            background: var(--forest, #1E4034);
-            color: var(--white, #FFFFFF);
-            z-index: 290;
-        }
-
-        .sub-nav-inner {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 5%;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            overflow-x: auto; /* Allows horizontal scrolling on mobile */
-            scrollbar-width: none; /* Hides scrollbar in Firefox */
-        }
-        
-        .sub-nav-inner::-webkit-scrollbar { display: none; } /* Hides scrollbar Chrome/Safari */
-
-        .sub-nav-title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.1rem;
-            letter-spacing: 0.05em;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            flex-shrink: 0;
-            color: var(--moss, #52B788);
-            margin-right: 2rem;
-        }
-
-        .sub-nav-links {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .sub-nav-links a {
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.6);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            text-decoration: none;
-            transition: color 0.2s ease;
-            white-space: nowrap;
-        }
-
-        .sub-nav-links a:hover,
-        .sub-nav-links a.active {
-            color: var(--white, #FFFFFF);
-        }
-
-        .sub-nav-links a.active {
-            position: relative;
-        }
-
-        .sub-nav-links a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -15px; /* Aligns with the bottom of the 48px header */
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--moss, #52B788);
-        }
-
-        /* ===== ASYNC SCROLL & GRID LAYOUT ===== */
-        main {
-            padding: 4rem 5%;
-            width: 100%;
-        }
-
-        .content-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 3rem;
-            max-width: 1400px;
-            width: 100%;
-            margin: 0 auto;
-            align-items: start;
-        }
-
-        @media (min-width: 900px) {
-            /* Using fr units handles the 3rem gap without overflowing 100% width */
-            .content-grid { grid-template-columns: 8fr 2fr; } 
-        }
-
-        .main-column {
-            position: relative;
-            z-index: 10;
-            will-change: transform;
-        }
-
-        .support-column {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            position: relative;
-            z-index: 10;
-            will-change: transform;
-            min-height: 50vh; 
-        }
-
-        /* ===== DUMMY WIDGETS (For visually testing the 10% sidebar) ===== */
-        .dummy-widget {
-            background: var(--warm-rule, #EAE6DB);
-            border: 1px dashed var(--ash, #8C8C8C);
-            border-radius: 8px;
-            padding: 1.5rem 0.5rem;
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.85rem;
-            color: var(--forest, #1E4034);
-        }
-
-        .dummy-widget strong {
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .dummy-widget.tall {
-            min-height: 800px; /* Forces enough scroll height to see the async effect */
-        }
-
-        /* Mobile Adjustments */
-        @media (max-width: 768px) {
-            .nav-links { display: none; /* Hide main links on mobile, normally handled by a hamburger menu JS */ }
-        }
-    </style>
+  <!--
+    CSS LOAD ORDER
+    1. theme.css      — design tokens
+    2. typography.css — heading scale, prose styles
+    3. layout.css     — reset, containers, section utilities
+    4. components.css — all UI components
+    5. navigation.css — header, nav, mobile menu
+    6. footer.css     — footer layout
+    7. animations.css — keyframes, scroll reveal
+  -->
+  <link rel="stylesheet" href="/theme.css">
+  <link rel="stylesheet" href="/typography.css">
+  <link rel="stylesheet" href="/layout.css">
+  <link rel="stylesheet" href="/components.css">
+  <link rel="stylesheet" href="/navigation.css">
+  <link rel="stylesheet" href="/footer.css">
+  <link rel="stylesheet" href="/animations.css">
 </head>
 <body>
 
-    <div id="site-header"></div>
-    <div id="japan-sub-header"></div>
+  <div id="site-header"></div>
+  <div id="japan-sub-header"></div>
 
-    <!-- Removed class="article-layout" to prevent external CSS grid interference -->
-    <main>
-        
-        <div class="content-grid" id="contentGrid">
-            <!-- Main Article Content (90%) - Injected via fetch -->
-            <article class="main-column" id="mainCol">
-                <!-- Content loads here -->
-            </article>
+  <main class="dest-main">
+    <div class="content-grid content-grid--wide" id="contentGrid">
 
-            <!-- Right Sidebar (10%) -->
-            <aside class="support-column" id="supportCol">
-                <!-- Dummy widgets added here so you can verify the layout and scroll behavior -->
-                <div class="dummy-widget">
-                    <strong>Widget 1</strong>
-                    <span>10% Width</span>
-                </div>
-                
-                <div class="dummy-widget tall">
-                    <strong>Widget 2</strong>
-                    <span>Scroll down to see the async effect sync up</span>
-                </div>
-                
-                <div class="dummy-widget">
-                    <strong>Widget 3</strong>
-                    <span>Bottom Alignment</span>
-                </div>
-            </aside>
-        </div>
-    </main>
+      <!-- Main article content (90%) — injected via fetch -->
+      <article class="main-column" id="mainCol">
+        <!-- Content loaded dynamically -->
+      </article>
 
-    <script>
-        // 1. Fetch Content and Initialize Scripts
-        fetch('/support/japan/tokyo/senso-ji_content.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('mainCol').innerHTML = data;
-                initInjectedScripts(); // Initialize image loader and pins after content exists
-                setTimeout(calculateLayout, 100); // Recalculate grid sizing for async scroll
-            })
-            .catch(error => console.error('Error loading the left column:', error));
+      <!-- Sidebar (10%) -->
+      <aside class="support-column" id="supportCol">
+        <!-- Widgets populated as content grows -->
+      </aside>
 
+    </div>
+  </main>
 
-        // 2. Wrap DOM-dependent scripts in a function
-        function initInjectedScripts() {
-            /**
-             * PROGRESSIVE IMAGE LOADER
-             * Stage 1: HD image loads instantly via HTML, displayed blurry
-             * Stage 2: Full-res loads in background, unblurs in when ready
-             */
-            const heroImg = document.getElementById('mainHeroImage');
-            if (heroImg) {
-                const fullUrl = "https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/tokyo/senso-ji/1%20-%20arial%20photo.jpg";
+  <div id="site-footer"></div>
 
-                function revealFull() {
-                    heroImg.src = fullUrl;
+  <script>
+    // ===== FETCH ARTICLE CONTENT =====
+    fetch('/support/japan/tokyo/senso-ji_content.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('mainCol').innerHTML = data;
+        initInjectedScripts();
+        setTimeout(calculateLayout, 100);
+      })
+      .catch(error => console.error('Error loading article content:', error));
 
-                    setTimeout(() => {
-                        heroImg.classList.remove('img-low-res');
-                        heroImg.classList.add('img-loaded');
-                    }, 50);
-                }
+    // ===== SCRIPTS THAT DEPEND ON FETCHED CONTENT =====
+    function initInjectedScripts() {
+      const heroImg = document.getElementById('mainHeroImage');
+      if (heroImg) {
+        const fullUrl = "https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/tokyo/senso-ji/1%20-%20arial%20photo.jpg";
 
-                const fullLoader = new Image();
-                fullLoader.referrerPolicy = 'no-referrer';
-                fullLoader.src = fullUrl;
-
-                if (fullLoader.complete) {
-                    revealFull();
-                } else {
-                    fullLoader.onload = revealFull;
-                }
-            }
-
-            /**
-             * GEO PIN HOVER LOGIC
-             * Single Image scope for floating pill styling
-             */
-            const pin   = document.getElementById('geoPin0');
-            const strip = document.getElementById('locationStrip0');
-            
-            if (pin && strip) {
-                let locked  = false;
-                const isMobile = () => window.matchMedia('(hover: none)').matches;
-
-                function showStrip()      { strip.classList.add('visible'); pin.classList.add('active'); }
-                function hideStrip()      { if (locked) return; strip.classList.remove('visible'); pin.classList.remove('active'); }
-
-                pin.addEventListener('mouseenter', () => { if (!isMobile()) showStrip(); });
-                pin.addEventListener('mouseleave', () => { if (!isMobile()) hideStrip(); });
-
-                pin.addEventListener('click', (e) => { e.stopPropagation(); locked = true; showStrip(); });
-                pin.addEventListener('touchend', (e) => { e.preventDefault(); locked = true; showStrip(); }, { passive: false });
-            }
+        function revealFull() {
+          heroImg.src = fullUrl;
+          setTimeout(() => {
+            heroImg.classList.remove('img-low-res');
+            heroImg.classList.add('img-loaded');
+          }, 50);
         }
 
+        const fullLoader = new Image();
+        fullLoader.referrerPolicy = 'no-referrer';
+        fullLoader.src = fullUrl;
+        if (fullLoader.complete) { revealFull(); } else { fullLoader.onload = revealFull; }
+      }
 
-        // ===== PROPORTIONAL (ASYNC) SCROLL =====
-        const layoutState  = { gridTop: 0, maxScroll: 0, diff: 0, taller: null };
-        const mainState    = { currentY: 0, targetY: 0 };
-        const supportState = { currentY: 0, targetY: 0 };
+      // Geo pin for inline article image (pill variant)
+      const pin   = document.getElementById('geoPin0');
+      const strip = document.getElementById('locationStrip0');
 
-        const gridEl     = document.getElementById('contentGrid');
-        const mainCol    = document.getElementById('mainCol');
-        const supportCol = document.getElementById('supportCol');
+      if (pin && strip) {
+        let locked  = false;
+        const isMobile = () => window.matchMedia('(hover: none)').matches;
 
-        function calculateLayout() {
-            if (window.innerWidth <= 900) {
-                mainCol.style.transform    = 'none';
-                supportCol.style.transform = 'none';
-                mainState.currentY = 0; mainState.targetY = 0;
-                supportState.currentY = 0; supportState.targetY = 0;
-                return;
-            }
-            const mainH    = mainCol.offsetHeight;
-            const supportH = supportCol.offsetHeight;
-            const rect     = gridEl.getBoundingClientRect();
-            layoutState.gridTop = window.scrollY + rect.top - 100; // Offset calculation
+        function showStrip() { strip.classList.add('visible'); pin.classList.add('active'); }
+        function hideStrip() { if (locked) return; strip.classList.remove('visible'); pin.classList.remove('active'); }
 
-            if (Math.abs(mainH - supportH) < 50) {
-                layoutState.diff = 0; layoutState.taller = 'equal';
-            } else if (mainH > supportH) {
-                layoutState.taller    = 'main';
-                layoutState.diff      = mainH - supportH;
-                layoutState.maxScroll = Math.max(window.innerHeight / 1.5, mainH - window.innerHeight + 100);
-            } else {
-                layoutState.taller    = 'support';
-                layoutState.diff      = supportH - mainH;
-                layoutState.maxScroll = Math.max(window.innerHeight / 1.5, supportH - window.innerHeight + 100);
-            }
-            handleProportionalScroll();
-        }
+        pin.addEventListener('mouseenter', () => { if (!isMobile()) showStrip(); });
+        pin.addEventListener('mouseleave', () => { if (!isMobile()) hideStrip(); });
+        pin.addEventListener('click',    (e) => { e.stopPropagation(); locked = true; showStrip(); });
+        pin.addEventListener('touchend', (e) => { e.preventDefault(); locked = true; showStrip(); }, { passive: false });
+      }
+    }
 
-        function handleProportionalScroll() {
-            if (window.innerWidth <= 900) return;
-            if (layoutState.diff <= 0 || layoutState.maxScroll <= 0) {
-                mainState.targetY = 0; supportState.targetY = 0; return;
-            }
-            let progress = (window.scrollY - layoutState.gridTop) / layoutState.maxScroll;
-            progress = Math.max(0, Math.min(1, progress));
-            const yOffset = progress * layoutState.diff;
+    // ===== PROPORTIONAL SCROLL =====
+    const layoutState  = { gridTop: 0, maxScroll: 0, diff: 0, taller: null };
+    const mainState    = { currentY: 0, targetY: 0 };
+    const supportState = { currentY: 0, targetY: 0 };
 
-            if (layoutState.taller === 'main') {
-                supportState.targetY = yOffset; mainState.targetY = 0;
-            } else if (layoutState.taller === 'support') {
-                mainState.targetY = yOffset; supportState.targetY = 0;
-            } else {
-                mainState.targetY = 0; supportState.targetY = 0;
-            }
-        }
+    const gridEl     = document.getElementById('contentGrid');
+    const mainCol    = document.getElementById('mainCol');
+    const supportCol = document.getElementById('supportCol');
 
-        function renderLoop() {
-            mainState.currentY   += (mainState.targetY      - mainState.currentY)    * 0.08;
-            supportState.currentY += (supportState.targetY - supportState.currentY) * 0.08;
-            if (window.innerWidth > 900) {
-                mainCol.style.transform    = `translate3d(0, ${mainState.currentY}px, 0)`;
-                supportCol.style.transform = `translate3d(0, ${supportState.currentY}px, 0)`;
-            }
-            requestAnimationFrame(renderLoop);
-        }
+    function calculateLayout() {
+      if (window.innerWidth <= 900) {
+        mainCol.style.transform    = 'none';
+        supportCol.style.transform = 'none';
+        mainState.currentY = 0; mainState.targetY = 0;
+        supportState.currentY = 0; supportState.targetY = 0;
+        return;
+      }
+      const mainH    = mainCol.offsetHeight;
+      const supportH = supportCol.offsetHeight;
+      const rect     = gridEl.getBoundingClientRect();
+      layoutState.gridTop = window.scrollY + rect.top - 100;
 
-        requestAnimationFrame(renderLoop);
-        window.addEventListener('scroll', handleProportionalScroll, { passive: true });
-        window.addEventListener('resize', calculateLayout);
+      if (Math.abs(mainH - supportH) < 50) {
+        layoutState.diff = 0; layoutState.taller = 'equal';
+      } else if (mainH > supportH) {
+        layoutState.taller    = 'main';
+        layoutState.diff      = mainH - supportH;
+        layoutState.maxScroll = Math.max(window.innerHeight / 1.5, mainH - window.innerHeight + 100);
+      } else {
+        layoutState.taller    = 'support';
+        layoutState.diff      = supportH - mainH;
+        layoutState.maxScroll = Math.max(window.innerHeight / 1.5, supportH - window.innerHeight + 100);
+      }
+      handleProportionalScroll();
+    }
 
-        // ResizeObserver ensures grid layout recalcs if elements (like images or embeds) pop in
-        let resizeTimeout;
-        const columnObserver = new ResizeObserver(() => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(calculateLayout, 50);
-        });
-        if (mainCol)    columnObserver.observe(mainCol);
-        if (supportCol) columnObserver.observe(supportCol);
-        window.addEventListener('load', () => setTimeout(calculateLayout, 100));
+    function handleProportionalScroll() {
+      if (window.innerWidth <= 900) return;
+      if (layoutState.diff <= 0 || layoutState.maxScroll <= 0) {
+        mainState.targetY = 0; supportState.targetY = 0; return;
+      }
+      let progress = (window.scrollY - layoutState.gridTop) / layoutState.maxScroll;
+      progress = Math.max(0, Math.min(1, progress));
+      const yOffset = progress * layoutState.diff;
 
-    </script>
-    <script src="/components.js"></script>
-    <script src="/destinations/japan/japan-components.js"></script>
+      if (layoutState.taller === 'main') {
+        supportState.targetY = yOffset; mainState.targetY = 0;
+      } else if (layoutState.taller === 'support') {
+        mainState.targetY = yOffset; supportState.targetY = 0;
+      } else {
+        mainState.targetY = 0; supportState.targetY = 0;
+      }
+    }
+
+    function renderLoop() {
+      mainState.currentY    += (mainState.targetY    - mainState.currentY)    * 0.08;
+      supportState.currentY += (supportState.targetY - supportState.currentY) * 0.08;
+      if (window.innerWidth > 900) {
+        mainCol.style.transform    = `translate3d(0, ${mainState.currentY}px, 0)`;
+        supportCol.style.transform = `translate3d(0, ${supportState.currentY}px, 0)`;
+      }
+      requestAnimationFrame(renderLoop);
+    }
+
+    requestAnimationFrame(renderLoop);
+    window.addEventListener('scroll', handleProportionalScroll, { passive: true });
+    window.addEventListener('resize', calculateLayout);
+
+    let resizeTimeout;
+    const columnObserver = new ResizeObserver(() => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(calculateLayout, 50);
+    });
+    if (mainCol)    columnObserver.observe(mainCol);
+    if (supportCol) columnObserver.observe(supportCol);
+    window.addEventListener('load', () => setTimeout(calculateLayout, 100));
+  </script>
+
+  <script src="/components.js"></script>
+  <script src="/destinations/japan/japan-components.js"></script>
+
 </body>
 </html>

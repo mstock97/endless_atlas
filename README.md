@@ -1,164 +1,105 @@
-# WanderNotes – Setup Guide
+# Endless Atlas
 
-## Project Structure
+A travel journalism site built with modular, token-driven CSS.
+
+## CSS Architecture
+
+All stylesheets must be loaded in this order. Each file depends on the tokens defined in `theme.css`.
+
+| File | Purpose |
+|------|---------|
+| `theme.css` | Design tokens: colors, fonts, spacing, radii, shadows, z-index, transitions |
+| `typography.css` | Global h1–h6 scale, `.prose` container, text utility classes |
+| `layout.css` | Reset, body base, containers, grid utilities, article three-column layout |
+| `components.css` | All UI components: buttons, hero, geo pin, cards, destination page patterns, widgets |
+| `navigation.css` | Site header, nav links, dropdowns, mobile menu |
+| `footer.css` | Footer grid, columns, newsletter signup, bottom bar |
+| `animations.css` | Keyframes, entrance classes, scroll-reveal, reduced-motion override |
+
+### `main.css` — Compatibility Bridge
+
+Pages that still reference `/main.css` are covered — it imports all seven files above via `@import`. New pages should link the individual files directly in `<head>`.
+
+## Color Palette
+
+All values live in `theme.css` as CSS custom properties. The canonical values are:
 
 ```
-travel-site/
-├── index.html                      ← Homepage
-├── articles/
-│   └── sample-article/
-│       └── index.html              ← Article template (copy this for every new article)
-├── assets/
-│   ├── css/
-│   │   └── main.css                ← All styles (design tokens, components, widgets)
-│   └── js/
-│       ├── components.js           ← Shared header + footer (auto-injected)
-│       └── widgets.js              ← Currency, weather, TOC, share buttons
-└── README.md
+--forest:    #1E4034  (dark forest green — primary)
+--canopy:    #2D6A4F  (mid green — hover states)
+--moss:      #52B788  (light green — highlights/CTAs)
+--ink:       #0F0F0F  (near-black — primary text)
+--graphite:  #3D3D3D  (dark grey — secondary text)
+--ash:       #8C8C8C  (mid grey — labels, meta)
+--paper:     #F7F5F0  (warm white — page background)
 ```
 
----
+## Font Stack
 
-## Phase 1: GitHub Setup
+- **Playfair Display** (`--font-editorial`) — article headings, editorial titles
+- **DM Sans** (`--font-body`) — body text, UI elements, labels
+- **Bebas Neue** (`--font-display`) — destination hero titles, impact display text
 
-### 1. Create your GitHub account
-Go to github.com and sign up.
+All three are imported from Google Fonts in `theme.css`.
 
-### 2. Create your repository
-- Click **+** → **New repository**
-- Name it: `yourusername.github.io`
-- Set to **Public**
-- Check **Add a README file**
-- Click **Create repository**
+## Page Structure
 
-### 3. Upload your files
-- Click **Add file** → **Upload files**
-- Drag in everything from this folder
-- Commit directly to `main`
+### Home page (`index.html`)
+Links the 7 split CSS files directly. No inline styles.
 
----
+### Destination pages (`destinations/japan/`)
+Link the 7 split CSS files. All page-specific styles absorbed into `components.css` and `layout.css`. No inline `<style>` blocks.
 
-## Phase 2: Enable GitHub Pages
+### JavaScript components
+- `components.js` — Injects shared header and footer into every page via `#site-header` and `#site-footer` divs.
+- `destinations/japan/japan-components.js` — Injects the Japan sub-navigation bar into `#japan-sub-header` divs on all Japan section pages.
 
-1. Go to your repo → **Settings** → **Pages**
-2. Under "Branch", select `main` → `/ (root)` → **Save**
-3. Your site will be live at `https://yourusername.github.io` within ~2 minutes
+## Key Component Classes
 
----
-
-## Phase 3: Connect Your Domain via Cloudflare
-
-### Add your domain to Cloudflare
-1. Go to cloudflare.com → **Add a site** → enter your domain
-2. Choose the **Free plan**
-3. Cloudflare will show you two nameservers (e.g., `ada.ns.cloudflare.com`)
-
-### Update nameservers at your registrar
-Log into wherever you bought your domain and replace the existing nameservers
-with the two Cloudflare ones. DNS propagation takes up to 48 hours (usually under 2).
-
-### Add DNS records in Cloudflare
-Go to **DNS** → **Add record** and add these four:
-
-| Type  | Name | Content            | Proxy |
-|-------|------|--------------------|-------|
-| A     | @    | 185.199.108.153    | ✅    |
-| A     | @    | 185.199.109.153    | ✅    |
-| A     | @    | 185.199.110.153    | ✅    |
-| A     | @    | 185.199.111.153    | ✅    |
-| CNAME | www  | yourusername.github.io | ✅ |
-
-These are GitHub Pages' IP addresses.
-
-### Tell GitHub your custom domain
-1. In your repo → **Settings** → **Pages**
-2. Under "Custom domain", enter `yourdomain.com` → **Save**
-3. A `CNAME` file will be created automatically in your repo
-4. Check **Enforce HTTPS** once it's available (may take a few minutes)
-
----
-
-## Phase 4: QA Subdomain (qa.yourdomain.com)
-
-### Create a QA branch in GitHub
-```bash
-git checkout -b qa
-git push origin qa
-```
-
-### Enable Pages on the QA branch
-1. **Settings** → **Pages**
-2. Change branch from `main` to `qa`
-
-Note: GitHub Pages only serves one branch at a time from the same repo.
-For a true parallel QA environment, create a **second repo** named `qa-yoursite`
-and point the subdomain there.
-
-### Add QA DNS record in Cloudflare
-| Type  | Name | Content                  | Proxy |
-|-------|------|--------------------------|-------|
-| CNAME | qa   | yourusername.github.io   | ✅    |
-
-### Add CNAME file to QA repo/branch
-Create a file named `CNAME` (no extension) containing:
-```
-qa.yourdomain.com
-```
-
-The purple QA banner will automatically appear on `qa.yourdomain.com` —
-it's triggered by `components.js` checking the hostname.
-
----
-
-## How to Add a New Article
-
-1. Copy the folder: `articles/sample-article/` → `articles/your-article-name/`
-2. Edit `index.html` inside it:
-   - Update `<title>`, `<meta name="description">`, `.article-title`, `.article-subtitle`
-   - Replace the article body content
-   - Set `data-city="YourCity"` on `#widget-weather` to pre-load the right city
-   - Update the related articles widget links
-3. Commit and push — GitHub Pages builds automatically
-
----
-
-## How Shared Components Work
-
-Every page has two placeholder divs:
+### Destination Hero (photo full-bleed)
 ```html
-<div id="site-header"></div>
-<div id="site-footer"></div>
+<section class="dest-hero" id="heroContainer">
+  <img class="dest-hero__image img-low-res" ...>
+  <h1 class="dest-hero__title">JAPAN</h1>
+  <div class="geo-pin" ...>...</div>
+  <div class="location-strip" ...>...</div>
+</section>
+```
+Add `dest-hero--tall` for the taller city-page variant.
+
+### Destination Content Grid
+```html
+<main class="dest-main">
+  <div class="content-grid">
+    <article class="main-column">...</article>
+    <aside class="support-column">...</aside>
+  </div>
+</main>
+```
+Add `content-grid--wide` for the 8fr / 2fr article layout.
+
+### Quick Facts
+```html
+<div class="quick-facts">
+  <div class="fact-cell">
+    <span class="fact-label">Capital</span>
+    <div class="fact-value">Tokyo</div>
+  </div>
+</div>
 ```
 
-`components.js` injects the full header and footer HTML at page load.
-To update the nav, footer links, or site name: **edit `components.js` once**
-and every page updates automatically.
+### Geo Pin (inline pill variant for article images)
+Use `.location-strip--pill` instead of `.location-strip` for the compact floating pill style.
 
-```javascript
-// In components.js — edit these to change nav:
-const NAV_LINKS = [
-  { label: 'Destinations', href: '/destinations/' },
-  { label: 'Travel Tips',  href: '/tips/' },
-  // Add more here...
-];
+### Prose Container
+Wrap any rich text content in `.prose` for properly styled headings, paragraphs, blockquotes, lists, and callout boxes:
+```html
+<div class="prose">
+  <h2>Section heading</h2>
+  <p>Body text...</p>
+  <div class="info-box">
+    <p class="info-box-title">Good to know</p>
+    <p>Callout text...</p>
+  </div>
+</div>
 ```
-
----
-
-## Available Widgets
-
-### Currency Converter
-- Add `id="widget-currency"` to your widget div
-- Uses free ExchangeRate-API (no key needed)
-
-### Weather
-- Add `id="widget-weather"` and `data-city="CityName"` to pre-load a location
-- Uses Open-Meteo (free, no key needed)
-
-### Table of Contents
-- Add `<ul class="toc-list" id="toc-list"></ul>` in your sidebar
-- Auto-generates from all `h2` and `h3` tags in `.article-body`
-- Highlights the active section as you scroll
-
-### Share Buttons
-- Add `data-share="twitter"`, `data-share="facebook"`, or `data-share="copy"` to any button
