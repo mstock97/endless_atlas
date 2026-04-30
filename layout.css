@@ -219,6 +219,7 @@ button { font-family: var(--font-body); cursor: pointer; }
   letter-spacing: -0.02em;
   color: var(--ink);
   margin-bottom: var(--space-4);
+  text-align: center;
 }
 
 .article-subtitle {
@@ -226,6 +227,7 @@ button { font-family: var(--font-body); cursor: pointer; }
   color: var(--graphite);
   line-height: var(--leading-normal);
   margin-bottom: var(--space-6);
+  text-align: center;
 }
 
 .article-byline {
