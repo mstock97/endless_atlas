@@ -1,443 +1,528 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-F7SKJN227T"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-F7SKJN227T');
-</script>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Travel Guide to Japan | Endless Atlas</title>
-  <meta name="description" content="Explore Japan with Endless Atlas. Discover local currency (JPY), current JST time, climate data, and national holidays to plan your perfect trip.">
-  <meta name="keywords" content="Japan travel, JPY exchange rate, Japan climate, Japan holidays, Endless Atlas">
-  <link rel="canonical" href="https://endless-atlas.com/destinations/japan">
-
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Japan | Endless Atlas">
-  <meta property="og:description" content="Your comprehensive guide to traveling Japan. Real-time FX rates, weather data, and travel essentials.">
-  <meta property="og:image" content="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero.JPG">
-
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="Japan | Endless Atlas">
-  <meta property="twitter:description" content="Real-time Japan travel data including currency, time, and climate.">
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Japan Travel Guide - Endless Atlas",
-    "description": "Comprehensive travel information for Japan, including currency, time zones, and climate.",
-    "publisher": {
-      "@type": "Organization",
-      "name": "Endless Atlas"
-    }
-  }
-  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Endless Atlas — travel stories, destination guides, and adventures from around the world." />
+  <title>Endless Atlas</title>
 
   <!--
-    CSS LOAD ORDER
-    1. theme.css      — design tokens (fonts, colors, spacing)
-    2. typography.css — heading scale, prose styles
-    3. layout.css     — reset, containers, section utilities
-    4. components.css — all UI components
-    5. navigation.css — header, nav, mobile menu
-    6. footer.css     — footer layout
-    7. animations.css — keyframes, scroll reveal
+    CSS LOAD ORDER — important, do not rearrange.
+    1. theme.css      — Google Fonts import + all design tokens (:root vars)
+    2. typography.css — Global heading scale + .prose container + text utilities
+    3. layout.css     — Reset, body, containers, grids, article layout
+    4. components.css — Buttons, hero, cards, widgets, destinations strip
+    5. navigation.css — Header, nav, dropdowns, mobile menu
+    6. footer.css     — Footer grid, columns, bottom bar
+    7. animations.css — Keyframes, entrance classes, reduced-motion override
   -->
-  <link rel="stylesheet" href="/theme.css">
-  <link rel="stylesheet" href="/typography.css">
-  <link rel="stylesheet" href="/layout.css">
-  <link rel="stylesheet" href="/components.css">
-  <link rel="stylesheet" href="/navigation.css">
-  <link rel="stylesheet" href="/footer.css">
-  <link rel="stylesheet" href="/animations.css">
-
-  <!--
-    Page-specific layout styles.
-    These override global rules that would otherwise conflict.
-    Defined here to guarantee correct padding and font rendering
-    regardless of external CSS cascade order.
-  -->
+  <link rel="stylesheet" href="theme.css" />
+  <link rel="stylesheet" href="typography.css" />
+  <link rel="stylesheet" href="layout.css" />
+  <link rel="stylesheet" href="components.css" />
+  <link rel="stylesheet" href="navigation.css" />
+  <link rel="stylesheet" href="footer.css" />
+  <link rel="stylesheet" href="animations.css" />
 </head>
 
-<body>
-
-  <div id="site-header"></div>
-  <div id="japan-sub-header"></div>
+<body class="page-wrapper">
 
   <!-- ============================================
-       DESTINATION HERO
+       ANNOUNCEMENT BANNER (optional)
   ============================================ -->
-  <section class="dest-hero" id="heroContainer" aria-label="Japan hero image">
+  <div class="qa-banner">
+    ✈️ New guides dropping weekly —
+    <a href="/newsletter">Subscribe for free</a>
+  </div>
 
-    <img src="https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero-hd.JPG"
-         class="dest-hero__image img-low-res"
-         id="mainHeroImage"
-         alt="Mount Fuji with cherry blossoms"
-         referrerpolicy="no-referrer">
+  <!-- ============================================
+       HEADER & NAV
+  ============================================ -->
+  <header class="site-header">
+    <nav class="nav-inner" role="navigation" aria-label="Main navigation">
 
-    <h1 class="dest-hero__title" id="heroText">JAPAN</h1>
+      <!-- Logo -->
+      <a href="/" class="nav-logo">
+        Endless<span>Atlas</span>
+      </a>
 
-    <div class="geo-pin" id="geoPin" aria-label="View photo location">
-      <div class="geo-pin-icon">
-        <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-        </svg>
-      </div>
-    </div>
+      <!-- Desktop nav links -->
+      <ul class="nav-links" id="nav-links">
 
-    <div class="location-strip" id="locationStrip">
-      <div class="strip-inner">
-        <span class="strip-dot" aria-hidden="true"></span>
-        <span class="strip-text">Chureito Pagoda, Yamanashi, Japan</span>
-        <a class="strip-link"
-           href="https://www.google.com/maps/search/Chureito+Pagoda+Yamanashi+Japan"
-           target="_blank"
-           rel="noopener noreferrer">Open in Maps ↗</a>
-      </div>
-    </div>
+        <li><a href="/destinations">Destinations</a></li>
 
-  </section>
+        <!-- Dropdown example -->
+        <li class="has-dropdown">
+          <a href="/guides" aria-haspopup="true" aria-expanded="false">
+            Guides ▾
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            <li role="none"><a href="/guides/packing" role="menuitem">Packing Lists</a></li>
+            <li role="none"><a href="/guides/budgeting" role="menuitem">Budget Travel</a></li>
+            <li role="none"><a href="/guides/solo" role="menuitem">Solo Travel</a></li>
+            <li role="none"><a href="/guides/food" role="menuitem">Food & Drink</a></li>
+          </ul>
+        </li>
+
+        <li><a href="/journal">Journal</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/newsletter" class="nav-cta">Subscribe</a></li>
+      </ul>
+
+      <!-- Mobile hamburger button -->
+      <!--
+        JS requirement: toggle aria-expanded + add .active to #nav-links
+        on click. Also add .open to .has-dropdown items on tap for mobile
+        dropdowns.
+      -->
+      <button
+        class="mobile-menu-btn"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="nav-links"
+      >
+        <span class="hamburger" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
+
+    </nav>
+  </header>
 
   <!-- ============================================
        MAIN CONTENT
   ============================================ -->
-  <main class="dest-main">
-    <div class="content-grid" id="contentGrid">
+  <main>
 
-      <!-- Main column -->
-      <article class="main-column" id="mainCol">
-
-        <div class="quick-facts">
-          <div class="fact-cell">
-            <span class="fact-label">Capital</span>
-            <div class="fact-value">Tokyo</div>
-          </div>
-          <div class="fact-cell">
-            <span class="fact-label">Population</span>
-            <div class="fact-value">125.7M <span>national</span></div>
-          </div>
-          <div class="fact-cell">
-            <span class="fact-label">Time Zone</span>
-            <div class="fact-value">JST <span>(UTC +9)</span></div>
-          </div>
-          <div class="fact-cell">
-            <span class="fact-label">Local Time</span>
-            <div class="fact-value" id="current-jst-time">—</div>
-          </div>
-          <div class="fact-cell">
-            <span class="fact-label">Language</span>
-            <div class="fact-value">Japanese</div>
-          </div>
-          <div class="fact-cell">
-            <span class="fact-label">Currency</span>
-            <div class="fact-value">¥ JPY <span id="live-fx-rate"></span></div>
+    <!-- HERO -->
+    <section class="hero" aria-label="Hero">
+      <div class="hero-bg-pattern" aria-hidden="true"></div>
+      <div class="hero-inner">
+        <div class="hero-content">
+          <span class="hero-tag fade-up delay-1">✦ New stories every week</span>
+          <h1 class="hero-title fade-up delay-2">
+            The world is wide.<br>
+            <em>Go see it.</em>
+          </h1>
+          <p class="hero-desc fade-up delay-3">
+            Honest travel writing, practical guides, and destination
+            inspiration for curious, independent travellers.
+          </p>
+          <div class="hero-actions fade-up delay-4">
+            <a href="/destinations" class="btn btn-primary">Explore destinations</a>
+            <a href="/journal" class="btn btn-secondary">Read the journal</a>
           </div>
         </div>
 
-        <div class="description-block" id="dynamic-text-block">
-          Discover essential travel information about Japan.
-        </div>
-
-        <!-- Climate accordion -->
-        <div class="weather-accordion">
-          <div class="accordion-header" id="weatherHeader" onclick="toggleWeather()">
-            <h2 class="dest-section-title">Climate &amp; Weather in Japan</h2>
-            <div class="accordion-meta">
-              <span class="best-months-label" id="dynamicBestMonthsLabel"></span>
-              <span class="accordion-chevron">▼</span>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="hero-card">
+            <div class="hero-card-img">🏔️</div>
+            <div class="hero-card-body">
+              <h3>Patagonia in November</h3>
+              <div class="hero-card-meta">
+                <span>12 min read</span>
+                <span>·</span>
+                <span>South America</span>
+              </div>
             </div>
           </div>
-          <div class="accordion-content" id="weatherContent">
-            <div class="accordion-inner">
-              <div class="dynamic-iframe-container">
-                <iframe src="/support/html/japan_climate.html"
-                        class="dynamic-iframe"
-                        id="climateWidget"
-                        title="Japan Climate Data Chart"
-                        scrolling="no"
-                        onload="extractBestTime()"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURED ARTICLES -->
+    <section class="section" aria-labelledby="featured-heading">
+      <div class="container">
+
+        <header class="section-header">
+          <div class="section-header__text">
+            <span class="section-label">Latest stories</span>
+            <h2 class="section-title" id="featured-heading">
+              Fresh from the road
+            </h2>
+            <p class="section-subtitle">
+              Guides, essays, and photo diaries from our contributors around the globe.
+            </p>
+          </div>
+          <a href="/journal" class="btn btn-outline">View all</a>
+        </header>
+
+        <div class="cards-grid cards-grid--featured">
+
+          <!-- Featured main card -->
+          <article class="article-card article-card--featured-main reveal">
+            <a href="/article/kyoto-in-autumn" class="card-img">
+              <div class="card-img-placeholder">🍂</div>
+              <span class="card-category">Japan</span>
+            </a>
+            <div class="card-body">
+              <h3>Kyoto in Autumn: A Guide to the Quiet Temples</h3>
+              <p class="card-excerpt">
+                Beyond the tourist trails lies a slower Kyoto — one of
+                morning mist, raked gravel, and unhurried monks.
+              </p>
+              <div class="card-meta">
+                <span>Sara Okafor</span>
+                <span class="card-meta-dot" aria-hidden="true"></span>
+                <span>14 min read</span>
+                <span class="card-meta-dot" aria-hidden="true"></span>
+                <time datetime="2025-11-02">Nov 2025</time>
+              </div>
+            </div>
+          </article>
+
+          <!-- Secondary card -->
+          <article class="article-card reveal delay-1">
+            <a href="/article/lisbon-trams" class="card-img">
+              <div class="card-img-placeholder">🚋</div>
+              <span class="card-category">Portugal</span>
+            </a>
+            <div class="card-body">
+              <h3>Riding Lisbon's Tram 28</h3>
+              <p class="card-excerpt">
+                One route, seven hills, and a city that rewards the patient.
+              </p>
+              <div class="card-meta">
+                <span>João Ferreira</span>
+                <span class="card-meta-dot" aria-hidden="true"></span>
+                <span>8 min read</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Secondary card -->
+          <article class="article-card reveal delay-2">
+            <a href="/article/oaxaca-mezcal" class="card-img">
+              <div class="card-img-placeholder">🥃</div>
+              <span class="card-category">Mexico</span>
+            </a>
+            <div class="card-body">
+              <h3>Oaxaca and the Art of Mezcal</h3>
+              <p class="card-excerpt">
+                How a single spirit tells the story of an entire region.
+              </p>
+              <div class="card-meta">
+                <span>Lucia Vargas</span>
+                <span class="card-meta-dot" aria-hidden="true"></span>
+                <span>10 min read</span>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- DESTINATIONS STRIP -->
+    <section class="destinations-strip" aria-labelledby="dest-heading">
+      <div class="container">
+        <header class="section-header section-header--center" style="margin-bottom: 2.5rem;">
+          <div>
+            <span class="section-label section-label--light">Browse by region</span>
+            <h2 class="section-title section-title--light" id="dest-heading">
+              Where do you want to go?
+            </h2>
+          </div>
+        </header>
+      </div>
+
+      <div class="dest-grid">
+        <a href="/destinations/asia" class="dest-card">
+          <span class="dest-icon">🌏</span>
+          <p class="dest-name">Asia</p>
+          <p class="dest-count">48 guides</p>
+        </a>
+        <a href="/destinations/europe" class="dest-card">
+          <span class="dest-icon">🏛️</span>
+          <p class="dest-name">Europe</p>
+          <p class="dest-count">61 guides</p>
+        </a>
+        <a href="/destinations/americas" class="dest-card">
+          <span class="dest-icon">🌎</span>
+          <p class="dest-name">Americas</p>
+          <p class="dest-count">34 guides</p>
+        </a>
+        <a href="/destinations/africa" class="dest-card">
+          <span class="dest-icon">🦁</span>
+          <p class="dest-name">Africa</p>
+          <p class="dest-count">22 guides</p>
+        </a>
+        <a href="/destinations/oceania" class="dest-card">
+          <span class="dest-icon">🌊</span>
+          <p class="dest-name">Oceania</p>
+          <p class="dest-count">18 guides</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- EXAMPLE: ARTICLE PAGE LAYOUT -->
+    <!--
+      Uncomment and use this on individual article pages.
+      The three-column layout requires all three children present.
+
+    <div class="article-layout">
+
+      <aside class="article-sidebar-left" aria-label="Table of contents">
+        <nav class="widget">
+          <h2 class="widget-title">📋 Contents</h2>
+          <ul class="toc-list">
+            <li><a href="#intro">Introduction</a></li>
+            <li><a href="#getting-there">Getting there</a></li>
+            <li class="toc-h3"><a href="#by-train">By train</a></li>
+            <li class="toc-h3"><a href="#by-bus">By bus</a></li>
+            <li><a href="#where-to-stay">Where to stay</a></li>
+            <li><a href="#food">Food & drink</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <article>
+        <div class="article-hero-img" aria-hidden="true">🌸</div>
+
+        <header class="article-header">
+          <span class="article-category">Japan</span>
+          <h1 class="article-title">Kyoto in Autumn</h1>
+          <p class="article-subtitle">
+            A guide to the quiet temples and hidden gardens that
+            come alive when the maple leaves turn.
+          </p>
+          <div class="article-byline">
+            <div class="author-avatar" aria-hidden="true">👩</div>
+            <div class="author-info">
+              <p class="author-name">Sara Okafor</p>
+              <p class="author-date">November 2, 2025</p>
+            </div>
+            <div class="article-stats" aria-label="Reading statistics">
+              <span>14 min read</span>
+              <span>·</span>
+              <span>2,840 words</span>
+            </div>
+          </div>
+        </header>
+
+        <div class="prose" id="article-body">
+          <p>Kyoto in November is unlike anywhere else on earth...</p>
+          <h2 id="getting-there">Getting there</h2>
+          <p>The shinkansen from Tokyo takes just over two hours...</p>
+          <blockquote>
+            The best time to arrive is at dawn, before the crowds.
+            <cite>Sara Okafor</cite>
+          </blockquote>
+          <div class="info-box">
+            <p class="info-box-title">💡 Good to know</p>
+            <p>Many temples require advance booking in November.</p>
+          </div>
+        </div>
+      </article>
+
+      <aside class="article-sidebar-right" aria-label="Article tools">
+
+        <div class="widget">
+          <h2 class="widget-title">🌤 Weather</h2>
+          <div class="weather-location-input">
+            <input type="text" placeholder="City name..." aria-label="Enter city name" />
+            <button type="button">Go</button>
+          </div>
+          <div class="weather-display">
+            <span class="weather-icon" aria-hidden="true">🍂</span>
+            <p class="weather-temp">14°C</p>
+            <p class="weather-desc">Partly cloudy</p>
+            <div class="weather-details">
+              <div class="weather-detail">
+                <span class="weather-detail-label">Humidity</span>
+                <span class="weather-detail-value">62%</span>
+              </div>
+              <div class="weather-detail">
+                <span class="weather-detail-label">Wind</span>
+                <span class="weather-detail-value">12 km/h</span>
               </div>
             </div>
           </div>
         </div>
 
-        <h2 class="dest-section-title">Japan National Holidays</h2>
-        <div class="dynamic-iframe-container">
-          <iframe src="/support/html/japan_holidays.html"
-                  class="dynamic-iframe"
-                  title="List of Japan Public Holidays"
-                  scrolling="no"></iframe>
-        </div>
-
-      </article>
-
-      <!-- Support column -->
-      <aside class="support-column" id="supportCol">
-
-        <iframe src="/support/html/japan_map.html"
-                class="support-iframe"
-                title="Interactive Map of Japan"
-                sandbox="allow-scripts allow-same-origin allow-top-navigation allow-top-navigation-by-user-activation allow-popups"
-                scrolling="no"></iframe>
-
-        <div class="dynamic-iframe-container">
-          <iframe src="/support/html/japan_essentials.html"
-                  class="dynamic-iframe"
-                  title="Japan Travel Essentials"
-                  scrolling="no"></iframe>
-        </div>
-
-        <div class="travel-tips-container">
-          <h3 class="support-title">Travel Tips</h3>
-          <div class="travel-tips-content" id="travel-tips-content">
-            Loading travel tips...
+        <div class="widget">
+          <h2 class="widget-title">💱 Currency</h2>
+          <div class="currency-inputs">
+            <div class="currency-row">
+              <input type="number" value="100" aria-label="Amount" />
+              <select aria-label="From currency">
+                <option>GBP</option>
+                <option>USD</option>
+                <option>EUR</option>
+              </select>
+            </div>
+            <button class="currency-swap" aria-label="Swap currencies" type="button">⇅</button>
+            <div class="currency-row">
+              <input type="number" readonly aria-label="Converted amount" />
+              <select aria-label="To currency">
+                <option>JPY</option>
+                <option>GBP</option>
+                <option>USD</option>
+              </select>
+            </div>
+            <div class="currency-result" aria-live="polite">¥ 18,942</div>
           </div>
         </div>
 
-        <div class="dynamic-iframe-container">
-          <iframe src="/support/html/japan_about_us.html"
-                  class="dynamic-iframe"
-                  title="About Endless Atlas — Japan"
-                  scrolling="no"></iframe>
+        <div class="widget">
+          <h2 class="widget-title">↗ Share</h2>
+          <div class="share-buttons">
+            <button class="share-btn share-btn--twitter" type="button">𝕏 Share on X</button>
+            <button class="share-btn share-btn--facebook" type="button">f Share on Facebook</button>
+            <button class="share-btn share-btn--copy" type="button">🔗 Copy link</button>
+          </div>
         </div>
 
-        <div class="dynamic-iframe-container fx-container">
-          <iframe src="/support/html/fx_usd_jpy.html"
-                  class="dynamic-iframe"
-                  title="USD to JPY Currency Converter Tool"
-                  scrolling="no"></iframe>
+        <div class="widget">
+          <h2 class="widget-title">📖 Read next</h2>
+          <div class="related-list">
+            <a href="/article/tokyo-neighborhoods" class="related-item">
+              <div class="related-thumb" aria-hidden="true">🗼</div>
+              <div class="related-info">
+                <h4>Tokyo's Best Neighbourhoods</h4>
+                <p class="related-meta">10 min read · Japan</p>
+              </div>
+            </a>
+            <a href="/article/osaka-food" class="related-item">
+              <div class="related-thumb" aria-hidden="true">🍜</div>
+              <div class="related-info">
+                <h4>Eating Your Way Through Osaka</h4>
+                <p class="related-meta">8 min read · Japan</p>
+              </div>
+            </a>
+          </div>
         </div>
 
       </aside>
     </div>
+    -->
+
   </main>
 
-  <div id="site-footer"></div>
+  <!-- ============================================
+       FOOTER
+  ============================================ -->
+  <footer class="site-footer">
+    <div class="footer-inner">
 
-  <script src="/components.js"></script>
-  <script src="/destinations/japan/japan-components.js"></script>
+      <div class="footer-grid">
 
+        <!-- Brand column -->
+        <div class="footer-brand">
+          <a href="/" class="nav-logo">Endless<span>Atlas</span></a>
+          <p class="footer-desc">
+            Honest travel writing and practical guides for curious,
+            independent travellers. No sponsored content, ever.
+          </p>
+          <div class="footer-social" aria-label="Social media links">
+            <a href="https://instagram.com" class="footer-social-link" aria-label="Instagram" rel="noopener noreferrer">📸</a>
+            <a href="https://twitter.com" class="footer-social-link" aria-label="X / Twitter" rel="noopener noreferrer">𝕏</a>
+            <a href="https://youtube.com" class="footer-social-link" aria-label="YouTube" rel="noopener noreferrer">▶</a>
+          </div>
+        </div>
+
+        <!-- Link columns -->
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="/destinations">All Destinations</a></li>
+            <li><a href="/destinations/asia">Asia</a></li>
+            <li><a href="/destinations/europe">Europe</a></li>
+            <li><a href="/destinations/americas">Americas</a></li>
+            <li><a href="/destinations/africa">Africa</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Guides</h4>
+          <ul>
+            <li><a href="/guides/packing">Packing Lists</a></li>
+            <li><a href="/guides/budgeting">Budget Travel</a></li>
+            <li><a href="/guides/solo">Solo Travel</a></li>
+            <li><a href="/guides/food">Food & Drink</a></li>
+            <li><a href="/guides/photography">Photography</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>About</h4>
+          <ul>
+            <li><a href="/about">Our story</a></li>
+            <li><a href="/contributors">Contributors</a></li>
+            <li><a href="/newsletter">Newsletter</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/advertise">Work with us</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <hr class="footer-divider" />
+
+      <div class="footer-bottom">
+        <p>© 2025 Endless Atlas. All rights reserved.</p>
+        <ul class="footer-bottom-links">
+          <li><a href="/privacy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Use</a></li>
+          <li><a href="/cookies">Cookie Policy</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ============================================
+       JAVASCRIPT
+       Minimal JS for nav toggle and scroll reveal.
+  ============================================ -->
   <script>
-    // ===== PROGRESSIVE IMAGE LOADER =====
-    const heroImg = document.getElementById('mainHeroImage');
-    const fullUrl = "https://storage.googleapis.com/blog_asset_storage_prod/japan_assets/Japan_Fuji_Hero.JPG";
+    // ---- Mobile nav toggle ----
+    const menuBtn = document.querySelector('.mobile-menu-btn');
+    const navLinks = document.getElementById('nav-links');
 
-    function revealFull() {
-      heroImg.src = fullUrl;
-      setTimeout(() => {
-        heroImg.classList.remove('img-low-res');
-        heroImg.classList.add('img-loaded');
-      }, 50);
-    }
-
-    const fullLoader = new Image();
-    fullLoader.referrerPolicy = 'no-referrer';
-    fullLoader.src = fullUrl;
-    if (fullLoader.complete) { revealFull(); } else { fullLoader.onload = revealFull; }
-
-    // ===== HERO SCROLL PARALLAX =====
-    window.addEventListener('scroll', function() {
-      const heroText = document.getElementById('heroText');
-      if (!heroText) return;
-      const s = window.scrollY;
-      heroText.style.transform = `scale(${1 + s / 600})`;
-      heroText.style.opacity   = Math.max(0, 1 - s / 400);
-    }, { passive: true });
-
-    // ===== JST CLOCK =====
-    function updateJSTTime() {
-      const el = document.getElementById('current-jst-time');
-      if (!el) return;
-      el.textContent = new Date().toLocaleTimeString('en-US', {
-        timeZone: 'Asia/Tokyo', hour: 'numeric', minute: '2-digit', hour12: true
-      });
-    }
-    updateJSTTime();
-    setInterval(updateJSTTime, 30000);
-
-    // ===== LIVE FX RATE =====
-    function updateHeaderFX() {
-      fetch('https://api.frankfurter.dev/v2/rates?quotes=USD,JPY')
-        .then(res => res.json())
-        .then(data => {
-          if (!Array.isArray(data)) return;
-          let usd, jpy;
-          data.forEach(item => {
-            if (item.quote === 'USD') usd = item.rate;
-            if (item.quote === 'JPY') jpy = item.rate;
-          });
-          if (usd && jpy) {
-            const rate = (jpy / usd).toFixed(2);
-            document.getElementById('live-fx-rate').textContent = `· 1 USD = ${rate}`;
-            setTimeout(calculateLayout, 50);
-          }
-        })
-        .catch(() => {});
-    }
-    updateHeaderFX();
-
-    // ===== PROPORTIONAL SCROLL =====
-    const layoutState  = { gridTop: 0, maxScroll: 0, diff: 0, taller: null };
-    const mainState    = { currentY: 0, targetY: 0 };
-    const supportState = { currentY: 0, targetY: 0 };
-
-    const gridEl     = document.getElementById('contentGrid');
-    const mainCol    = document.getElementById('mainCol');
-    const supportCol = document.getElementById('supportCol');
-
-    function calculateLayout() {
-      if (window.innerWidth <= 900) {
-        mainCol.style.transform    = 'none';
-        supportCol.style.transform = 'none';
-        mainState.currentY = 0; mainState.targetY = 0;
-        supportState.currentY = 0; supportState.targetY = 0;
-        return;
-      }
-      const mainH    = mainCol.offsetHeight;
-      const supportH = supportCol.offsetHeight;
-      const rect     = gridEl.getBoundingClientRect();
-      layoutState.gridTop = window.scrollY + rect.top - 100;
-
-      if (Math.abs(mainH - supportH) < 50) {
-        layoutState.diff = 0; layoutState.taller = 'equal';
-      } else if (mainH > supportH) {
-        layoutState.taller    = 'main';
-        layoutState.diff      = mainH - supportH;
-        layoutState.maxScroll = Math.max(window.innerHeight / 1.5, mainH - window.innerHeight + 100);
-      } else {
-        layoutState.taller    = 'support';
-        layoutState.diff      = supportH - mainH;
-        layoutState.maxScroll = Math.max(window.innerHeight / 1.5, supportH - window.innerHeight + 100);
-      }
-      handleProportionalScroll();
-    }
-
-    function handleProportionalScroll() {
-      if (window.innerWidth <= 900) return;
-      if (layoutState.diff <= 0 || layoutState.maxScroll <= 0) {
-        mainState.targetY = 0; supportState.targetY = 0; return;
-      }
-      let progress = (window.scrollY - layoutState.gridTop) / layoutState.maxScroll;
-      progress = Math.max(0, Math.min(1, progress));
-      const yOffset = progress * layoutState.diff;
-
-      if (layoutState.taller === 'main') {
-        supportState.targetY = yOffset; mainState.targetY = 0;
-      } else if (layoutState.taller === 'support') {
-        mainState.targetY = yOffset; supportState.targetY = 0;
-      } else {
-        mainState.targetY = 0; supportState.targetY = 0;
-      }
-    }
-
-    function renderLoop() {
-      mainState.currentY    += (mainState.targetY    - mainState.currentY)    * 0.08;
-      supportState.currentY += (supportState.targetY - supportState.currentY) * 0.08;
-      if (window.innerWidth > 900) {
-        mainCol.style.transform    = `translate3d(0, ${mainState.currentY}px, 0)`;
-        supportCol.style.transform = `translate3d(0, ${supportState.currentY}px, 0)`;
-      }
-      requestAnimationFrame(renderLoop);
-    }
-
-    requestAnimationFrame(renderLoop);
-    window.addEventListener('scroll', handleProportionalScroll, { passive: true });
-    window.addEventListener('resize', calculateLayout);
-
-    let resizeTimeout;
-    const columnObserver = new ResizeObserver(() => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(calculateLayout, 50);
-    });
-    if (mainCol)    columnObserver.observe(mainCol);
-    if (supportCol) columnObserver.observe(supportCol);
-
-    // ===== IFRAME MESSAGING =====
-    window.addEventListener('message', function(e) {
-      if (e.origin !== window.location.origin) return;
-      if (e.data && e.data.height) {
-        const iframes = document.querySelectorAll('iframe');
-        iframes.forEach(iframe => {
-          if (iframe.contentWindow === e.source) {
-            const newHeight = e.data.height + 'px';
-            iframe.style.height = newHeight;
-            if (iframe.parentElement.classList.contains('dynamic-iframe-container')) {
-              iframe.parentElement.style.height = newHeight;
-            }
-            setTimeout(calculateLayout, 50);
-          }
-        });
-      }
+    menuBtn?.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('active');
+      menuBtn.setAttribute('aria-expanded', isOpen);
+      menuBtn.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
     });
 
-    // ===== FETCH CONTENT =====
-    fetch('/support/text/japan_country_paragraph.html')
-      .then(res => res.ok ? res.text() : Promise.reject())
-      .then(html => {
-        document.getElementById('dynamic-text-block').innerHTML = html;
-        setTimeout(calculateLayout, 50);
-      })
-      .catch(() => document.getElementById('dynamic-text-block').innerHTML = "Could not load the description.");
-
-    fetch('/support/text/japan_travel_tips.html')
-      .then(res => res.ok ? res.text() : Promise.reject())
-      .then(html => {
-        document.getElementById('travel-tips-content').innerHTML = html;
-        setTimeout(calculateLayout, 50);
-      })
-      .catch(() => document.getElementById('travel-tips-content').innerHTML = "Travel tips are currently unavailable.");
-
-    // ===== ACCORDION =====
-    function toggleWeather() {
-      document.getElementById('weatherHeader').classList.toggle('expanded');
-      document.getElementById('weatherContent').classList.toggle('expanded');
-      setTimeout(calculateLayout, 450);
-    }
-
-    function extractBestTime() {
-      const climateIframe = document.getElementById('climateWidget');
-      const labelElement  = document.getElementById('dynamicBestMonthsLabel');
-      try {
-        const iframeDoc  = climateIframe.contentDocument || climateIframe.contentWindow.document;
-        const sourceData = iframeDoc.getElementById('widget-best-time');
-        if (sourceData && sourceData.innerText) {
-          labelElement.textContent = `Best time: ${sourceData.innerText}`;
-          labelElement.style.visibility = 'visible';
+    // ---- Mobile dropdown toggle (tap) ----
+    document.querySelectorAll('.has-dropdown > a').forEach(trigger => {
+      trigger.addEventListener('click', (e) => {
+        if (window.innerWidth <= 768) {
+          e.preventDefault();
+          const parent = trigger.closest('.has-dropdown');
+          const isOpen = parent.classList.toggle('open');
+          trigger.setAttribute('aria-expanded', isOpen);
         }
-      } catch (error) {
-        console.warn("Could not extract widget data.", error);
+      });
+    });
+
+    // ---- Close nav on outside click ----
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.site-header')) {
+        navLinks?.classList.remove('active');
+        menuBtn?.setAttribute('aria-expanded', 'false');
+        menuBtn?.setAttribute('aria-label', 'Open menu');
       }
-    }
+    });
 
-    // ===== GEO PIN =====
-    (function() {
-      const hero  = document.getElementById('heroContainer');
-      const pin   = document.getElementById('geoPin');
-      const strip = document.getElementById('locationStrip');
-      let locked  = false;
-      const isMobile = () => window.matchMedia('(hover: none)').matches;
+    // ---- Scroll reveal ----
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
 
-      function showStrip()      { strip.classList.add('visible'); pin.classList.add('active'); }
-      function hideStrip()      { if (locked) return; strip.classList.remove('visible'); pin.classList.remove('active'); }
-      function clearOverlay()   { hero.classList.add('pin-revealed'); }
-      function restoreOverlay() { hero.classList.remove('pin-revealed'); }
-
-      pin.addEventListener('mouseenter', () => { if (!isMobile()) { showStrip(); clearOverlay(); } });
-      pin.addEventListener('mouseleave', () => { if (!isMobile()) { hideStrip(); restoreOverlay(); } });
-      strip.addEventListener('mouseenter', () => { if (!isMobile()) clearOverlay(); });
-      strip.addEventListener('mouseleave', () => { if (!isMobile()) restoreOverlay(); });
-      pin.addEventListener('click', (e) => { e.stopPropagation(); locked = true; showStrip(); });
-      pin.addEventListener('touchend', (e) => { e.preventDefault(); locked = true; showStrip(); }, { passive: false });
-    })();
-
-    window.addEventListener('load', () => setTimeout(calculateLayout, 100));
-    requestAnimationFrame(calculateLayout);
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-stagger').forEach(el => {
+      observer.observe(el);
+    });
   </script>
+
 </body>
 </html>

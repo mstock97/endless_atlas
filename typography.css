@@ -70,7 +70,6 @@ small { font-size: var(--text-sm); color: var(--graphite); }
   padding-top: var(--space-4);
   letter-spacing: -0.02em;
   line-height: var(--leading-tight);
-   text-align: center;
 }
 
 .prose h3 {
@@ -129,7 +128,6 @@ small { font-size: var(--text-sm); color: var(--graphite); }
   font-size: var(--text-xl);
   color: var(--ink);
   line-height: var(--leading-normal);
-   text-align: center;
 }
 
 .prose blockquote cite {
@@ -139,14 +137,12 @@ small { font-size: var(--text-sm); color: var(--graphite); }
   font-style: normal;
   font-family: var(--font-body);
   color: var(--graphite);
-   text-align: center;
 }
 
 .prose hr {
   border: none;
   border-top: 1px solid var(--warm-rule);
   margin: var(--space-10) 0;
-   text-align: center;
 }
 
 .prose img {

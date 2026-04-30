@@ -676,8 +676,14 @@ The chevron rotates and the best-months label hides automatically via CSS.
 
 ### Inline Article Image with Geo Pin
 
-Used for images within article body content. Uses the pill-shaped location
-strip instead of the full-width strip.
+Used for images within article body content. Works with both landscape and
+portrait photos — the container renders at the image's natural proportions
+with no forced aspect ratio. Uses the pill-shaped location strip instead of
+the full-width strip.
+
+The `.photo-caption` element sits outside the container as a sibling. It
+shares the same `width: 85%` and `max-width: 800px` as the image container
+so both elements share the same center point.
 
 ```html
 <div class="article-image-container">
@@ -704,8 +710,17 @@ strip instead of the full-width strip.
 
 </div>
 
+<!-- Caption is a sibling of the container, not inside it.
+     Its width and centering match the image container exactly. -->
 <p class="photo-caption">Caption text goes here.</p>
 ```
+
+**What the CSS does:**
+- `.article-image-container` is 85% wide, max 800px, centered with `margin: auto`
+- The image inside gets `width: 100%; height: auto` — portrait and landscape both render at their natural proportions. No cropping.
+- `.photo-caption` uses the same `width: 85%; max-width: 800px; margin-inline: auto` so it aligns with the image edge rather than the full column width
+
+**Do not** put `aspect-ratio` or `overflow: hidden` on `.article-image-container` — doing so will crop portrait images back to a landscape box.
 
 ### Article Intro Paragraph
 

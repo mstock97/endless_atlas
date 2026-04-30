@@ -533,20 +533,21 @@ a.btn-primary { display: inline-flex; }
   position: relative;
   width: 85%;
   max-width: 800px;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
   border-radius: var(--radius-md);
   margin: var(--space-8) auto;
+  display: block;
 }
-.article-image-container-vertical {
-  position: relative;
-  width: 85%;
-  max-width: 800px;
-  aspect-ratio: 9 / 16;
-  overflow: hidden;
+
+/* Image fills the container at its natural proportions —
+   no forced aspect ratio so portrait and landscape both render correctly */
+.article-image-container img,
+.article-image-container .hero-image {
+  width: 100%;
+  height: auto;
+  display: block;
   border-radius: var(--radius-md);
-  margin: var(--space-8) auto;
 }
+
 .article-image-container .geo-pin {
   bottom: 40px;
   left: 16px;
@@ -1243,11 +1244,14 @@ h2.dest-section-title:first-child,
 
 /* Photo caption — sits below an .article-image-container */
 .photo-caption {
+  width: 85%;
+  max-width: 800px;
+  margin-inline: auto;
+  text-align: center;
   font-family: var(--font-body);
   font-size: var(--text-sm);
   color: var(--ash);
-  text-align: center;
-  margin-top: -0.75rem;
+  margin-top: -0.5rem;
   margin-bottom: var(--space-8);
   line-height: var(--leading-relaxed);
   font-style: italic;
@@ -1259,7 +1263,6 @@ h2.dest-section-title:first-child,
   font-size: 1.1rem;
   line-height: var(--leading-relaxed);
   color: var(--graphite);
-  text-align: center;
   margin-bottom: var(--space-8);
   border-left: 3px solid var(--moss);
   padding-left: var(--space-5);
