@@ -1266,6 +1266,7 @@ h2.dest-section-title:first-child,
   margin-bottom: var(--space-8);
   border-left: 3px solid var(--moss);
   padding-left: var(--space-5);
+  text-align: center;
 }
 
 /* Inline live FX conversion spans */
