@@ -171,6 +171,7 @@ button { font-family: var(--font-body); cursor: pointer; }
   grid-template-columns: 220px 1fr 280px;
   gap: var(--space-12);
   align-items: start;
+  text-align: center;
 }
 
 .article-sidebar-left,
@@ -219,6 +220,7 @@ button { font-family: var(--font-body); cursor: pointer; }
   letter-spacing: -0.02em;
   color: var(--ink);
   margin-bottom: var(--space-4);
+  text-align: center;
 }
 
 .article-subtitle {
@@ -226,6 +228,7 @@ button { font-family: var(--font-body); cursor: pointer; }
   color: var(--graphite);
   line-height: var(--leading-normal);
   margin-bottom: var(--space-6);
+  text-align: center;
 }
 
 .article-byline {
@@ -235,6 +238,7 @@ button { font-family: var(--font-body); cursor: pointer; }
   padding-block: var(--space-4);
   border-top: 1px solid var(--warm-rule);
   border-bottom: 1px solid var(--warm-rule);
+  text-align: center;
 }
 
 .author-avatar {
