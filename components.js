@@ -18,7 +18,7 @@ const NAV_LINKS = [
     label: 'Destinations',
     href:  '/destinations/',
     children: [
-      { label: 'Japan',            href: '/destinations/japan', children: [{label: 'Tokyo', href: '/destinations/japan/tokyo'}] },
+      { label: 'Japan',            href: '/destinations/japan' },
       { label: 'Europe',           href: '/destinations/europe' },
       { label: 'All Destinations', href: '/destinations' },
     ],
@@ -147,16 +147,13 @@ function initHoverReveal() {
     const vw   = window.innerWidth;
     const vh   = window.innerHeight;
 
-    // Space available above and below the trigger word
     const spaceAbove = rect.top    - GAP - EDGE_PAD;
     const spaceBelow = vh - rect.bottom - GAP - EDGE_PAD;
     const goAbove    = spaceAbove >= spaceBelow;
-    const availH     = Math.max(goAbove ? spaceAbove : spaceBelow, 80); // floor at 80px
+    const availH     = Math.max(goAbove ? spaceAbove : spaceBelow, 80);
 
-    // 75vw wide, clamped so it never overflows the viewport sides
     const popupW = Math.min(vw * 0.75, vw - EDGE_PAD * 2);
 
-    // Center horizontally on the trigger word, clamped to edges
     let left = rect.left + rect.width / 2 - popupW / 2;
     left = Math.max(EDGE_PAD, Math.min(left, vw - popupW - EDGE_PAD));
 
@@ -173,41 +170,50 @@ function initHoverReveal() {
     }
   }
 
-  document.querySelectorAll('.hover-reveal').forEach(trigger => {
+  function closeAll() {
+    document.querySelectorAll('.hover-reveal__popup.is-visible').forEach(p => {
+      p.classList.remove('is-visible');
+    });
+  }
+
+  // ── Desktop: delegated mouseenter/mouseleave on document ──────
+  // mouseover fires on every child element too, so check the closest trigger
+  document.addEventListener('mouseover', e => {
+    const trigger = e.target.closest('.hover-reveal');
+    if (!trigger) return;
     const popup = trigger.querySelector('.hover-reveal__popup');
     if (!popup) return;
+    positionPopup(trigger, popup);
+    popup.classList.add('is-visible');
+  });
 
-    // Desktop: show on hover
-    trigger.addEventListener('mouseenter', () => {
-      positionPopup(trigger, popup);
-      popup.classList.add('is-visible');
-    });
-    trigger.addEventListener('mouseleave', () => {
-      popup.classList.remove('is-visible');
-    });
+  document.addEventListener('mouseout', e => {
+    const trigger = e.target.closest('.hover-reveal');
+    if (!trigger) return;
+    // Only hide if the cursor is leaving the trigger entirely (not just moving to a child)
+    if (trigger.contains(e.relatedTarget)) return;
+    const popup = trigger.querySelector('.hover-reveal__popup');
+    if (popup) popup.classList.remove('is-visible');
+  });
 
-    // Mobile: tap to toggle; dismiss others first
-    trigger.addEventListener('touchend', e => {
+  // ── Mobile: delegated touchend ────────────────────────────────
+  document.addEventListener('touchend', e => {
+    const trigger = e.target.closest('.hover-reveal');
+    if (trigger) {
       e.preventDefault();
+      const popup = trigger.querySelector('.hover-reveal__popup');
+      if (!popup) return;
       const wasVisible = popup.classList.contains('is-visible');
-      document.querySelectorAll('.hover-reveal__popup.is-visible').forEach(p => {
-        p.classList.remove('is-visible');
-      });
+      closeAll();
       if (!wasVisible) {
         positionPopup(trigger, popup);
         popup.classList.add('is-visible');
       }
-    }, { passive: false });
-  });
-
-  // Dismiss on tap outside (mobile)
-  document.addEventListener('touchend', e => {
-    if (!e.target.closest('.hover-reveal')) {
-      document.querySelectorAll('.hover-reveal__popup.is-visible').forEach(p => {
-        p.classList.remove('is-visible');
-      });
+    } else {
+      // Tap outside — close everything
+      closeAll();
     }
-  });
+  }, { passive: false });
 }
 
 
