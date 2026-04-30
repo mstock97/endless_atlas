@@ -1564,7 +1564,8 @@ h2.dest-section-title:first-child,
   text-underline-offset: 3px;
 }
 
-/* Popup — position/size set by JS, CSS handles show/hide only */
+/* Popup — shrink-wraps tightly around the image + caption.
+   Position and image dimensions are set entirely by JS. */
 .hover-reveal__popup {
   position: fixed;
   z-index: var(--z-dropdown);
@@ -1574,8 +1575,6 @@ h2.dest-section-title:first-child,
   box-shadow: var(--shadow-modal);
   border: 1px solid var(--warm-rule);
   pointer-events: none;
-  display: flex;
-  flex-direction: column;
 
   opacity: 0;
   visibility: hidden;
@@ -1587,17 +1586,13 @@ h2.dest-section-title:first-child,
   visibility: visible;
 }
 
-/* Image fills all available popup height without cropping */
+/* JS sets explicit width + height — no stretching, no cropping */
 .hover-reveal__img {
   display: block;
-  width: 100%;
-  flex: 1;
-  min-height: 0;
   border-radius: var(--radius-sm);
-  object-fit: contain;
 }
 
-/* Optional caption — sits below the image, never grows */
+/* Caption sits below image, inherits popup width */
 .hover-reveal__caption {
   display: block;
   font-family: var(--font-body);
@@ -1607,7 +1602,6 @@ h2.dest-section-title:first-child,
   margin-top: var(--space-2);
   font-style: italic;
   line-height: var(--leading-normal);
-  flex-shrink: 0;
 }
 
 /* Reduced motion — skip the fade entirely */
