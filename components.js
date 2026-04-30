@@ -139,34 +139,70 @@ function setActiveNavLink() {
 
 /* ── Hover image popup ────────────────────────────────────────── */
 function initHoverReveal() {
-  const GAP      = 12; // px gap between trigger element and popup edge
+  const GAP      = 12; // px between trigger word and popup edge
   const EDGE_PAD = 20; // minimum px from any viewport edge
+  const PAD      = 8;  // popup padding (var(--space-2) = 0.5rem ≈ 8px)
 
   function positionPopup(trigger, popup) {
+    const img     = popup.querySelector('.hover-reveal__img');
+    const caption = popup.querySelector('.hover-reveal__caption');
+    if (!img) return;
+
+    // Wait for image to load so we have naturalWidth / naturalHeight
+    if (!img.naturalWidth || !img.naturalHeight) {
+      img.addEventListener('load', () => positionPopup(trigger, popup), { once: true });
+      return;
+    }
+
     const rect = trigger.getBoundingClientRect();
     const vw   = window.innerWidth;
     const vh   = window.innerHeight;
 
+    // Available space above and below the trigger word
     const spaceAbove = rect.top    - GAP - EDGE_PAD;
     const spaceBelow = vh - rect.bottom - GAP - EDGE_PAD;
     const goAbove    = spaceAbove >= spaceBelow;
-    const availH     = Math.max(goAbove ? spaceAbove : spaceBelow, 80);
+    const availH     = Math.max(goAbove ? spaceAbove : spaceBelow, 60);
+    const availW     = vw - EDGE_PAD * 2;
 
-    const popupW = Math.min(vw * 0.75, vw - EDGE_PAD * 2);
+    // Rough caption height (font 0.7rem * 1.6 lineheight + space-2 margin-top)
+    const captionH = caption ? Math.round(caption.offsetHeight || 28) + PAD : 0;
 
-    let left = rect.left + rect.width / 2 - popupW / 2;
+    // Maximum space the image itself can occupy
+    const maxImgW = availW - PAD * 2;
+    const maxImgH = availH - PAD * 2 - captionH;
+
+    // Start from the image's natural pixel dimensions
+    const ratio  = img.naturalWidth / img.naturalHeight;
+    let imgW     = img.naturalWidth;
+    let imgH     = img.naturalHeight;
+
+    // Scale down only as much as needed to fit — never upscale
+    if (imgW > maxImgW) { imgW = maxImgW; imgH = imgW / ratio; }
+    if (imgH > maxImgH) { imgH = maxImgH; imgW = imgH * ratio; }
+
+    imgW = Math.round(imgW);
+    imgH = Math.round(imgH);
+
+    // Apply dimensions directly to the image element
+    img.style.width  = imgW + 'px';
+    img.style.height = imgH + 'px';
+
+    // Popup width shrink-wraps the image (image width + padding on each side)
+    const popupW = imgW + PAD * 2;
+
+    // Center horizontally on the trigger word, clamped to viewport edges
+    let left = Math.round(rect.left + rect.width / 2 - popupW / 2);
     left = Math.max(EDGE_PAD, Math.min(left, vw - popupW - EDGE_PAD));
 
-    popup.style.width     = popupW + 'px';
-    popup.style.left      = left + 'px';
-    popup.style.maxHeight = availH + 'px';
+    popup.style.left = left + 'px';
 
     if (goAbove) {
       popup.style.top    = '';
-      popup.style.bottom = (vh - rect.top + GAP) + 'px';
+      popup.style.bottom = Math.round(vh - rect.top + GAP) + 'px';
     } else {
       popup.style.bottom = '';
-      popup.style.top    = (rect.bottom + GAP) + 'px';
+      popup.style.top    = Math.round(rect.bottom + GAP) + 'px';
     }
   }
 
@@ -176,8 +212,7 @@ function initHoverReveal() {
     });
   }
 
-  // ── Desktop: delegated mouseenter/mouseleave on document ──────
-  // mouseover fires on every child element too, so check the closest trigger
+  // Desktop: delegated mouseover / mouseout
   document.addEventListener('mouseover', e => {
     const trigger = e.target.closest('.hover-reveal');
     if (!trigger) return;
@@ -190,13 +225,12 @@ function initHoverReveal() {
   document.addEventListener('mouseout', e => {
     const trigger = e.target.closest('.hover-reveal');
     if (!trigger) return;
-    // Only hide if the cursor is leaving the trigger entirely (not just moving to a child)
     if (trigger.contains(e.relatedTarget)) return;
     const popup = trigger.querySelector('.hover-reveal__popup');
     if (popup) popup.classList.remove('is-visible');
   });
 
-  // ── Mobile: delegated touchend ────────────────────────────────
+  // Mobile: delegated touchend
   document.addEventListener('touchend', e => {
     const trigger = e.target.closest('.hover-reveal');
     if (trigger) {
@@ -210,7 +244,6 @@ function initHoverReveal() {
         popup.classList.add('is-visible');
       }
     } else {
-      // Tap outside — close everything
       closeAll();
     }
   }, { passive: false });
