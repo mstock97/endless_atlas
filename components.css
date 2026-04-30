@@ -1548,14 +1548,13 @@ h2.dest-section-title:first-child,
 /* ============================================
    HOVER IMAGE POPUP
    Wrap any inline text in .hover-reveal to
-   reveal a photo popup on hover. Pure CSS —
-   no JavaScript required. Uses opacity +
-   visibility so transform transitions work.
-   Works inside .prose, .description-block,
-   .city-body, or any text container.
+   reveal a photo popup on hover. JavaScript
+   in components.js measures available viewport
+   space at hover time and sets position +
+   max-height via inline style. CSS handles
+   only appearance and the fade transition.
    ============================================ */
 .hover-reveal {
-  position: relative;
   display: inline;
   cursor: default;
   color: var(--canopy);
@@ -1565,47 +1564,40 @@ h2.dest-section-title:first-child,
   text-underline-offset: 3px;
 }
 
-/* Popup container — fixed to viewport center, hidden until hover */
+/* Popup — position/size set by JS, CSS handles show/hide only */
 .hover-reveal__popup {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -48%);
   z-index: var(--z-dropdown);
   background: var(--white);
   border-radius: var(--radius-md);
   padding: var(--space-2);
   box-shadow: var(--shadow-modal);
   border: 1px solid var(--warm-rule);
-  width: 75vw;
   pointer-events: none;
+  display: flex;
+  flex-direction: column;
 
-  /* Hidden state — use visibility so opacity transition works */
   opacity: 0;
   visibility: hidden;
-  transition:
-    opacity var(--transition),
-    visibility var(--transition),
-    transform var(--transition);
+  transition: opacity var(--transition), visibility var(--transition);
 }
 
-/* Show on hover */
-.hover-reveal:hover .hover-reveal__popup {
+.hover-reveal__popup.is-visible {
   opacity: 1;
   visibility: visible;
-  transform: translate(-50%, -50%);
 }
 
-/* The photo itself — full image, no cropping */
+/* Image fills all available popup height without cropping */
 .hover-reveal__img {
   display: block;
   width: 100%;
-  height: auto;
+  flex: 1;
+  min-height: 0;
   border-radius: var(--radius-sm);
   object-fit: contain;
 }
 
-/* Optional caption below the image */
+/* Optional caption — sits below the image, never grows */
 .hover-reveal__caption {
   display: block;
   font-family: var(--font-body);
@@ -1615,15 +1607,13 @@ h2.dest-section-title:first-child,
   margin-top: var(--space-2);
   font-style: italic;
   line-height: var(--leading-normal);
-  max-width: 75vw;
-  white-space: normal;
+  flex-shrink: 0;
 }
 
-/* Reduced motion — collapse transforms, keep fade */
+/* Reduced motion — skip the fade entirely */
 @media (prefers-reduced-motion: reduce) {
   .hover-reveal__popup {
-    transition: opacity var(--transition), visibility var(--transition);
-    transform: translate(-50%, -50%) !important;
+    transition: none;
   }
 }
 
