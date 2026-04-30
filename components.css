@@ -1576,7 +1576,7 @@ h2.dest-section-title:first-child,
   padding: var(--space-2);
   box-shadow: var(--shadow-modal);
   border: 1px solid var(--warm-rule);
-  white-space: nowrap;
+  width: 75vw;
   pointer-events: none;
 
   /* Hidden state — use visibility so opacity transition works */
@@ -1599,10 +1599,8 @@ h2.dest-section-title:first-child,
 /* The photo itself */
 .hover-reveal__img {
   display: block;
-  max-width: 280px;
-  max-height: 200px;
-  width: auto;
-  height: auto;
+  width: 75vw;
+  max-height: 60vh;
   border-radius: var(--radius-sm);
   object-fit: cover;
 }
@@ -1617,7 +1615,7 @@ h2.dest-section-title:first-child,
   margin-top: var(--space-2);
   font-style: italic;
   line-height: var(--leading-normal);
-  max-width: 280px;
+  max-width: 75vw;
   white-space: normal;
 }
 
