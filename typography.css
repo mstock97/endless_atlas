@@ -82,13 +82,11 @@ small { font-size: var(--text-sm); color: var(--graphite); }
   margin-bottom: var(--space-3);
   letter-spacing: -0.01em;
   line-height: var(--leading-snug);
-   text-align: center;
 }
 
 .prose p {
   margin-bottom: var(--space-6);
   line-height: var(--leading-prose);
-   text-align: center;
 }
 
 .prose a {
