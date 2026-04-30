@@ -144,11 +144,13 @@ function initHoverReveal() {
   const PAD      = 8;  // popup padding (var(--space-2) = 0.5rem ≈ 8px)
 
   function positionPopup(trigger, popup) {
+  function positionPopup(trigger, popup) {
     const img     = popup.querySelector('.hover-reveal__img');
     const caption = popup.querySelector('.hover-reveal__caption');
     if (!img) return;
 
-    // Wait for image to load so we have naturalWidth / naturalHeight
+    // Wait for image to load so we have naturalWidth / naturalHeight.
+    // Do NOT add is-visible yet — no coordinates are set until we return here.
     if (!img.naturalWidth || !img.naturalHeight) {
       img.addEventListener('load', () => positionPopup(trigger, popup), { once: true });
       return;
@@ -158,40 +160,32 @@ function initHoverReveal() {
     const vw   = window.innerWidth;
     const vh   = window.innerHeight;
 
-    // Available space above and below the trigger word
     const spaceAbove = rect.top    - GAP - EDGE_PAD;
     const spaceBelow = vh - rect.bottom - GAP - EDGE_PAD;
     const goAbove    = spaceAbove >= spaceBelow;
     const availH     = Math.max(goAbove ? spaceAbove : spaceBelow, 60);
     const availW     = vw - EDGE_PAD * 2;
 
-    // Rough caption height (font 0.7rem * 1.6 lineheight + space-2 margin-top)
     const captionH = caption ? Math.round(caption.offsetHeight || 28) + PAD : 0;
 
-    // Maximum space the image itself can occupy
     const maxImgW = availW - PAD * 2;
     const maxImgH = availH - PAD * 2 - captionH;
 
-    // Start from the image's natural pixel dimensions
     const ratio  = img.naturalWidth / img.naturalHeight;
     let imgW     = img.naturalWidth;
     let imgH     = img.naturalHeight;
 
-    // Scale down only as much as needed to fit — never upscale
     if (imgW > maxImgW) { imgW = maxImgW; imgH = imgW / ratio; }
     if (imgH > maxImgH) { imgH = maxImgH; imgW = imgH * ratio; }
 
     imgW = Math.round(imgW);
     imgH = Math.round(imgH);
 
-    // Apply dimensions directly to the image element
     img.style.width  = imgW + 'px';
     img.style.height = imgH + 'px';
 
-    // Popup width shrink-wraps the image (image width + padding on each side)
     const popupW = imgW + PAD * 2;
 
-    // Center horizontally on the trigger word, clamped to viewport edges
     let left = Math.round(rect.left + rect.width / 2 - popupW / 2);
     left = Math.max(EDGE_PAD, Math.min(left, vw - popupW - EDGE_PAD));
 
@@ -204,6 +198,9 @@ function initHoverReveal() {
       popup.style.bottom = '';
       popup.style.top    = Math.round(rect.bottom + GAP) + 'px';
     }
+
+    // Add is-visible only after coordinates are fully written
+    popup.classList.add('is-visible');
   }
 
   function closeAll() {
@@ -217,9 +214,8 @@ function initHoverReveal() {
     const trigger = e.target.closest('.hover-reveal');
     if (!trigger) return;
     const popup = trigger.querySelector('.hover-reveal__popup');
-    if (!popup) return;
+    if (!popup || popup.classList.contains('is-visible')) return; // already shown
     positionPopup(trigger, popup);
-    popup.classList.add('is-visible');
   });
 
   document.addEventListener('mouseout', e => {
@@ -241,7 +237,6 @@ function initHoverReveal() {
       closeAll();
       if (!wasVisible) {
         positionPopup(trigger, popup);
-        popup.classList.add('is-visible');
       }
     } else {
       closeAll();
