@@ -139,18 +139,15 @@ function setActiveNavLink() {
 
 /* ── Hover image popup ────────────────────────────────────────── */
 function initHoverReveal() {
-  const GAP      = 12; // px between trigger word and popup edge
-  const EDGE_PAD = 20; // minimum px from any viewport edge
-  const PAD      = 8;  // popup padding (var(--space-2) = 0.5rem ≈ 8px)
+  const GAP      = 12;
+  const EDGE_PAD = 20;
+  const PAD      = 8;
 
-  function positionPopup(trigger, popup) {
   function positionPopup(trigger, popup) {
     const img     = popup.querySelector('.hover-reveal__img');
     const caption = popup.querySelector('.hover-reveal__caption');
     if (!img) return;
 
-    // Wait for image to load so we have naturalWidth / naturalHeight.
-    // Do NOT add is-visible yet — no coordinates are set until we return here.
     if (!img.naturalWidth || !img.naturalHeight) {
       img.addEventListener('load', () => positionPopup(trigger, popup), { once: true });
       return;
@@ -167,13 +164,12 @@ function initHoverReveal() {
     const availW     = vw - EDGE_PAD * 2;
 
     const captionH = caption ? Math.round(caption.offsetHeight || 28) + PAD : 0;
+    const maxImgW  = availW - PAD * 2;
+    const maxImgH  = availH - PAD * 2 - captionH;
 
-    const maxImgW = availW - PAD * 2;
-    const maxImgH = availH - PAD * 2 - captionH;
-
-    const ratio  = img.naturalWidth / img.naturalHeight;
-    let imgW     = img.naturalWidth;
-    let imgH     = img.naturalHeight;
+    const ratio = img.naturalWidth / img.naturalHeight;
+    let imgW    = img.naturalWidth;
+    let imgH    = img.naturalHeight;
 
     if (imgW > maxImgW) { imgW = maxImgW; imgH = imgW / ratio; }
     if (imgH > maxImgH) { imgH = maxImgH; imgW = imgH * ratio; }
@@ -185,7 +181,6 @@ function initHoverReveal() {
     img.style.height = imgH + 'px';
 
     const popupW = imgW + PAD * 2;
-
     let left = Math.round(rect.left + rect.width / 2 - popupW / 2);
     left = Math.max(EDGE_PAD, Math.min(left, vw - popupW - EDGE_PAD));
 
@@ -199,7 +194,6 @@ function initHoverReveal() {
       popup.style.top    = Math.round(rect.bottom + GAP) + 'px';
     }
 
-    // Add is-visible only after coordinates are fully written
     popup.classList.add('is-visible');
   }
 
@@ -209,12 +203,11 @@ function initHoverReveal() {
     });
   }
 
-  // Desktop: delegated mouseover / mouseout
   document.addEventListener('mouseover', e => {
     const trigger = e.target.closest('.hover-reveal');
     if (!trigger) return;
     const popup = trigger.querySelector('.hover-reveal__popup');
-    if (!popup || popup.classList.contains('is-visible')) return; // already shown
+    if (!popup || popup.classList.contains('is-visible')) return;
     positionPopup(trigger, popup);
   });
 
@@ -226,7 +219,6 @@ function initHoverReveal() {
     if (popup) popup.classList.remove('is-visible');
   });
 
-  // Mobile: delegated touchend
   document.addEventListener('touchend', e => {
     const trigger = e.target.closest('.hover-reveal');
     if (trigger) {
@@ -235,9 +227,7 @@ function initHoverReveal() {
       if (!popup) return;
       const wasVisible = popup.classList.contains('is-visible');
       closeAll();
-      if (!wasVisible) {
-        positionPopup(trigger, popup);
-      }
+      if (!wasVisible) positionPopup(trigger, popup);
     } else {
       closeAll();
     }
