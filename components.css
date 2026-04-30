@@ -1546,6 +1546,144 @@ h2.dest-section-title:first-child,
 
 
 /* ============================================
+   HOVER IMAGE POPUP
+   Wrap any inline text in .hover-reveal to
+   reveal a photo popup on hover. Pure CSS —
+   no JavaScript required. Uses opacity +
+   visibility so transform transitions work.
+   Works inside .prose, .description-block,
+   .city-body, or any text container.
+   ============================================ */
+.hover-reveal {
+  position: relative;
+  display: inline;
+  cursor: default;
+  color: var(--canopy);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--moss);
+  text-underline-offset: 3px;
+}
+
+/* Popup container — hidden until hover */
+.hover-reveal__popup {
+  position: absolute;
+  bottom: calc(100% + var(--space-3));
+  left: 50%;
+  z-index: var(--z-dropdown);
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: var(--space-2);
+  box-shadow: var(--shadow-modal);
+  border: 1px solid var(--warm-rule);
+  white-space: nowrap;
+  pointer-events: none;
+
+  /* Hidden state — use visibility so opacity transition works */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(var(--space-2));
+  transition:
+    opacity var(--transition),
+    visibility var(--transition),
+    transform var(--transition);
+}
+
+/* Show on hover */
+.hover-reveal:hover .hover-reveal__popup {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* The photo itself */
+.hover-reveal__img {
+  display: block;
+  max-width: 280px;
+  max-height: 200px;
+  width: auto;
+  height: auto;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+}
+
+/* Optional caption below the image */
+.hover-reveal__caption {
+  display: block;
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--ash);
+  text-align: center;
+  margin-top: var(--space-2);
+  font-style: italic;
+  line-height: var(--leading-normal);
+  max-width: 280px;
+  white-space: normal;
+}
+
+/* Arrow pointing from popup down to the trigger text */
+.hover-reveal__popup::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--white);
+  filter: drop-shadow(0 1px 1px rgba(15, 15, 15, 0.08));
+}
+
+/* ── Position modifier: BELOW the trigger text ── */
+/* Use near page tops or inside the page header area */
+.hover-reveal--below .hover-reveal__popup {
+  bottom: auto;
+  top: calc(100% + var(--space-3));
+  transform: translateX(-50%) translateY(calc(-1 * var(--space-2)));
+}
+.hover-reveal--below:hover .hover-reveal__popup {
+  transform: translateX(-50%) translateY(0);
+}
+.hover-reveal--below .hover-reveal__popup::after {
+  top: auto;
+  bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: var(--white);
+  filter: drop-shadow(0 -1px 1px rgba(15, 15, 15, 0.08));
+}
+
+/* ── Position modifier: RIGHT of the trigger text ── */
+/* Use for short words or text near the left page margin */
+.hover-reveal--right .hover-reveal__popup {
+  bottom: auto;
+  top: 50%;
+  left: calc(100% + var(--space-4));
+  transform: translateY(-50%) translateX(var(--space-2));
+}
+.hover-reveal--right:hover .hover-reveal__popup {
+  transform: translateY(-50%) translateX(0);
+}
+.hover-reveal--right .hover-reveal__popup::after {
+  top: 50%;
+  left: auto;
+  right: 100%;
+  transform: translateY(-50%);
+  border-top-color: transparent;
+  border-right-color: var(--white);
+}
+
+/* Reduced motion — collapse transforms, keep fade */
+@media (prefers-reduced-motion: reduce) {
+  .hover-reveal__popup {
+    transition: opacity var(--transition), visibility var(--transition);
+    transform: translateX(-50%) translateY(0) !important;
+  }
+  .hover-reveal--right .hover-reveal__popup {
+    transform: translateY(-50%) translateX(0) !important;
+  }
+}
+
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 1024px) {

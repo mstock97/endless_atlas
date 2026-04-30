@@ -921,6 +921,78 @@ Any text span can display a live-converted currency amount. The FX script
 <!-- Renders as: ¥500 (~$3.34 USD) -->
 ```
 
+### Hover Image Popup
+
+Wrap any inline text in `.hover-reveal` to show a photo popup when that text is hovered.
+Pure CSS — no JavaScript required. Uses `opacity` and `visibility` for a smooth fade so
+the popup can simultaneously transition its `transform` (sliding in from slightly below).
+Works inside `.prose`, `.description-block`, `.city-body`, or any other text container.
+
+```html
+<p class="description-block">
+  The gates of
+  <span class="hover-reveal">
+    Senso-ji Temple
+    <span class="hover-reveal__popup">
+      <img class="hover-reveal__img"
+           src="senso-ji.jpg"
+           alt="Senso-ji Temple, Asakusa, Tokyo">
+      <!-- Optional caption -->
+      <span class="hover-reveal__caption">Senso-ji, Asakusa, Tokyo</span>
+    </span>
+  </span>
+  open at dawn.
+</p>
+```
+
+**Class reference:**
+
+| Class | Element | Purpose |
+|---|---|---|
+| `.hover-reveal` | `<span>` | Trigger. `display: inline` so it sits inside prose without breaking layout. Applies dotted moss underline and canopy text color to signal interactivity. |
+| `.hover-reveal__popup` | `<span>` | Popup container. Hidden (`opacity: 0; visibility: hidden`) until hover, then fades and slides into view above the trigger. `pointer-events: none` so it never blocks clicks. |
+| `.hover-reveal__img` | `<img>` | The popup photo. Max 280px wide, 200px tall. `object-fit: cover` prevents stretching. |
+| `.hover-reveal__caption` | `<span>` | Optional caption below the image. Small, italic, graphite, max 280px wide, wraps to multiple lines. |
+
+**Position modifiers** — add to `.hover-reveal` to control which direction the popup opens:
+
+```html
+<!-- Default: popup opens ABOVE the trigger (use for text in the middle or bottom of the page) -->
+<span class="hover-reveal">
+  Asakusa
+  <span class="hover-reveal__popup">...</span>
+</span>
+
+<!-- Popup opens BELOW the trigger (use for text near the top of the page) -->
+<span class="hover-reveal hover-reveal--below">
+  Asakusa
+  <span class="hover-reveal__popup">...</span>
+</span>
+
+<!-- Popup opens to the RIGHT of the trigger (use near the left page margin) -->
+<span class="hover-reveal hover-reveal--right">
+  Asakusa
+  <span class="hover-reveal__popup">...</span>
+</span>
+```
+
+**What the CSS does:**
+- `.hover-reveal` is `display: inline` — it wraps exactly like a `<strong>` or `<em>` tag and does not push surrounding text out of position
+- The dotted underline and `--canopy` text color are the only visual signals. No icon or cursor change is needed
+- The popup uses `visibility: hidden` + `opacity: 0` instead of `display: none` so the `opacity` and `transform` transitions run smoothly on both reveal and hide
+- A `transform: translateY()` shift accompanies the fade for a polished entrance — the popup slides up two spacer units as it appears
+- A CSS `::after` arrow triangle points from the popup back toward the trigger text
+- The popup sits at `z-index: var(--z-dropdown)` (400) — above nav dropdowns (300) but below modals (500)
+- `prefers-reduced-motion` collapses all `transform` transitions automatically — the fade still plays, the slide does not
+
+**Rules:**
+- Always use `<span>` tags for both `.hover-reveal` and `.hover-reveal__popup` — never `<div>`. The component is inline and `<div>` inside `<p>` is invalid HTML
+- Always provide a descriptive `alt` attribute on `.hover-reveal__img`
+- Never add `overflow: hidden` to a parent container — it will clip the popup
+- Never add `position: relative` to a new ancestor between `.hover-reveal` and the page root unless that ancestor also sets `z-index` — doing so creates a new stacking context that may bury the popup
+- If the popup appears cut off at the right edge of the viewport, switch to `.hover-reveal--right` or add the modifier inline via a custom modifier class in `components.css`
+- Multiple `.hover-reveal` spans can appear in the same paragraph — each is fully self-contained
+
 ---
 
 ## 7. Navigation — `navigation.css`
@@ -1152,6 +1224,8 @@ A single change to a CSS file must be sufficient to change that style everywhere
 - Use `.dest-section-title` for all section headings on destination pages
 - Use `.location-strip--pill` for geo pins on inline article images
 - Use `.location-strip` (full-width) for geo pins on hero images
+- Use `<span>` (never `<div>`) for both `.hover-reveal` and `.hover-reveal__popup`
+- Use `.hover-reveal--below` when the trigger text is near the top of the page
 - Use `<main class="dest-main">` on all destination and article pages
 - Use `content-grid--wide` on article pages, `content-grid` on country/city pages
 - Apply `img-low-res` to images that will be progressively loaded; JS replaces it with `img-loaded`
