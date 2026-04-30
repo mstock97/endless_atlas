@@ -24,45 +24,6 @@
   <link rel="stylesheet" href="/navigation.css">
   <link rel="stylesheet" href="/footer.css">
   <link rel="stylesheet" href="/animations.css">
-
-  <style>
-    /* Article page: wider main column (8:2), generous padding */
-    main {
-      padding: 4rem 5%;
-      width: 100%;
-      background-color: var(--paper);
-    }
-
-    .content-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 3rem;
-      max-width: 1400px;
-      width: 100%;
-      margin: 0 auto;
-      align-items: start;
-    }
-
-    @media (min-width: 900px) {
-      /* 8fr / 2fr — article body dominates, narrow sidebar */
-      .content-grid { grid-template-columns: 8fr 2fr; }
-    }
-
-    /* Destination section titles — Bebas Neue, overrides global h2 */
-    .dest-section-title {
-      font-family: 'Bebas Neue', var(--font-display), sans-serif;
-      font-size: 2.5rem;
-      color: var(--forest);
-      margin: 4rem 0 1.5rem 0;
-      letter-spacing: 0.05em;
-      border-bottom: 2px solid var(--warm-rule);
-      padding-bottom: 0.5rem;
-      line-height: 1.1;
-      font-weight: 400;
-    }
-
-    .dest-section-title:first-child { margin-top: 0; }
-  </style>
 </head>
 <body>
 

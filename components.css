@@ -682,11 +682,6 @@ h2.dest-section-title:first-child,
 
 /* No bottom border when inside an accordion header */
 .accordion-header h2.dest-section-title,
-.accordion-header .dest-section-title {
-  margin: 0;
-  border-bottom: none;
-  padding-bottom: 0;
-}
 
 /* ============================================
    WEATHER ACCORDION
