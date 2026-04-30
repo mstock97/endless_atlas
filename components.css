@@ -538,7 +538,15 @@ a.btn-primary { display: inline-flex; }
   border-radius: var(--radius-md);
   margin: var(--space-8) auto;
 }
-
+.article-image-container-vertical {
+  position: relative;
+  width: 85%;
+  max-width: 800px;
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  margin: var(--space-8) auto;
+}
 .article-image-container .geo-pin {
   bottom: 40px;
   left: 16px;
