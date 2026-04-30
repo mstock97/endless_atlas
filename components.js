@@ -18,7 +18,7 @@ const NAV_LINKS = [
     label: 'Destinations',
     href:  '/destinations/',
     children: [
-      { label: 'Japan',            href: '/destinations/japan' },
+      { label: 'Japan',            href: '/destinations/japan', children: [{label: 'Tokyo', href: '/destinations/japan/tokyo'}] },
       { label: 'Europe',           href: '/destinations/europe' },
       { label: 'All Destinations', href: '/destinations' },
     ],
@@ -137,7 +137,80 @@ function setActiveNavLink() {
   });
 }
 
-/* ── Init ─────────────────────────────────────────────────────── */
+/* ── Hover image popup ────────────────────────────────────────── */
+function initHoverReveal() {
+  const GAP      = 12; // px gap between trigger element and popup edge
+  const EDGE_PAD = 20; // minimum px from any viewport edge
+
+  function positionPopup(trigger, popup) {
+    const rect = trigger.getBoundingClientRect();
+    const vw   = window.innerWidth;
+    const vh   = window.innerHeight;
+
+    // Space available above and below the trigger word
+    const spaceAbove = rect.top    - GAP - EDGE_PAD;
+    const spaceBelow = vh - rect.bottom - GAP - EDGE_PAD;
+    const goAbove    = spaceAbove >= spaceBelow;
+    const availH     = Math.max(goAbove ? spaceAbove : spaceBelow, 80); // floor at 80px
+
+    // 75vw wide, clamped so it never overflows the viewport sides
+    const popupW = Math.min(vw * 0.75, vw - EDGE_PAD * 2);
+
+    // Center horizontally on the trigger word, clamped to edges
+    let left = rect.left + rect.width / 2 - popupW / 2;
+    left = Math.max(EDGE_PAD, Math.min(left, vw - popupW - EDGE_PAD));
+
+    popup.style.width     = popupW + 'px';
+    popup.style.left      = left + 'px';
+    popup.style.maxHeight = availH + 'px';
+
+    if (goAbove) {
+      popup.style.top    = '';
+      popup.style.bottom = (vh - rect.top + GAP) + 'px';
+    } else {
+      popup.style.bottom = '';
+      popup.style.top    = (rect.bottom + GAP) + 'px';
+    }
+  }
+
+  document.querySelectorAll('.hover-reveal').forEach(trigger => {
+    const popup = trigger.querySelector('.hover-reveal__popup');
+    if (!popup) return;
+
+    // Desktop: show on hover
+    trigger.addEventListener('mouseenter', () => {
+      positionPopup(trigger, popup);
+      popup.classList.add('is-visible');
+    });
+    trigger.addEventListener('mouseleave', () => {
+      popup.classList.remove('is-visible');
+    });
+
+    // Mobile: tap to toggle; dismiss others first
+    trigger.addEventListener('touchend', e => {
+      e.preventDefault();
+      const wasVisible = popup.classList.contains('is-visible');
+      document.querySelectorAll('.hover-reveal__popup.is-visible').forEach(p => {
+        p.classList.remove('is-visible');
+      });
+      if (!wasVisible) {
+        positionPopup(trigger, popup);
+        popup.classList.add('is-visible');
+      }
+    }, { passive: false });
+  });
+
+  // Dismiss on tap outside (mobile)
+  document.addEventListener('touchend', e => {
+    if (!e.target.closest('.hover-reveal')) {
+      document.querySelectorAll('.hover-reveal__popup.is-visible').forEach(p => {
+        p.classList.remove('is-visible');
+      });
+    }
+  });
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
   const headerEl = document.getElementById('site-header');
   const footerEl = document.getElementById('site-footer');
@@ -146,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (footerEl) footerEl.innerHTML = renderFooter();
 
   setActiveNavLink();
+  initHoverReveal();
 
   const btn   = document.getElementById('mobileMenuBtn');
   const links = document.getElementById('navLinks');
